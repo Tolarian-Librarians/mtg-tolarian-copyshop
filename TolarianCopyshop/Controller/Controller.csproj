@@ -47,6 +47,8 @@
     <Compile Include="CardController.cs" />
     <Compile Include="ICardDataPresenter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ResponseObjects\CardNamesAndIdsBySearchQuery.cs" />
+    <Compile Include="ResponseObjects\GetCardByIdResponse.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Business\Business.csproj">

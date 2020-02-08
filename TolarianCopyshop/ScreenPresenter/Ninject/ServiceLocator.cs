@@ -9,7 +9,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.Ninject
 
         public ServiceLocator()
         {
-            kernel = new StandardKernel(new ServiceModule());
+            kernel = new StandardKernel(new ServiceModule(), new AutoMapperModule());
         }
 
         public DeckBuilderViewModel ViewModel

@@ -92,7 +92,7 @@
     <Reference Include="System.Web" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ScryfallDataAccessTests\DataMapperTest.cs" />
+    <Compile Include="ScryfallDataAccessTests\CardDataMapperTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
