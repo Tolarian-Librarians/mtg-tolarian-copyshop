@@ -1,0 +1,24 @@
+﻿<Controls:MetroWindow x:Class="Tolarian.Copyshop.ScreenPresenter.Views.CopyShopView"
+                      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                      xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
+                      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                      xmlns:local="clr-namespace:Tolarian.Copyshop.ScreenPresenter.Views"
+                      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                      xmlns:vm="clr-namespace:Tolarian.Copyshop.ScreenPresenter.ViewModels"
+                      Title="Tolarian Copyshop"
+                      Width="800"
+                      Height="450"
+                      d:DataContext="{d:DesignInstance Type=vm:CopyShopDesignViewModel,
+                                                       IsDesignTimeCreatable=True}"
+                      DataContext="{Binding Path=CopyShopViewModel, Source={StaticResource ServiceLocator}}"
+                      mc:Ignorable="d">
+    <Grid>
+        <TabControl>
+            <TabItem Header="Build Deck" ToolTip="Build your Deck here!">
+                <local:DeckBuilderView />
+            </TabItem>
+            <TabItem Header="View Deck" IsEnabled="False" ToolTip="Coming Soon" />
+        </TabControl>
+    </Grid>
+</Controls:MetroWindow>
