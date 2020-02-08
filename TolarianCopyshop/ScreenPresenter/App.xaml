@@ -1,7 +1,7 @@
-﻿<Application x:Class="TolarianCopyshop.App"
+﻿<Application x:Class="ScreenPresenter.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:TolarianCopyshop"
+             xmlns:local="clr-namespace:ScreenPresenter"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
          

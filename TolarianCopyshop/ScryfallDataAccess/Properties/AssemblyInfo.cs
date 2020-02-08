@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("CardInfoAccess")]
+[assembly: AssemblyTitle("ScryfallDataAccess")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("CardInfoAccess")]
+[assembly: AssemblyProduct("ScryfallDataAccess")]
 [assembly: AssemblyCopyright("Copyright ©  2020")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("51df4dd1-09d3-4548-a0b5-b18b90504d73")]
+[assembly: Guid("96d19586-2ac8-4236-ad41-f25d739cf626")]
 
 // Version information for an assembly consists of the following four values:
 //
