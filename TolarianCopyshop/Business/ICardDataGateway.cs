@@ -10,5 +10,6 @@ namespace Tolarian.Copyshop.Business
     public interface ICardDataGateway
     {
         SfPaginatedCardList GetCardsByQuery(string query);
+        SfCard GetCardById(Guid id);
     }
 }
