@@ -7,7 +7,7 @@ using Tolarian.Copyshop.Business.Models.Enums;
 
 namespace Tolarian.Copyshop.Controller.ResponseObjects
 {
-    public class GetCardByIdResponse
+    public class FullCardResponse
     {
         public string Name { get; set; }
 

@@ -24,6 +24,12 @@ namespace Tolarian.Copyshop.Business
 
         public List<SfCard> GetCardsBySearchQuery(string searchQuery, int maxCountOfItems)
         {
+            const int minimumQueryLength = 3;
+            if (searchQuery.Length < minimumQueryLength)
+            {
+                return new List<SfCard>();
+            }
+
             List<SfCard> result = _gateway.GetCardsByQuery(searchQuery).Data.ToList();
 
             result = TruncateListToMaxSize(maxCountOfItems, result);

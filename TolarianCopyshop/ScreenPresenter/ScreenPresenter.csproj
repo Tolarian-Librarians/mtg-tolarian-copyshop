@@ -84,8 +84,6 @@
     </Compile>
     <Compile Include="Base\BindableBase.cs" />
     <Compile Include="Base\Command.cs" />
-    <Compile Include="Models\Card.cs" />
-    <Compile Include="Models\CardDataPresenter.cs" />
     <Compile Include="Ninject\AutoMapperModule.cs" />
     <Compile Include="AutoMapper\AutoMapperProfile.cs" />
     <Compile Include="Ninject\ServiceLocator.cs" />

@@ -12,31 +12,29 @@ namespace Tolarian.Copyshop.Controller
 {
     public class CardController
     {
-        private readonly ICardDataPresenter _presenter;
         private readonly ICardDataRequester _requester;
         private readonly IMapper _mapper;
 
-        public CardController(ICardDataPresenter presenter, ICardDataRequester requester, IMapper mapper)
+        public CardController(ICardDataRequester requester, IMapper mapper)
         {
-            _presenter = presenter;
             _requester = requester;
             _mapper = mapper;
         }
 
-        public GetCardByIdResponse GetCardById(Guid id)
+        public FullCardResponse GetCardById(Guid id)
         {
             SfCard card = _requester.GetCardById(id);
 
-            GetCardByIdResponse response = _mapper.Map<GetCardByIdResponse>(card);
+            FullCardResponse response = _mapper.Map<FullCardResponse>(card);
 
             return response;
         }
 
-        public List<CardNamesAndIdsBySearchQuery> GetCardNamesAndIdsBySearchQuery(string query, int maxCountOfItems)
+        public List<CardNameResponse> GetCardNamesAndIdsBySearchQuery(string query, int maxCountOfItems)
         {
-            var result = new List<CardNamesAndIdsBySearchQuery>();
+            var result = new List<CardNameResponse>();
 
-            result = _requester.GetCardsBySearchQuery(query, maxCountOfItems).Select(c => new CardNamesAndIdsBySearchQuery { Name = c.Name, Id = c.Id }).ToList();
+            result = _requester.GetCardsBySearchQuery(query, maxCountOfItems).Select(c => new CardNameResponse { Name = c.Name, Id = c.Id }).ToList();
 
             return result;
         }
