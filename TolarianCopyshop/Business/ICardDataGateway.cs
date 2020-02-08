@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Tolarian.Copyshop.Controller
+namespace Tolarian.Copyshop.Business
 {
-    public interface CardData
+    public interface ICardDataGateway
     {
     }
 }

@@ -41,8 +41,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CardDataGateway.cs" />
-    <Compile Include="CardDataRequester.cs" />
+    <Compile Include="ICardDataGateway.cs" />
+    <Compile Include="ICardDataRequester.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

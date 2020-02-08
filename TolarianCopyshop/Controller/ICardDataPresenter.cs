@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Tolarian.Copyshop.Business
+namespace Tolarian.Copyshop.Controller
 {
-    public interface CardDataRequester
+    public interface ICardDataPresenter
     {
+
     }
 }

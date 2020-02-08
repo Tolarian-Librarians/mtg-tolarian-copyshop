@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Tolarian.Copyshop.Business
 {
-    public interface CardDataGateway
+    public interface ICardDataRequester
     {
     }
 }
