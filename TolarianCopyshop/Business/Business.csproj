@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CardInteractor.cs" />
     <Compile Include="ICardDataGateway.cs" />
     <Compile Include="ICardDataRequester.cs" />
     <Compile Include="Models\SfCard.cs" />

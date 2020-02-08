@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Tolarian.Copyshop.ScreenPresenter
+namespace WpfApp2
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

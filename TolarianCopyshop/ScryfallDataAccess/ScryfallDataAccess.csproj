@@ -50,7 +50,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DataMapper.cs" />
+    <Compile Include="CardDataMapper.cs" />
     <Compile Include="IScryfallApi.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
