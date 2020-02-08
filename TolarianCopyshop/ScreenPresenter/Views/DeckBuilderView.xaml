@@ -9,6 +9,7 @@
                       Title="MainWindow"
                       Width="800"
                       Height="450"
+                      DataContext="{Binding Path=ViewModel, Source={StaticResource ServiceLocator}}"
                       d:DataContext="{d:DesignInstance Type=vm:DeckBuilderDesignViewModel,
                                                        IsDesignTimeCreatable=True}"
                       mc:Ignorable="d">

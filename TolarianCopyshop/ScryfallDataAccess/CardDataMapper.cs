@@ -9,7 +9,7 @@ using Tolarian.Copyshop.Business.Models;
 
 namespace Tolarian.Copyshop.ScryfallDataAccess
 {
-    public class DataMapper : ICardDataGateway
+    public class CardDataMapper : ICardDataGateway
     {
         public SfPaginatedCardList GetCardsByQuery(string query)
         {

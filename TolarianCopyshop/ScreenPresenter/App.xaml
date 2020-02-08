@@ -3,9 +3,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:Tolarian.Copyshop.ScreenPresenter"
              xmlns:view="clr-namespace:Tolarian.Copyshop.ScreenPresenter.Views"
+             xmlns:ninject="clr-namespace:Tolarian.Copyshop.ScreenPresenter.Ninject"
              StartupUri="Views/DeckBuilderView.xaml">
     <Application.Resources>
         <ResourceDictionary>
+            <ninject:ServiceLocator x:Key="ServiceLocator"/>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
