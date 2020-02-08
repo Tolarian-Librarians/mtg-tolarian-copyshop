@@ -23,7 +23,28 @@
                 <RowDefinition Height="30" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            <TextBox Grid.Row="0" Margin="2" />
+
+            <TextBox Grid.Row="0" Margin="2" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" />
+            <ListView Grid.Row="1"
+                      Height="100"
+                      Margin="2,-2,2,2"
+                      VerticalAlignment="Top"
+                      Panel.ZIndex="1000"
+                      BorderThickness="1"
+                      ItemsSource="{Binding SearchResults}"
+                      SelectedItem="{Binding SelectedSearchItem}"
+                      Visibility="{Binding SeachResultVisibility}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock HorizontalAlignment="Left"
+                                   VerticalAlignment="Top"
+                                   FontSize="12"
+                                   FontWeight="Bold"
+                                   Text="{Binding Name}" />
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+
             <ListView Grid.Row="1" ItemsSource="{Binding Cards}" SelectedItem="{Binding SelectedCard}">
                 <ListView.ItemTemplate>
                     <DataTemplate>

@@ -83,6 +83,7 @@
     <Compile Include="Base\Command.cs" />
     <Compile Include="Models\Card.cs" />
     <Compile Include="Models\CardDataPresenter.cs" />
+    <Compile Include="Models\SearchItem.cs" />
     <Compile Include="Ninject\ServiceLocator.cs" />
     <Compile Include="Ninject\ServiceModule.cs" />
     <Compile Include="ViewModels\CopyShopDesignViewModel.cs" />
