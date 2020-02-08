@@ -71,6 +71,10 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Page Include="Views\DeckBuilderView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\CopyShopView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -85,10 +89,15 @@
     <Compile Include="Ninject\AutoMapperModule.cs" />
     <Compile Include="Ninject\ServiceLocator.cs" />
     <Compile Include="Ninject\ServiceModule.cs" />
+    <Compile Include="ViewModels\CopyShopDesignViewModel.cs" />
+    <Compile Include="ViewModels\CopyShopViewModel.cs" />
     <Compile Include="ViewModels\DeckBuilderDesignViewModel.cs" />
     <Compile Include="ViewModels\DeckBuilderViewModel.cs" />
     <Compile Include="Views\DeckBuilderView.xaml.cs">
       <DependentUpon>DeckBuilderView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\CopyShopView.xaml.cs">
+      <DependentUpon>CopyShopView.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>

@@ -10,9 +10,9 @@ namespace Tolarian.Copyshop.ScreenPresenter.Ninject
     {
         public override void Load()
         {
-            Bind<ICardDataPresenter>().To<CardDataPresenter>();
-            Bind<ICardDataRequester>().To<CardInteractor>();
-            Bind<ICardDataGateway>().To<CardDataMapper>();
+            this.Bind<ICardDataPresenter>().To<CardDataPresenter>().InSingletonScope();
+            this.Bind<ICardDataRequester>().To<CardInteractor>().InSingletonScope();
+            this.Bind<ICardDataGateway>().To<CardDataMapper>().InSingletonScope();
         }
     }
 }

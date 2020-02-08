@@ -14,8 +14,8 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
     public class DeckBuilderViewModel : BindableBase
     {
         private Card _selectedCard;
-        private readonly CardController _controller;
         private ObservableCollection<Card> _cards;
+        private readonly CardController _controller;
 
         public DeckBuilderViewModel(CardController controller)
         {
