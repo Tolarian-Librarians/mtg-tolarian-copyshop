@@ -1,9 +1,11 @@
-﻿using System;
+﻿using AutoMapper;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Tolarian.Copyshop.Business;
+using Tolarian.Copyshop.Business.Models;
 using Tolarian.Copyshop.Controller.ResponseObjects;
 
 namespace Tolarian.Copyshop.Controller
@@ -12,20 +14,20 @@ namespace Tolarian.Copyshop.Controller
     {
         private readonly ICardDataPresenter _presenter;
         private readonly ICardDataRequester _requester;
-        //private readonly IMapper _requester;
+        private readonly IMapper _mapper;
 
-        public CardController(ICardDataPresenter presenter, ICardDataRequester requester)
+        public CardController(ICardDataPresenter presenter, ICardDataRequester requester, IMapper mapper)
         {
             _presenter = presenter;
             _requester = requester;
+            _mapper = mapper;
         }
 
         public GetCardByIdResponse GetCardById(Guid id)
         {
-            GetCardByIdResponse response = new GetCardByIdResponse
-            {
+            SfCard card = _requester.GetCardById(id);
 
-            };
+            GetCardByIdResponse response = _mapper.Map<GetCardByIdResponse>(card);
 
             return response;
         }

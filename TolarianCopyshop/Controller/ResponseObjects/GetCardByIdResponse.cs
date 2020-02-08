@@ -19,6 +19,6 @@ namespace Tolarian.Copyshop.Controller.ResponseObjects
 
         public Uri PngImage { get; set; }
 
-        public Dictionary<MtgPlayModes, bool> Legalities { get; set; }
+        public Dictionary<string, string> Legalities { get; set; }
     }
 }

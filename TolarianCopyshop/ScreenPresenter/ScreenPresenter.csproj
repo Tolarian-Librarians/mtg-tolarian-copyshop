@@ -87,6 +87,7 @@
     <Compile Include="Models\Card.cs" />
     <Compile Include="Models\CardDataPresenter.cs" />
     <Compile Include="Ninject\AutoMapperModule.cs" />
+    <Compile Include="AutoMapper\AutoMapperProfile.cs" />
     <Compile Include="Ninject\ServiceLocator.cs" />
     <Compile Include="Ninject\ServiceModule.cs" />
     <Compile Include="ViewModels\CopyShopDesignViewModel.cs" />
