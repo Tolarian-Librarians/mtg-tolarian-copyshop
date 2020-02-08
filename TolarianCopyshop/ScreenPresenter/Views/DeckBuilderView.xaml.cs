@@ -25,7 +25,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.Views
         public DeckBuilderView()
         {
             this.InitializeComponent();
-            this.DataContext = new DeckBuilderViewModel()
+            this.DataContext = new DeckBuilderViewModel(null)
             {
                 Cards = new System.Collections.ObjectModel.ObservableCollection<Models.Card>
                 {
