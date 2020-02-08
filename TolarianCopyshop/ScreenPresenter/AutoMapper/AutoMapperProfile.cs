@@ -10,7 +10,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.AutoMapper
     {
         public AutoMapperProfile()
         {
-            CreateMap<SfCard, GetCardByIdResponse>().ForMember(dest => dest.PngImage, opt => opt.MapFrom(d => d.ImageUris.ContainsKey(CardImageTypes.Png) ? d.ImageUris[Business.Models.Enums.CardImageTypes.Png] : null)).
+            CreateMap<SfCard, FullCardResponse>().ForMember(dest => dest.PngImage, opt => opt.MapFrom(d => d.ImageUris.ContainsKey(CardImageTypes.Png) ? d.ImageUris[Business.Models.Enums.CardImageTypes.Png] : null)).
                 ForMember(dest => dest.SmallImage, opt => opt.MapFrom(d => d.ImageUris.ContainsKey(CardImageTypes.Small) ? d.ImageUris[CardImageTypes.Small] : null));  //.ConvertUsing(convert);
         }
     }

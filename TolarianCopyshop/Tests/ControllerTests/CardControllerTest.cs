@@ -15,7 +15,7 @@ using Tolarian.Copyshop.Business.Models.Enums;
 
 namespace Tests.ControllerTests
 {
- 
+
     [TestClass]
     public class CardControllerTest
     {
@@ -48,7 +48,7 @@ namespace Tests.ControllerTests
 
             GetCardByIdResponse response = unitUnterTest.GetCardById(Guid.Empty);
         }
-        
+
         [TestMethod]
         public void GetCardById_Test()
         {

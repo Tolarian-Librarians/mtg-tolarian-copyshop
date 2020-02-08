@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Tolarian.Copyshop.Controller.ResponseObjects
 {
-    public class CardNamesAndIdsBySearchQuery
+    public class CardNameResponse
     {
         public string Name { get; set; }
 

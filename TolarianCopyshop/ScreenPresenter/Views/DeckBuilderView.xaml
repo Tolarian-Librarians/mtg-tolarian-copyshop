@@ -24,7 +24,7 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
-            <TextBox Grid.Row="0" Margin="2" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" />
+            <TextBox Grid.Row="0" Margin="2" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged, Delay=300}" />
             <ListView Grid.Row="1"
                       Height="100"
                       Margin="2,-2,2,2"
@@ -61,7 +61,7 @@
                             <Image Grid.RowSpan="2"
                                    Grid.Column="0"
                                    Height="100"
-                                   Source="{Binding Picture}" />
+                                   Source="{Binding SmallImage}" />
                             <TextBlock Grid.Row="0"
                                        Grid.Column="2"
                                        HorizontalAlignment="Left"
@@ -89,7 +89,7 @@
                 <RowDefinition Height="5*" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            <Image Grid.Row="0" Source="{Binding SelectedCard.Picture}" />
+            <Image Grid.Row="0" Source="{Binding SelectedCard.PngImage}" />
 
         </Grid>
     </Grid>
