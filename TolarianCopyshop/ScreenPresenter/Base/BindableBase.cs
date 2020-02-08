@@ -9,7 +9,6 @@ namespace Tolarian.Copyshop.ScreenPresenter.Base
         #region Events
 
         public event PropertyChangedEventHandler PropertyChanged;
-        public event NotifyCollectionChangedEventHandler CollectionChanged;
 
         #endregion
 

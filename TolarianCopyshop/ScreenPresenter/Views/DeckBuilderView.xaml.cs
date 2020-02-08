@@ -1,5 +1,4 @@
-﻿using MahApps.Metro.Controls;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,13 +17,13 @@ using Tolarian.Copyshop.ScreenPresenter.ViewModels;
 namespace Tolarian.Copyshop.ScreenPresenter.Views
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaktionslogik für DeckBuilder.xaml
     /// </summary>
-    public partial class DeckBuilderView : MetroWindow
+    public partial class DeckBuilderView : UserControl
     {
         public DeckBuilderView()
         {
-            this.InitializeComponent();
+            InitializeComponent();
             this.DataContext = new DeckBuilderViewModel(null)
             {
                 Cards = new System.Collections.ObjectModel.ObservableCollection<Models.Card>
