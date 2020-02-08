@@ -16,9 +16,29 @@ namespace Tolarian.Copyshop.Business
             _gateway = gateway;
         }
 
-        public List<SfCard> GetCardsBySearchQuery(string searchQuery)
+        public SfCard GetCardById(Guid id)
         {
-            throw new NotImplementedException();
+            SfCard result = _gateway.GetCardById(id);
+            return result;
+        }
+
+        public List<SfCard> GetCardsBySearchQuery(string searchQuery, int maxCountOfItems)
+        {
+            List<SfCard> result = _gateway.GetCardsByQuery(searchQuery).Data.ToList();
+
+            result = TruncateListToMaxSize(maxCountOfItems, result);
+
+            return result;
+        }
+
+        private List<SfCard> TruncateListToMaxSize(int maxCountOfItems, List<SfCard> targetList)
+        {
+            int lastIndex = maxCountOfItems - 1;
+
+            if (targetList.Count > maxCountOfItems)
+                targetList.RemoveRange(lastIndex, targetList.Count - lastIndex);
+
+            return targetList;
         }
     }
 }

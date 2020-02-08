@@ -9,7 +9,7 @@ using System.Linq;
 namespace Tests.ScryfallDataAccessTests
 {
     [TestClass]
-    public class DataMapperTest
+    public class CardDataMapperTest
     {
         IScryfallApi service;
 

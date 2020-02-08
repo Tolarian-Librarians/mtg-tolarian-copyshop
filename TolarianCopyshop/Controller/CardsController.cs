@@ -18,7 +18,7 @@ namespace Tolarian.Copyshop.Controller
             _presenter = presenter;
         }
 
-        public string[] GetCardsForSearch(string query)
+        public List<CardSearchResponse> GetCardsForSearch(string query)
         {
             return _requester.GetCardsBySearchQuery(query).Select(c => c.Name).ToArray();
         }
