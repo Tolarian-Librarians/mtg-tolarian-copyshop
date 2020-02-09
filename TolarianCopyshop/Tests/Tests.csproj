@@ -110,6 +110,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ControllerTests\CardControllerTest.cs" />
+    <Compile Include="InteractorTests\CardInteractorTests.cs" />
     <Compile Include="ScryfallDataAccessTests\CardDataMapperTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

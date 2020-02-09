@@ -46,7 +46,10 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
         {
             string importCards = await CopyShopView.GetInstance().ShowChildWindowAsync<string>(new ImportCardsChildView() { IsModal = false }).ConfigureAwait(false);
 
-            // TODO Call Controller
+             _controller.GetCardsByNameList(importCards ?? "", out string errMessage);
+
+            if (!string.IsNullOrEmpty(errMessage))
+                ShowMessage("Error", errMessage);
         }
 
         // Methods

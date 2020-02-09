@@ -22,6 +22,13 @@ namespace Tolarian.Copyshop.Business
             return result;
         }
 
+        public List<SfCard> GetCardsByNameList(List<string> cardNames)
+        {
+            List<string> resolvedNames = DeckImportHelper.ResolveCardNamesFromList(cardNames);
+            List<SfCard> result = _gateway.GetCardsByNameList(resolvedNames).Data.ToList();
+            return result;
+        }
+
         public List<SfCard> GetCardsBySearchQuery(string searchQuery, int maxCountOfItems)
         {
             const int minimumQueryLength = 3;
