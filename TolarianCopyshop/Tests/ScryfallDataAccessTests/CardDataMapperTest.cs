@@ -64,5 +64,22 @@ namespace Tests.ScryfallDataAccessTests
             Assert.AreEqual("Dusk // Dawn", result.Name);
             Assert.IsTrue(result.CardFaces.All(c => c.ImageUris == null));
         }
+        
+        [TestMethod]
+        public void GetCardsByNameList_Test()
+        {
+            //Arrange
+            List<string> names = new List<string> { "Sol Ring", "Dusk // Dawn"};
+
+
+            //Act
+            CardDataMapper mapper = new CardDataMapper();
+            SfPaginatedCardList result = mapper.GetCardsByNameList(names);
+
+            //Assert
+            Assert.IsTrue(result != null);
+            Assert.AreEqual(2, result.Data.Length);
+        }
+
     }
 }

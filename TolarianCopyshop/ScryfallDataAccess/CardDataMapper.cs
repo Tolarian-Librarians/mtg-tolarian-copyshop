@@ -39,6 +39,28 @@ namespace Tolarian.Copyshop.ScryfallDataAccess
             return null;
         }
 
+        public SfPaginatedCardList GetCardsByNameList(List<string> cardNames)
+        {
+            SfIdentifierContainer container = new SfIdentifierContainer { Identifiers = cardNames.Select(n => new SfIdentifier { Name = n}).ToList() };
+            string s = JsonConvert.SerializeObject(container);
+
+
+            ApiResponse<SfPaginatedCardList> response = _service.GetCardsByCollection(container).Result;
+
+            switch (response.StatusCode)
+            {
+                case HttpStatusCode.OK:
+                    return response.Content;
+                case HttpStatusCode.NotFound:
+                    return SfPaginatedCardList.GetEmpty();
+                default:
+                    HandleUnexpectedStatusCodeForResponse(response);
+                    break;
+            }
+
+            return null;
+        }
+
         public SfPaginatedCardList GetCardsByQuery(string query)
         {
             ApiResponse<SfPaginatedCardList> response = _service.GetCardsBySearchQuery(query).Result;
