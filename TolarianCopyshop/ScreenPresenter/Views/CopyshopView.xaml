@@ -29,19 +29,13 @@
     </Controls:MetroWindow.LeftWindowCommands>
 
     <Grid>
-        <ToolBarTray DockPanel.Dock="Top">
-            <ToolBar>
-                <Button>
-                    Import
-                </Button>
-            </ToolBar>
-        </ToolBarTray>
-
         <TabControl>
             <TabItem Header="Build Deck">
                 <local:DeckBuilderView />
             </TabItem>
-            <TabItem Header="View Deck" IsEnabled="False" />
+            <TabItem Header="View Deck">
+                <local:DeckViewerView />
+            </TabItem>
         </TabControl>
     </Grid>
 </Controls:MetroWindow>

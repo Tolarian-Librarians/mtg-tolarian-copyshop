@@ -79,7 +79,13 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Model\DeckCardModel.cs" />
+    <Compile Include="ViewModels\DeckViewerDesignViewModel.cs" />
+    <Compile Include="ViewModels\DeckViewerViewModel.cs" />
     <Compile Include="ViewModels\ImportCardViewModel.cs" />
+    <Compile Include="Views\DeckViewerView.xaml.cs">
+      <DependentUpon>DeckViewerView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\ImportCardsChildView.xaml.cs">
       <DependentUpon>ImportCardsChildView.xaml</DependentUpon>
     </Compile>
@@ -112,6 +118,10 @@
       <DependentUpon>CopyShopView.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Views\DeckViewerView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\ImportCardsChildView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

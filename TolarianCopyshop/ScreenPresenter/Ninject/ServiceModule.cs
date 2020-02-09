@@ -2,6 +2,7 @@
 using Ninject.Modules;
 using Tolarian.Copyshop.Business;
 using Tolarian.Copyshop.Controller;
+using Tolarian.Copyshop.ScreenPresenter.Model;
 using Tolarian.Copyshop.ScryfallDataAccess;
 
 namespace Tolarian.Copyshop.ScreenPresenter.Ninject
@@ -13,6 +14,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.Ninject
             this.Bind<ICardDataRequester>().To<CardInteractor>().InSingletonScope();
             this.Bind<ICardDataGateway>().To<CardDataMapper>().InSingletonScope();
             this.Bind<IDialogCoordinator>().To<DialogCoordinator>().InSingletonScope();
+            this.Bind<DeckCardModel>().To<DeckCardModel>().InSingletonScope();
         }
     }
 }

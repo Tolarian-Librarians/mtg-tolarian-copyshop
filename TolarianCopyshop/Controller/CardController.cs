@@ -37,11 +37,11 @@ namespace Tolarian.Copyshop.Controller
             }
             catch (HttpException ex)
             {
-                message = ex.Message + Environment.NewLine + ex.InnerException != null ? ex.InnerException.Message : "";
+                message = BuildErrorMessage(ex);
             }
             catch (AggregateException ex)
             {
-                message = ex.Message + Environment.NewLine + ex.InnerException != null ? ex.InnerException.Message : "";
+                message = BuildErrorMessage(ex);
             }
 
             return response;
@@ -58,20 +58,23 @@ namespace Tolarian.Copyshop.Controller
             }
             catch (HttpException ex)
             {
-                message = ex.Message + Environment.NewLine + ex.InnerException != null ? ex.InnerException.Message : "";
+                message = BuildErrorMessage(ex);
             }
             catch (AggregateException ex)
             {
-                message = ex.Message + Environment.NewLine + ex.InnerException != null ? ex.InnerException.Message : "";
+                message = BuildErrorMessage(ex);
             }
 
             return response;
         }
 
+        private static string BuildErrorMessage(Exception ex)
+            => ex.Message + Environment.NewLine + (ex.InnerException != null ? ex.InnerException.Message : "");
+
         public List<FullCardResponse> GetCardsByNameList(string importString, out string message)
         {
             message = string.Empty;
-            List<FullCardResponse> response = null;
+            List<FullCardResponse> response = new List<FullCardResponse>();
 
             try
             {
@@ -82,11 +85,11 @@ namespace Tolarian.Copyshop.Controller
             }
             catch (HttpException ex)
             {
-                message = ex.Message + Environment.NewLine + ex.InnerException != null ? ex.InnerException.Message : "";
+                message = BuildErrorMessage(ex);
             }
             catch (AggregateException ex)
             {
-                message = ex.Message + Environment.NewLine + ex.InnerException != null ? ex.InnerException.Message : "";
+                message = BuildErrorMessage(ex);
             }
 
             return response;
