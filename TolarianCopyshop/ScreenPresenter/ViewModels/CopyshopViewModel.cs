@@ -3,10 +3,12 @@ using MahApps.Metro.Controls.Dialogs;
 using MahApps.Metro.SimpleChildWindow;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Tolarian.Copyshop.Controller;
+using Tolarian.Copyshop.Controller.ResponseObjects;
 using Tolarian.Copyshop.ScreenPresenter.Base;
 using Tolarian.Copyshop.ScreenPresenter.Views;
 using static MahApps.Metro.SimpleChildWindow.ChildWindowManager;
@@ -46,10 +48,16 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
         {
             string importCards = await CopyShopView.GetInstance().ShowChildWindowAsync<string>(new ImportCardsChildView() { IsModal = false }).ConfigureAwait(false);
 
-             _controller.GetCardsByNameList(importCards ?? "", out string errMessage);
+            List<FullCardResponse> importedCards = _controller.GetCardsByNameList(importCards ?? "", out string errMessage);
 
-            if (!string.IsNullOrEmpty(errMessage))
-                ShowMessage("Error", errMessage);
+            if (importedCards.Count > 0)
+            {
+                DeckBuilderViewModel.GetInstance().DeckCards = new ObservableCollection<FullCardResponse>(importedCards);
+            }
+            else if (!string.IsNullOrEmpty(errMessage))
+            {
+                this.ShowMessage("Error", errMessage);
+            }
         }
 
         // Methods
