@@ -24,8 +24,14 @@ namespace Tolarian.Copyshop.Business
 
         public List<SfCard> GetCardsByNameList(List<string> cardNames)
         {
+            //Scryfall will return a maximum of 75 Cards per request
+            int scryfallApiReturnCountMaximum = 75;
+
             List<string> resolvedNames = DeckImportHelper.ResolveCardNamesFromList(cardNames);
-            List<SfCard> result = _gateway.GetCardsByNameList(resolvedNames).Data.ToList();
+
+            List<List<string>> requestLists = ChunkListBySize<string>(resolvedNames, scryfallApiReturnCountMaximum);
+
+            List<SfCard> result = requestLists.SelectMany(r => _gateway.GetCardsByNameList(r).Data.ToList()).ToList();
             return result;
         }
 
@@ -52,6 +58,15 @@ namespace Tolarian.Copyshop.Business
                 targetList.RemoveRange(firstInvalidIndex, targetList.Count - firstInvalidIndex);
 
             return targetList;
+        }
+
+        public static List<List<T>> ChunkListBySize<T>(List<T> source, int chunkSize)
+        {
+            return source
+                .Select((x, i) => new { Index = i, Value = x })
+                .GroupBy(x => x.Index / chunkSize)
+                .Select(x => x.Select(v => v.Value).ToList())
+                .ToList();
         }
     }
 }

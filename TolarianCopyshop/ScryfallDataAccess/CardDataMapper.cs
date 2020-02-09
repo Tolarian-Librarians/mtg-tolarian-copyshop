@@ -42,8 +42,6 @@ namespace Tolarian.Copyshop.ScryfallDataAccess
         public SfPaginatedCardList GetCardsByNameList(List<string> cardNames)
         {
             SfIdentifierContainer container = new SfIdentifierContainer { Identifiers = cardNames.Select(n => new SfIdentifier { Name = n}).ToList() };
-            string s = JsonConvert.SerializeObject(container);
-
 
             ApiResponse<SfPaginatedCardList> response = _service.GetCardsByCollection(container).Result;
 
