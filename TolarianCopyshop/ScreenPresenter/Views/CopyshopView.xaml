@@ -2,18 +2,41 @@
                       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                       xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
+                      xmlns:Dialog="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro"
                       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                      xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
                       xmlns:local="clr-namespace:Tolarian.Copyshop.ScreenPresenter.Views"
                       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                       xmlns:vm="clr-namespace:Tolarian.Copyshop.ScreenPresenter.ViewModels"
                       Title="Tolarian Copyshop"
-                      Width="800"
-                      Height="450"
+                      MinWidth="1200"
+                      MinHeight="600"
+                      Dialog:DialogParticipation.Register="{Binding}"
                       d:DataContext="{d:DesignInstance Type=vm:CopyShopDesignViewModel,
                                                        IsDesignTimeCreatable=True}"
                       DataContext="{Binding Path=CopyShopViewModel, Source={StaticResource ServiceLocator}}"
                       mc:Ignorable="d">
+
+    <Controls:MetroWindow.LeftWindowCommands>
+        <Controls:WindowCommands>
+            <Button Command="{Binding ImportCommand}">
+                <StackPanel Orientation="Horizontal">
+                    <iconPacks:PackIconFontAwesome Width="24" Height="24" Kind="FileImportSolid" />
+                    <TextBlock Margin="4,0,0,0" VerticalAlignment="Center" Text="Import" />
+                </StackPanel>
+            </Button>
+        </Controls:WindowCommands>
+    </Controls:MetroWindow.LeftWindowCommands>
+
     <Grid>
+        <ToolBarTray DockPanel.Dock="Top">
+            <ToolBar>
+                <Button>
+                    Import
+                </Button>
+            </ToolBar>
+        </ToolBarTray>
+
         <TabControl>
             <TabItem Header="Build Deck">
                 <local:DeckBuilderView />

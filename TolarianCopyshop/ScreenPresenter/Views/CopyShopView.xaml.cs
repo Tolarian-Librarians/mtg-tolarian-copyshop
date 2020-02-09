@@ -1,4 +1,5 @@
 ﻿using MahApps.Metro.Controls;
+using MahApps.Metro.SimpleChildWindow;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,9 +23,15 @@ namespace Tolarian.Copyshop.ScreenPresenter.Views
     /// </summary>
     public partial class CopyShopView : MetroWindow
     {
+        private static CopyShopView _copyShopView;
+
         public CopyShopView()
         {
+            _copyShopView = this;
             this.InitializeComponent();
         }
+
+        internal static CopyShopView GetInstance()
+            => _copyShopView;
     }
 }
