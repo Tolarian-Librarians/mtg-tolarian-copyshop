@@ -42,7 +42,7 @@ namespace Tolarian.Copyshop.ScryfallDataAccess
         public SfPaginatedCardList GetCardsByQuery(string query)
         {
             ApiResponse<SfPaginatedCardList> response = _service.GetCardsBySearchQuery(query).Result;
-            
+
             switch (response.StatusCode)
             {
                 case HttpStatusCode.OK:

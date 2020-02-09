@@ -79,10 +79,14 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
 
         private void OnSearchTextChanged()
         {
-            this.SearchResults = new ObservableCollection<CardNameResponse>(this._controller.GetCardNamesAndIdsBySearchQuery(this.SearchText, 10));
+            this.SearchResults = new ObservableCollection<CardNameResponse>(this._controller.GetCardNamesAndIdsBySearchQuery(this.SearchText, 10, out string errMessage));
             if (this.SearchResults.Count > 0)
             {
                 this.SeachResultVisibility = Visibility.Visible;
+            }
+            else if (!string.IsNullOrEmpty(errMessage))
+            {
+                MessageBox.Show(errMessage, "Error");
             }
         }
 
@@ -94,7 +98,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             }
 
             this.SearchText = string.Empty;
-            this.Cards.Add(this._controller.GetCardById(this.SelectedSearchItem.Id));
+            this.Cards.Add(this._controller.GetCardById(this.SelectedSearchItem.Id, out string errMessage));
             this.SelectedSearchItem = null;
             this.SearchResults = new ObservableCollection<CardNameResponse>();
             this.SeachResultVisibility = Visibility.Hidden;
