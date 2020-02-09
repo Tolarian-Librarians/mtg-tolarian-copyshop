@@ -116,13 +116,14 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
 
         private void OnSelectedSearchItemChanged()
         {
-            if (this.SelectedSearchItem is null)
+            if (this.SelectedSearchItem is null)    
             {
                 return;
             }
 
             this.SearchText = string.Empty;
-            this.Cards.Add(this._controller.GetCardById(this.SelectedSearchItem.Id, out string errMessage));
+            var newCards = this._controller.GetCardById(this.SelectedSearchItem.Id, out string errMessage);
+            this.Cards = new ObservableCollection<FullCardResponse>(this.Cards.Concat(newCards));
             this.SelectedSearchItem = null;
             this.SearchResults = new ObservableCollection<CardNameResponse>();
             this.SeachResultVisibility = Visibility.Hidden;
