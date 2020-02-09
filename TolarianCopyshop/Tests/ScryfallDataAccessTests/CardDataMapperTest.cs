@@ -26,7 +26,7 @@ namespace Tests.ScryfallDataAccessTests
             //Arrange
 
             //Act
-            SfPaginatedCardList result = service.GetCardsBySearchQuery(expectedCardName).Result;
+            SfPaginatedCardList result = service.GetCardsBySearchQuery(expectedCardName).Result.Content;
 
             //Assert
             Assert.IsTrue(result.CardCount == 1);
@@ -42,7 +42,7 @@ namespace Tests.ScryfallDataAccessTests
             //Arrange
 
             //Act
-            SfPaginatedCardList result = service.GetCardsBySearchQueryUniqueArt(expectedCardName).Result;
+            SfPaginatedCardList result = service.GetCardsBySearchQueryUniqueArt(expectedCardName).Result.Content;
 
             //Assert
             Assert.IsTrue(result.CardCount == 4);
