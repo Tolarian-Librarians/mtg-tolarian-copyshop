@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
@@ -61,11 +62,28 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             set
             {
                 this.SetProperty(ref this._searchText, value);
-
-                // Run async to not lock the UI
-                Task.Run(() => this.OnSearchTextChanged());
+                OnSearchTextChangedAsync();
             }
         }
+
+        private async void OnSearchTextChangedAsync()
+        {
+            Console.WriteLine($"OnSearchTextChangedAsync: {this._searchText} at {DateTime.Now}");
+            // Run async to not lock the UI
+            if (task != null && this.task.Status != TaskStatus.RanToCompletion)
+            {
+                tokenSource.Cancel();
+                await this.task;
+            }
+            this.tokenSource = new CancellationTokenSource();
+            this.token = tokenSource.Token;
+            this.task = Task.Run(() => OnSearchTextChanged(), this.token);
+            await this.task;
+        }
+
+        Task task;
+        CancellationTokenSource tokenSource;
+        CancellationToken token;
 
         public CardNameResponse SelectedSearchItem
         {
@@ -79,7 +97,13 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
 
         private void OnSearchTextChanged()
         {
-            this.SearchResults = new ObservableCollection<CardNameResponse>(this._controller.GetCardNamesAndIdsBySearchQuery(this.SearchText, 10, out string errMessage));
+            var result = this._controller.GetCardNamesAndIdsBySearchQuery(this.SearchText, 10, out string errMessage);
+            if (this.token.IsCancellationRequested)
+            {
+                return;
+            }
+
+            this.SearchResults = new ObservableCollection<CardNameResponse>(result);
             if (this.SearchResults.Count > 0)
             {
                 this.SeachResultVisibility = Visibility.Visible;
