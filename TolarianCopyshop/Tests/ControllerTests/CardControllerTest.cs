@@ -58,7 +58,7 @@ namespace Tests.ControllerTests
                 Name = "Sol Ring",
                 Id = Guid.Empty,
                 ImageUris = new Dictionary<CardImageTypes, Uri> { { CardImageTypes.Png, new Uri("https://img.scryfall.com/cards/png/front/e/6/e672d408-997c-4a19-810a-3da8411eecf2.png?1568004958") }, { CardImageTypes.Small, new Uri("https://img.scryfall.com/cards/small/front/e/6/e672d408-997c-4a19-810a-3da8411eecf2.jpg?1568004958") } },
-                Legalities = new Dictionary<MtgPlayModes, string> { { MtgPlayModes.Commander, "legal"} },
+                Legalities = new Dictionary<MtgPlayModes, string> { { MtgPlayModes.Commander, "legal"}, { MtgPlayModes.Brawl, "legal" }, { MtgPlayModes.Duel, "legal" }, { MtgPlayModes.Future, "legal" }, { MtgPlayModes.Historic, "legal" }, { MtgPlayModes.Legacy, "legal" }, { MtgPlayModes.Modern, "legal" } },
                 Text = "Tap for 2 colorless."
             };
 
