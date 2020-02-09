@@ -20,5 +20,13 @@ namespace Tolarian.Copyshop.Business.Models
 
         [JsonProperty(PropertyName = "warnings")]
         public string[] Warnings { get; set; }
+
+        public static SfPaginatedCardList GetEmpty()
+        {
+            return new SfPaginatedCardList
+            {
+                Data = new SfCard[0]
+            };
+        }
     }
 }
