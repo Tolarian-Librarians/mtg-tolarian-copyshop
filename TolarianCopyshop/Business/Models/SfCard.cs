@@ -29,5 +29,10 @@ namespace Tolarian.Copyshop.Business.Models
         {
             return $"{Name}";
         }
+
+        public static SfCard GetEmpty()
+        {
+            return new SfCard { Id = Guid.Empty };
+        }
     }
 }
