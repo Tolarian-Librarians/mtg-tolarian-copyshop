@@ -62,7 +62,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             set
             {
                 this.SetProperty(ref this._searchText, value);
-                OnSearchTextChangedAsync();
+                this.OnSearchTextChangedAsync();
             }
         }
 
@@ -73,12 +73,12 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             if (task != null && this.task.Status != TaskStatus.RanToCompletion)
             {
                 tokenSource.Cancel();
-                await this.task;
+                await this.task.ConfigureAwait(false);
             }
             this.tokenSource = new CancellationTokenSource();
             this.token = tokenSource.Token;
             this.task = Task.Run(() => OnSearchTextChanged(), this.token);
-            await this.task;
+            await this.task.ConfigureAwait(false);
         }
 
         Task task;
@@ -110,7 +110,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             }
             else if (!string.IsNullOrEmpty(errMessage))
             {
-                MessageBox.Show(errMessage, "Error");
+                CopyShopViewModel.GetInstance().ShowMessage("Error", errMessage);
             }
         }
 

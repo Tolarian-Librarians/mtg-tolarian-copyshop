@@ -1,4 +1,5 @@
-﻿using Ninject.Modules;
+﻿using MahApps.Metro.Controls.Dialogs;
+using Ninject.Modules;
 using Tolarian.Copyshop.Business;
 using Tolarian.Copyshop.Controller;
 using Tolarian.Copyshop.ScryfallDataAccess;
@@ -11,6 +12,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.Ninject
         {
             this.Bind<ICardDataRequester>().To<CardInteractor>().InSingletonScope();
             this.Bind<ICardDataGateway>().To<CardDataMapper>().InSingletonScope();
+            this.Bind<IDialogCoordinator>().To<DialogCoordinator>().InSingletonScope();
         }
     }
 }
