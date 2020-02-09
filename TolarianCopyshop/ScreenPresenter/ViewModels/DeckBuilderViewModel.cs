@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Threading;
 using Tolarian.Copyshop.Controller;
 using Tolarian.Copyshop.Controller.ResponseObjects;
 using Tolarian.Copyshop.ScreenPresenter.Base;
@@ -60,7 +61,9 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             set
             {
                 this.SetProperty(ref this._searchText, value);
-                this.OnSearchTextChanged();
+
+                // Run async to not lock the UI
+                Task.Run(() => this.OnSearchTextChanged());
             }
         }
 

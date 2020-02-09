@@ -15,10 +15,10 @@
                       mc:Ignorable="d">
     <Grid>
         <TabControl>
-            <TabItem Header="Build Deck" ToolTip="Build your Deck here!">
+            <TabItem Header="Build Deck">
                 <local:DeckBuilderView />
             </TabItem>
-            <TabItem Header="View Deck" IsEnabled="False" ToolTip="Coming Soon" />
+            <TabItem Header="View Deck" IsEnabled="False" />
         </TabControl>
     </Grid>
 </Controls:MetroWindow>
