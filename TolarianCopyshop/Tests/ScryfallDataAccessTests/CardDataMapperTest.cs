@@ -31,23 +31,38 @@ namespace Tests.ScryfallDataAccessTests
             //Assert
             Assert.IsTrue(result.CardCount == 1);
             Assert.AreEqual(expectedCardName, result.Data[0].Name);
-
         }
-
+        
         [TestMethod]
-        public void GetCardsBySearchQueryUniqueArt_Test()
+        public void GetCardById_DoubleFaced_Test()
         {
-            string expectedCardName = "Sol Ring";
-
             //Arrange
+            Guid id = new Guid("b3b87bfc-f97f-4734-94f6-e3e2f335fc4d");
+
 
             //Act
-            SfPaginatedCardList result = service.GetCardsBySearchQueryUniqueArt(expectedCardName).Result.Content;
+            SfCard result = service.GetCardById(id).Result.Content;
 
             //Assert
-            Assert.IsTrue(result.CardCount == 4);
-            Assert.IsTrue(result.Data.All(c => c.Name.Equals(expectedCardName)));
+            Assert.IsTrue(result != null);
+            Assert.AreEqual("Growing Rites of Itlimoc // Itlimoc, Cradle of the Sun", result.Name);
+            Assert.AreEqual(2, result.CardFaces.Count);
+        }
+        
+        [TestMethod]
+        public void GetCardById_DualCard_Test()
+        {
+            //Arrange
+            Guid id = new Guid("e9d5aee0-5963-41db-a22b-cfea40a967a3");
 
+
+            //Act
+            SfCard result = service.GetCardById(id).Result.Content;
+
+            //Assert
+            Assert.IsTrue(result != null);
+            Assert.AreEqual("Dusk // Dawn", result.Name);
+            Assert.IsTrue(result.CardFaces.All(c => c.ImageUris == null));
         }
     }
 }

@@ -39,10 +39,10 @@ namespace Tolarian.Copyshop.Business
 
         private List<SfCard> TruncateListToMaxSize(int maxCountOfItems, List<SfCard> targetList)
         {
-            int lastIndex = maxCountOfItems - 1;
+            int firstInvalidIndex = maxCountOfItems;
 
             if (targetList.Count > maxCountOfItems)
-                targetList.RemoveRange(lastIndex, targetList.Count - lastIndex);
+                targetList.RemoveRange(firstInvalidIndex, targetList.Count - firstInvalidIndex);
 
             return targetList;
         }

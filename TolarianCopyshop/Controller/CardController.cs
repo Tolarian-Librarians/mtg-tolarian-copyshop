@@ -22,14 +22,21 @@ namespace Tolarian.Copyshop.Controller
             _mapper = mapper;
         }
 
-        public FullCardResponse GetCardById(Guid id, out string message)
+        /// <summary>
+        /// Gets the information for one Card by ID. This returns a List because the target card may be multifaced.
+        /// </summary>
+        public List<FullCardResponse> GetCardById(Guid id, out string message)
         {
             message = string.Empty;
-            FullCardResponse response = null;
+            List<FullCardResponse> response = null;
             try
             {
                 SfCard card = _requester.GetCardById(id);
-                response = _mapper.Map<FullCardResponse>(card);
+
+                if (IsDoubleFacedCard(card))
+                    response = _mapper.Map<List<FullCardResponse>>(card);
+                else
+                    response = new List<FullCardResponse> { _mapper.Map<FullCardResponse>(card) };
             }
             catch (HttpException ex)
             {
@@ -43,6 +50,11 @@ namespace Tolarian.Copyshop.Controller
             return response;
         }
 
+        private bool IsDoubleFacedCard(SfCard card)
+        {
+            return card.CardFaces != null && card.ImageUris == null;
+        }
+
         public List<CardNameResponse> GetCardNamesAndIdsBySearchQuery(string query, int maxCountOfItems, out string message)
         {
             message = string.Empty;
@@ -50,7 +62,7 @@ namespace Tolarian.Copyshop.Controller
 
             try
             {
-                result = _requester.GetCardsBySearchQuery(query, maxCountOfItems).Select(c => new CardNameResponse { Name = c.Name, Id = c.Id }).ToList();
+                result = _mapper.Map<List<CardNameResponse>>(_requester.GetCardsBySearchQuery(query, maxCountOfItems));
             }
             catch (HttpException ex)
             {

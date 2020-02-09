@@ -13,10 +13,48 @@ namespace Tolarian.Copyshop.ScreenPresenter.AutoMapper
     {
         public AutoMapperProfile()
         {
-            CreateMap<SfCard, FullCardResponse>().ForMember(dest => dest.PngImage, opt => opt.MapFrom(s => s.ImageUris.ContainsKey(CardImageTypes.Png) ? s.ImageUris[Business.Models.Enums.CardImageTypes.Png] : null))
+            CreateMap<SfCard, CardNameResponse>();
+
+            CreateMap<SfCard, FullCardResponse>()
+                .ForMember(dest => dest.PngImage, opt => opt.MapFrom(s => s.ImageUris.ContainsKey(CardImageTypes.Png) ? s.ImageUris[CardImageTypes.Png] : null))
                 .ForMember(dest => dest.SmallImage, opt => opt.MapFrom(s => s.ImageUris.ContainsKey(CardImageTypes.Small) ? s.ImageUris[CardImageTypes.Small] : null))
-                .ForMember(dest => dest.Legalities1, opt => opt.MapFrom(s => s.Legalities.Take(GetHalfIndexOfDictionary(s.Legalities)).ToDictionary(k => k.Key, e => e.Value)))
-                .ForMember(dest => dest.Legalities2, opt => opt.MapFrom(s => s.Legalities.Skip(GetHalfIndexOfDictionary(s.Legalities)).Take(s.Legalities.Count - GetHalfIndexOfDictionary(s.Legalities)).ToDictionary(k => k.Key, e => e.Value)));//.Take(s.Legalities.Count - GetHalfIndexOfDictionary(s.Legalities)).ToDictionary(k => k.Key)));
+                .ForMember(dest => dest.Legalities1, opt => opt.MapFrom(s => GetFirstHalfOfLegalities(s)))
+                .ForMember(dest => dest.Legalities2, opt => opt.MapFrom(s => GetSecondHalfOfLegalities(s)))
+                .ForMember(dest => dest.Text, opt => opt.MapFrom(s => GetTextOfCard(s)));
+
+            CreateMap<SfCard, List<FullCardResponse>>().ConvertUsing(source => source.CardFaces.Select(c => new FullCardResponse
+                { 
+                    Id =  source.Id,
+                    Text = c.Text,
+                    Name = c.Name,
+                    PngImage = c.ImageUris.ContainsKey(CardImageTypes.Png) ? c.ImageUris[CardImageTypes.Png] : null,
+                    SmallImage = c.ImageUris.ContainsKey(CardImageTypes.Small) ? c.ImageUris[CardImageTypes.Small] : null,
+                    Legalities1 = GetFirstHalfOfLegalities(source),
+                    Legalities2 = GetSecondHalfOfLegalities(source)
+                }
+            ).ToList());
+        }
+
+        private Dictionary<string, string> GetFirstHalfOfLegalities(SfCard source)
+        {
+            return source.Legalities.Take(GetHalfIndexOfDictionary(source.Legalities)).ToDictionary(k => k.Key.ToString(), e => e.Value.Replace('_', ' '));
+        }
+        
+        private Dictionary<string, string> GetSecondHalfOfLegalities(SfCard source)
+        {
+            return source.Legalities.Skip(GetHalfIndexOfDictionary(source.Legalities)).Take(source.Legalities.Count - GetHalfIndexOfDictionary(source.Legalities)).ToDictionary(k => k.Key.ToString(), e => e.Value.Replace('_', ' '));
+        }
+
+        private string GetTextOfCard(SfCard source)
+        {
+            if(string.IsNullOrEmpty(source.Text) && source.CardFaces != null)
+            {
+                return string.Join(" // ", source.CardFaces.Select(c => c.Text).ToArray());
+            }
+            else
+            {
+                return source.Text ?? "";
+            }
         }
 
         private int GetHalfIndexOfDictionary(ICollection collection)
