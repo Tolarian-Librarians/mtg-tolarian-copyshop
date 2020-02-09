@@ -68,14 +68,17 @@ namespace Tolarian.Copyshop.Controller
             return response;
         }
 
-        public List<FullCardResponse> GetCardsByNameList(List<string> cardNames, out string message)
+        public List<FullCardResponse> GetCardsByNameList(string importString, out string message)
         {
             message = string.Empty;
             List<FullCardResponse> response = null;
 
             try
             {
-                return _requester.GetCardsByNameList(cardNames).SelectMany(c => MapCardToFullCardResponse(c)).ToList();
+                List<string> lines = importString.Split(
+                                new[] { "\r\n", "\r", "\n" },
+                                StringSplitOptions.None).ToList();
+                return _requester.GetCardsByNameList(lines).SelectMany(c => MapCardToFullCardResponse(c)).ToList();
             }
             catch (HttpException ex)
             {

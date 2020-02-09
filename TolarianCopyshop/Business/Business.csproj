@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CardInteractor.cs" />
+    <Compile Include="DeckImportHelper.cs" />
     <Compile Include="ICardDataGateway.cs" />
     <Compile Include="ICardDataRequester.cs" />
     <Compile Include="Models\Enums\CardImageTypes.cs" />
