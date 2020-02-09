@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Threading;
 using Tolarian.Copyshop.Controller;
 using Tolarian.Copyshop.Controller.ResponseObjects;
 using Tolarian.Copyshop.ScreenPresenter.Base;
@@ -60,7 +61,9 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             set
             {
                 this.SetProperty(ref this._searchText, value);
-                this.OnSearchTextChanged();
+
+                // Run async to not lock the UI
+                Task.Run(() => this.OnSearchTextChanged());
             }
         }
 
@@ -76,10 +79,14 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
 
         private void OnSearchTextChanged()
         {
-            this.SearchResults = new ObservableCollection<CardNameResponse>(this._controller.GetCardNamesAndIdsBySearchQuery(this.SearchText, 10));
+            this.SearchResults = new ObservableCollection<CardNameResponse>(this._controller.GetCardNamesAndIdsBySearchQuery(this.SearchText, 10, out string errMessage));
             if (this.SearchResults.Count > 0)
             {
                 this.SeachResultVisibility = Visibility.Visible;
+            }
+            else if (!string.IsNullOrEmpty(errMessage))
+            {
+                MessageBox.Show(errMessage, "Error");
             }
         }
 
@@ -91,7 +98,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             }
 
             this.SearchText = string.Empty;
-            this.Cards.Add(this._controller.GetCardById(this.SelectedSearchItem.Id));
+            this.Cards.Add(this._controller.GetCardById(this.SelectedSearchItem.Id, out string errMessage));
             this.SelectedSearchItem = null;
             this.SearchResults = new ObservableCollection<CardNameResponse>();
             this.SeachResultVisibility = Visibility.Hidden;
