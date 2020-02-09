@@ -34,20 +34,27 @@
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\WindowsBase.4.6.1055.0\lib\WindowsBase.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CardInteractor.cs" />
     <Compile Include="DeckImportHelper.cs" />
     <Compile Include="ICardDataGateway.cs" />
     <Compile Include="ICardDataRequester.cs" />
+    <Compile Include="IPrintRequester.cs" />
     <Compile Include="Models\Enums\CardImageTypes.cs" />
     <Compile Include="Models\Enums\MtgPlayModes.cs" />
     <Compile Include="Models\SfIdentifier.cs" />
@@ -55,6 +62,7 @@
     <Compile Include="Models\SfCardFace.cs" />
     <Compile Include="Models\SfIdentifierContainer.cs" />
     <Compile Include="Models\SfPaginatedCardList.cs" />
+    <Compile Include="PrintInteractor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
