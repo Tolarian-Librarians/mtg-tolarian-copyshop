@@ -37,12 +37,12 @@ namespace Tolarian.Copyshop.ScreenPresenter.AutoMapper
 
         private Dictionary<string, string> GetFirstHalfOfLegalities(SfCard source)
         {
-            return source.Legalities.Take(GetHalfIndexOfDictionary(source.Legalities)).ToDictionary(k => k.Key.ToString(), e => e.Value);
+            return source.Legalities.Take(GetHalfIndexOfDictionary(source.Legalities)).ToDictionary(k => k.Key.ToString(), e => e.Value.Replace('_', ' '));
         }
         
         private Dictionary<string, string> GetSecondHalfOfLegalities(SfCard source)
         {
-            return source.Legalities.Skip(GetHalfIndexOfDictionary(source.Legalities)).Take(source.Legalities.Count - GetHalfIndexOfDictionary(source.Legalities)).ToDictionary(k => k.Key.ToString(), e => e.Value);
+            return source.Legalities.Skip(GetHalfIndexOfDictionary(source.Legalities)).Take(source.Legalities.Count - GetHalfIndexOfDictionary(source.Legalities)).ToDictionary(k => k.Key.ToString(), e => e.Value.Replace('_', ' '));
         }
 
         private string GetTextOfCard(SfCard source)
@@ -56,27 +56,6 @@ namespace Tolarian.Copyshop.ScreenPresenter.AutoMapper
                 return source.Text ?? "";
             }
         }
-
-        //private List<FullCardResponse> MapSfCardToListResponse(SfCard source)
-        //{
-        //    if (source.CardFaces == null)
-        //    {
-        //        response = new List<FullCardResponse> { MapSfCardToSingleResponse(source) };
-        //    }
-        //    else if (source.CardFaces.All(c => c.ImageUris != null))
-        //    {
-        //        response = new List<FullCardResponse> { _mapper.Map<FullCardResponse>(card) };
-        //    }
-        //    else
-        //    {
-
-        //    }
-        //}
-
-        //private FullCardResponse MapSfCardToSingleResponse(SfCard source)
-        //{
-
-        //}
 
         private int GetHalfIndexOfDictionary(ICollection collection)
         {
