@@ -49,8 +49,10 @@
     <Compile Include="ICardDataRequester.cs" />
     <Compile Include="Models\Enums\CardImageTypes.cs" />
     <Compile Include="Models\Enums\MtgPlayModes.cs" />
+    <Compile Include="Models\SfIdentifier.cs" />
     <Compile Include="Models\SfCard.cs" />
     <Compile Include="Models\SfCardFace.cs" />
+    <Compile Include="Models\SfIdentifierContainer.cs" />
     <Compile Include="Models\SfPaginatedCardList.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

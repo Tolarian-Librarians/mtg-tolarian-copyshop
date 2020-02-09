@@ -11,5 +11,6 @@ namespace Tolarian.Copyshop.Business
     {
         SfPaginatedCardList GetCardsByQuery(string query);
         SfCard GetCardById(Guid id);
+        SfPaginatedCardList GetCardsByNameList(List<string> cardNames);
     }
 }

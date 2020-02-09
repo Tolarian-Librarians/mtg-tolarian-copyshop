@@ -33,10 +33,7 @@ namespace Tolarian.Copyshop.Controller
             {
                 SfCard card = _requester.GetCardById(id);
 
-                if (IsDoubleFacedCard(card))
-                    response = _mapper.Map<List<FullCardResponse>>(card);
-                else
-                    response = new List<FullCardResponse> { _mapper.Map<FullCardResponse>(card) };
+                response = MapCardToFullCardResponse(card);
             }
             catch (HttpException ex)
             {
@@ -50,19 +47,14 @@ namespace Tolarian.Copyshop.Controller
             return response;
         }
 
-        private bool IsDoubleFacedCard(SfCard card)
-        {
-            return card.CardFaces != null && card.ImageUris == null;
-        }
-
         public List<CardNameResponse> GetCardNamesAndIdsBySearchQuery(string query, int maxCountOfItems, out string message)
         {
             message = string.Empty;
-            var result = new List<CardNameResponse>();
+            var response = new List<CardNameResponse>();
 
             try
             {
-                result = _mapper.Map<List<CardNameResponse>>(_requester.GetCardsBySearchQuery(query, maxCountOfItems));
+                response = _mapper.Map<List<CardNameResponse>>(_requester.GetCardsBySearchQuery(query, maxCountOfItems));
             }
             catch (HttpException ex)
             {
@@ -73,7 +65,43 @@ namespace Tolarian.Copyshop.Controller
                 message = ex.Message + Environment.NewLine + ex.InnerException != null ? ex.InnerException.Message : "";
             }
 
-            return result;
+            return response;
+        }
+
+        public List<FullCardResponse> GetCardsByNameList(List<string> cardNames, out string message)
+        {
+            message = string.Empty;
+            List<FullCardResponse> response = null;
+
+            try
+            {
+                return _requester.GetCardsByNameList(cardNames).SelectMany(c => MapCardToFullCardResponse(c)).ToList();
+            }
+            catch (HttpException ex)
+            {
+                message = ex.Message + Environment.NewLine + ex.InnerException != null ? ex.InnerException.Message : "";
+            }
+            catch (AggregateException ex)
+            {
+                message = ex.Message + Environment.NewLine + ex.InnerException != null ? ex.InnerException.Message : "";
+            }
+
+            return response;
+        }
+
+        private List<FullCardResponse> MapCardToFullCardResponse(SfCard card)
+        {
+            List<FullCardResponse> response;
+            if (IsDoubleFacedCard(card))
+                response = _mapper.Map<List<FullCardResponse>>(card);
+            else
+                response = new List<FullCardResponse> { _mapper.Map<FullCardResponse>(card) };
+            return response;
+        }
+
+        private bool IsDoubleFacedCard(SfCard card)
+        {
+            return card.CardFaces != null && card.ImageUris == null;
         }
     }
 }
