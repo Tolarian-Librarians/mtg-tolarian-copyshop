@@ -44,9 +44,9 @@ namespace Tests.ControllerTests
 
             //Act
             _requesterMock.Setup(m => m.GetCardById(It.IsAny<Guid>())).Returns(expected);
-            CardController unitUnterTest = new CardController(Mock.Of<ICardDataPresenter>(), _requesterMock.Object, GetMapper());
+            CardController unitUnterTest = new CardController(_requesterMock.Object, GetMapper());
 
-            GetCardByIdResponse response = unitUnterTest.GetCardById(Guid.Empty);
+            FullCardResponse response = unitUnterTest.GetCardById(Guid.Empty);
         }
 
         [TestMethod]
@@ -64,9 +64,9 @@ namespace Tests.ControllerTests
 
             //Act
             _requesterMock.Setup(m => m.GetCardById(It.IsAny<Guid>())).Returns(expected);
-            CardController unitUnterTest = new CardController(Mock.Of<ICardDataPresenter>(), _requesterMock.Object, GetMapper());
+            CardController unitUnterTest = new CardController(_requesterMock.Object, GetMapper());
 
-            GetCardByIdResponse response = unitUnterTest.GetCardById(Guid.Empty);
+            FullCardResponse response = unitUnterTest.GetCardById(Guid.Empty);
         }
 
         private IMapper GetMapper()

@@ -11,13 +11,13 @@ namespace Tolarian.Copyshop.ScryfallDataAccess
     public interface IScryfallApi
     {
         [Get("/cards/{id}")]
-        Task<SfCard> GetCardById(Guid id);
+        Task<ApiResponse<SfCard>> GetCardById(Guid id);
 
         [Get("/cards/search?q=\"{searchQuery}\"")]
-        Task<SfPaginatedCardList> GetCardsBySearchQuery(string searchQuery);
+        Task<ApiResponse<SfPaginatedCardList>> GetCardsBySearchQuery(string searchQuery);
         
         [Get("/cards/search?q=!\"{searchQuery}\"&unique=art")]
-        Task<SfPaginatedCardList> GetCardsBySearchQueryUniqueArt(string searchQuery);
+        Task<ApiResponse<SfPaginatedCardList>> GetCardsBySearchQueryUniqueArt(string searchQuery);
 
     }
 }

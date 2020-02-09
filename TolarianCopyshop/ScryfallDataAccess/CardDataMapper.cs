@@ -3,8 +3,10 @@ using Refit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 using Tolarian.Copyshop.Business;
 using Tolarian.Copyshop.Business.Models;
 
@@ -21,12 +23,43 @@ namespace Tolarian.Copyshop.ScryfallDataAccess
 
         public SfCard GetCardById(Guid id)
         {
-            return _service.GetCardById(id).Result;
+            ApiResponse<SfCard> response = _service.GetCardById(id).Result;
+
+            switch (response.StatusCode)
+            {
+                case HttpStatusCode.OK:
+                    return response.Content;
+                case HttpStatusCode.NotFound:
+                    return SfCard.GetEmpty();
+                default:
+                    HandleUnexpectedStatusCodeForResponse(response);
+                    break;
+            }
+
+            return null;
         }
 
         public SfPaginatedCardList GetCardsByQuery(string query)
         {
-            return _service.GetCardsBySearchQuery(query).Result;
+            ApiResponse<SfPaginatedCardList> response = _service.GetCardsBySearchQuery(query).Result;
+            
+            switch (response.StatusCode)
+            {
+                case HttpStatusCode.OK:
+                    return response.Content;
+                case HttpStatusCode.NotFound:
+                    return SfPaginatedCardList.GetEmpty();
+                default:
+                    HandleUnexpectedStatusCodeForResponse(response);
+                    break;
+            }
+
+            return null;
+        }
+
+        public void HandleUnexpectedStatusCodeForResponse<T>(ApiResponse<T> response)
+        {
+            throw new HttpException($"Unexpected Status Code of Http Request. Status {response.StatusCode}, Error: {response.Error}");
         }
     }
 }
