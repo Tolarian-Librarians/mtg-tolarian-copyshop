@@ -11,36 +11,54 @@ using System.Windows.Threading;
 using Tolarian.Copyshop.Controller;
 using Tolarian.Copyshop.Controller.ResponseObjects;
 using Tolarian.Copyshop.ScreenPresenter.Base;
+using Tolarian.Copyshop.ScreenPresenter.Model;
 
 namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
 {
     public class DeckBuilderViewModel : BindableBase
     {
+        private static DeckBuilderViewModel _deckBuilder;
+        private readonly CardController _controller;
+        private readonly DeckCardModel _deckCardModel;
+
         private FullCardResponse _selectedCard;
-        private ObservableCollection<FullCardResponse> _cards;
         private Visibility _seachResultVisibility = Visibility.Hidden;
         private string _searchText;
         private ObservableCollection<CardNameResponse> _searchResults;
         private CardNameResponse _selectedSearchItem;
-        private readonly CardController _controller;
 
-        public DeckBuilderViewModel(CardController controller)
+        public DeckBuilderViewModel(CardController controller, DeckCardModel deckCardModel)
         {
-            this._cards = new ObservableCollection<FullCardResponse>();
+            _deckBuilder = this;
             this._controller = controller;
+            this._deckCardModel = deckCardModel;
         }
 
-        public ObservableCollection<FullCardResponse> Cards
+        public ObservableCollection<FullCardResponse> DeckCards
         {
-            get => this._cards;
-            set => this.SetProperty(ref this._cards, value);
+            get => this._deckCardModel.DeckCards;
+            set
+            {
+                if (!Equals(this._deckCardModel.DeckCards, value))
+                {
+                    this._deckCardModel.DeckCards = value;
+                    this.OnPropertyChanged(nameof(this.DeckCards));
+                    DeckViewerViewModel.GetInstance().InvokeDeckCards();
+                }
+            }
         }
+
+        public void InvokeDeckCards()
+            => this.OnPropertyChanged(nameof(this.DeckCards));
 
         public FullCardResponse SelectedCard
         {
             get => this._selectedCard;
             set => this.SetProperty(ref this._selectedCard, value);
         }
+
+        public static DeckBuilderViewModel GetInstance()
+            => _deckBuilder;
 
         #region SearchTextBox
 
@@ -85,6 +103,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
         CancellationTokenSource tokenSource;
         CancellationToken token;
 
+
         public CardNameResponse SelectedSearchItem
         {
             get => this._selectedSearchItem;
@@ -116,14 +135,14 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
 
         private void OnSelectedSearchItemChanged()
         {
-            if (this.SelectedSearchItem is null)    
+            if (this.SelectedSearchItem is null)
             {
                 return;
             }
 
             this.SearchText = string.Empty;
             var newCards = this._controller.GetCardById(this.SelectedSearchItem.Id, out string errMessage);
-            this.Cards = new ObservableCollection<FullCardResponse>(this.Cards.Concat(newCards));
+            this.DeckCards = new ObservableCollection<FullCardResponse>(this.DeckCards.Concat(newCards));
             this.SelectedSearchItem = null;
             this.SearchResults = new ObservableCollection<CardNameResponse>();
             this.SeachResultVisibility = Visibility.Hidden;

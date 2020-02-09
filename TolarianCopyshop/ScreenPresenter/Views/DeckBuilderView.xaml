@@ -45,7 +45,7 @@
                 </ListView.ItemTemplate>
             </ListView>
 
-            <ListView Grid.Row="1" ItemsSource="{Binding Cards}" SelectedItem="{Binding SelectedCard}">
+            <ListView Grid.Row="1" ItemsSource="{Binding DeckCards}" SelectedItem="{Binding SelectedCard}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <Grid>
@@ -111,7 +111,7 @@
                                         <Trigger Property="Text" Value="legal">
                                             <Setter Property="Background" Value="LightGreen" />
                                         </Trigger>
-                                        <Trigger Property="Text" Value="not_legal">
+                                        <Trigger Property="Text" Value="not legal">
                                             <Setter Property="Background" Value="LightGray" />
                                         </Trigger>
                                         <Trigger Property="Text" Value="banned">
@@ -148,7 +148,7 @@
                                         <Trigger Property="Text" Value="legal">
                                             <Setter Property="Background" Value="LightGreen" />
                                         </Trigger>
-                                        <Trigger Property="Text" Value="not_legal">
+                                        <Trigger Property="Text" Value="not legal">
                                             <Setter Property="Background" Value="LightGray" />
                                         </Trigger>
                                         <Trigger Property="Text" Value="banned">

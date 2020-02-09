@@ -17,5 +17,8 @@ namespace Tolarian.Copyshop.ScreenPresenter.Ninject
 
         public DeckBuilderViewModel DeckBuilderViewModel
             => this.kernel.Get<DeckBuilderViewModel>();
+
+        public DeckViewerViewModel DeckViewerViewModel
+            => this.kernel.Get<DeckViewerViewModel>();
     }
 }

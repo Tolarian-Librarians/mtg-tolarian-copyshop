@@ -8,5 +8,6 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
 {
     public class CopyShopDesignViewModel
     {
+
     }
 }
