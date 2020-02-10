@@ -17,22 +17,36 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
 {
     public class DeckBuilderViewModel : BindableBase
     {
+        #region Fields
+
         private static DeckBuilderViewModel _deckBuilder;
         private readonly CardController _controller;
         private readonly DeckCardModel _deckCardModel;
 
         private FullCardResponse _selectedCard;
-        private Visibility _seachResultVisibility = Visibility.Hidden;
+        private Visibility _searchResultVisibility = Visibility.Hidden;
         private string _searchText;
         private ObservableCollection<CardNameResponse> _searchResults;
         private CardNameResponse _selectedSearchItem;
+        private Task task;
+        private CancellationTokenSource tokenSource;
+        private CancellationToken token;
+
+        #endregion
+
+        #region Constructor
 
         public DeckBuilderViewModel(CardController controller, DeckCardModel deckCardModel)
         {
             _deckBuilder = this;
             this._controller = controller;
             this._deckCardModel = deckCardModel;
+            this.DeleteCommand = new Command(DeleteSelectedCard);
         }
+
+        #endregion
+
+        #region Properties
 
         public ObservableCollection<FullCardResponse> DeckCards
         {
@@ -48,19 +62,11 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             }
         }
 
-        public void InvokeDeckCards()
-            => this.OnPropertyChanged(nameof(this.DeckCards));
-
         public FullCardResponse SelectedCard
         {
             get => this._selectedCard;
             set => this.SetProperty(ref this._selectedCard, value);
         }
-
-        public static DeckBuilderViewModel GetInstance()
-            => _deckBuilder;
-
-        #region SearchTextBox
 
         public ObservableCollection<CardNameResponse> SearchResults
         {
@@ -68,10 +74,10 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             set => this.SetProperty(ref this._searchResults, value);
         }
 
-        public Visibility SeachResultVisibility
+        public Visibility SearchResultVisibility
         {
-            get => this._seachResultVisibility;
-            set => this.SetProperty(ref this._seachResultVisibility, value);
+            get => this._searchResultVisibility;
+            set => this.SetProperty(ref this._searchResultVisibility, value);
         }
 
         public string SearchText
@@ -81,6 +87,48 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             {
                 this.SetProperty(ref this._searchText, value);
                 this.OnSearchTextChangedAsync();
+            }
+        }
+
+        public CardNameResponse SelectedSearchItem
+        {
+            get => this._selectedSearchItem;
+            set
+            {
+                this.SetProperty(ref this._selectedSearchItem, value);
+                this.OnSelectedSearchItemChanged();
+            }
+        }
+
+        public Command DeleteCommand { get; set; }
+
+        #endregion
+
+        #region Static Methods
+
+        public static DeckBuilderViewModel GetInstance()
+            => _deckBuilder;
+
+        #endregion
+
+        #region Methods
+
+        public void InvokeDeckCards()
+            => this.OnPropertyChanged(nameof(this.DeckCards));
+
+        private void SendErrorMessage(string errorMessage)
+        {
+            if (!string.IsNullOrEmpty(errorMessage))
+            {
+                CopyShopViewModel.GetInstance().ShowMessage("Error", errorMessage);
+            }
+        }
+
+        private void DeleteSelectedCard(object clickedCard)
+        {
+            if (clickedCard is FullCardResponse card)
+            {
+                this.DeckCards.Remove(card);
             }
         }
 
@@ -99,21 +147,6 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             await this.task.ConfigureAwait(false);
         }
 
-        Task task;
-        CancellationTokenSource tokenSource;
-        CancellationToken token;
-
-
-        public CardNameResponse SelectedSearchItem
-        {
-            get => this._selectedSearchItem;
-            set
-            {
-                this.SetProperty(ref this._selectedSearchItem, value);
-                this.OnSelectedSearchItemChanged();
-            }
-        }
-
         private void OnSearchTextChanged()
         {
             var result = this._controller.GetCardNamesAndIdsBySearchQuery(this.SearchText, 10, out string errMessage);
@@ -122,14 +155,11 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
                 return;
             }
 
+            this.SendErrorMessage(errMessage);
             this.SearchResults = new ObservableCollection<CardNameResponse>(result);
             if (this.SearchResults.Count > 0)
             {
-                this.SeachResultVisibility = Visibility.Visible;
-            }
-            else if (!string.IsNullOrEmpty(errMessage))
-            {
-                CopyShopViewModel.GetInstance().ShowMessage("Error", errMessage);
+                this.SearchResultVisibility = Visibility.Visible;
             }
         }
 
@@ -141,13 +171,15 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             }
 
             this.SearchText = string.Empty;
-            var newCards = this._controller.GetCardById(this.SelectedSearchItem.Id, out string errMessage);
+            List<FullCardResponse> newCards = this._controller.GetCardById(this.SelectedSearchItem.Id, out string errMessage);
+            this.SendErrorMessage(errMessage);
             this.DeckCards = new ObservableCollection<FullCardResponse>(this.DeckCards.Concat(newCards));
             this.SelectedSearchItem = null;
             this.SearchResults = new ObservableCollection<CardNameResponse>();
-            this.SeachResultVisibility = Visibility.Hidden;
+            this.SearchResultVisibility = Visibility.Hidden;
         }
 
-        #endregion SearchTextBox
+        #endregion
+
     }
 }

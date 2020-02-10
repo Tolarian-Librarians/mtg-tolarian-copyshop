@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Media.Imaging;
 using Tolarian.Copyshop.Controller.ResponseObjects;
 
@@ -14,6 +15,8 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
         public ObservableCollection<FullCardResponse> DeckCards { get; set; }
 
         public FullCardResponse SelectedCard { get; set; }
+
+        public Visibility SearchResultVisibility { get; set; } = Visibility.Hidden;
 
         public DeckBuilderDesignViewModel()
         {
