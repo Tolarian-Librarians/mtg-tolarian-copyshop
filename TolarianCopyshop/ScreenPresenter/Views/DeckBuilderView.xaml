@@ -6,7 +6,6 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="clr-namespace:Tolarian.Copyshop.ScreenPresenter.ViewModels"
              xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
-             xmlns:converters="clr-namespace:Tolarian.Copyshop.ScreenPresenter.Converters"
              d:DataContext="{d:DesignInstance Type=vm:DeckBuilderDesignViewModel,
                                               IsDesignTimeCreatable=True}"
              d:DesignHeight="600"
@@ -14,10 +13,6 @@
              Background="{DynamicResource MahApps.Brushes.White}"
              DataContext="{Binding Path=DeckBuilderViewModel, Source={StaticResource ServiceLocator}}"
              mc:Ignorable="d">
-    <UserControl.Resources>
-        <converters:StarWidthConverter x:Key="starWidthConverter"></converters:StarWidthConverter>
-    </UserControl.Resources>
-    
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
