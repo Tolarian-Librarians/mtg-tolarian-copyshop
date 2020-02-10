@@ -20,6 +20,7 @@ namespace Tolarian.Copyshop.Controller.ResponseObjects
         public Uri PngImage { get; set; }
 
         public Dictionary<string, string> Legalities1 { get; set; }
+
         public Dictionary<string, string> Legalities2 { get; set; }
     }
 }
