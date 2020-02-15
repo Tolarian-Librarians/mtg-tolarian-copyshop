@@ -40,7 +40,7 @@ namespace Tests.ControllerTests
             CardController unitUnterTest = new CardController(_requesterMock.Object, GetMapper());
 
             //Act
-            List<FullCardResponse> response = unitUnterTest.GetCardById(Guid.Empty, out string err);
+            List<FullCardResponse> response = unitUnterTest.GetCardById(Guid.Empty);
 
             //Assert
             Assert.IsNotNull(response);
@@ -57,7 +57,7 @@ namespace Tests.ControllerTests
             CardController unitUnterTest = new CardController(_requesterMock.Object, GetMapper());
 
             //Act
-            List<FullCardResponse> response = unitUnterTest.GetCardById(Guid.Empty, out string err);
+            List<FullCardResponse> response = unitUnterTest.GetCardById(Guid.Empty);
 
             //Assert
             Assert.IsNotNull(response);
@@ -82,7 +82,7 @@ namespace Tests.ControllerTests
             CardController unitUnterTest = new CardController(_requesterMock.Object, GetMapper());
 
             //Act
-            List<FullCardResponse> response = unitUnterTest.GetCardById(Guid.Empty, out string err);
+            List<FullCardResponse> response = unitUnterTest.GetCardById(Guid.Empty);
 
             //Assert
             Assert.IsNotNull(response);
@@ -102,7 +102,7 @@ namespace Tests.ControllerTests
             CardController unitUnterTest = new CardController(_requesterMock.Object, GetMapper());
 
             //Act
-            List<FullCardResponse> response = unitUnterTest.GetCardById(Guid.Empty, out string err);
+            List<FullCardResponse> response = unitUnterTest.GetCardById(Guid.Empty);
 
             //Assert
             Assert.IsNotNull(response);

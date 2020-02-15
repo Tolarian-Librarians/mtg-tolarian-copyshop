@@ -27,14 +27,72 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="20" />
         </Grid.RowDefinitions>
-        <ToolBar>
-            <Button Command="{Binding ImportCommand}">
-                <StackPanel Orientation="Horizontal">
-                    <iconPacks:PackIconFontAwesome Width="24" Height="24" Kind="FileImportSolid" />
-                    <TextBlock Margin="4,0,0,0" VerticalAlignment="Center" Text="Import" />
-                </StackPanel>
-            </Button>
-        </ToolBar>
+        <Menu>
+            <MenuItem Header="FILE">
+                <MenuItem Command="{Binding NewCommand}" Header="New">
+                    <MenuItem.Icon>
+                        <iconPacks:PackIconFontAwesome Height="16" Margin="4,0,0,0" Kind="FileAltSolid" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Command="{Binding OpenCommand}" Header="Open">
+                    <MenuItem.Icon>
+                        <iconPacks:PackIconFontAwesome Height="16" Margin="4,0,0,0" Kind="FolderOpenSolid" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Command="{Binding SaveCommand}" Header="Save">
+                    <MenuItem.Icon>
+                        <iconPacks:PackIconFontAwesome Height="16" Margin="4,0,0,0" Kind="SaveSolid" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Command="{Binding SaveToCommand}" Header="Save to">
+                    <MenuItem.Icon>
+                        <iconPacks:PackIconFontAwesome Height="16" Margin="4,0,0,0" Kind="HddSolid" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <Separator />
+                <MenuItem Header="Import from ...">
+                    <MenuItem.Icon>
+                        <iconPacks:PackIconFontAwesome Height="16" Margin="4,0,0,0" Kind="FileImportSolid" />
+                    </MenuItem.Icon>
+                    <MenuItem Command="{Binding ImportTextCommand}" Header="Import from Text">
+                        <MenuItem.Icon>
+                            <iconPacks:PackIconFontAwesome Height="16" Margin="4,0,0,0" Kind="EnvelopeOpenTextSolid" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                </MenuItem>
+                <MenuItem Header="Export to ..." IsEnabled="False">
+                    <MenuItem.Icon>
+                        <iconPacks:PackIconFontAwesome Height="16" Margin="4,0,0,0" Kind="ShareSquareSolid" />
+                    </MenuItem.Icon>
+                </MenuItem>
+            </MenuItem>
+            <MenuItem Header="EDIT">
+                <MenuItem Command="{Binding ClearCommand}" Header="Clear Decklist">
+                    <MenuItem.Icon>
+                        <iconPacks:PackIconFontAwesome Height="16" Margin="4,0,0,0" Kind="TrashAltSolid" />
+                    </MenuItem.Icon>
+                </MenuItem>
+            </MenuItem>
+            <MenuItem Header="ACTION">
+                <MenuItem Command="{Binding PrintCommand}" Header="Print Deck">
+                    <MenuItem.Icon>
+                        <iconPacks:PackIconFontAwesome Height="16" Margin="4,0,0,0" Kind="PrintSolid" />
+                    </MenuItem.Icon>
+                </MenuItem>
+            </MenuItem>
+            <MenuItem Header="HELP">
+                <MenuItem Header="About Tolarian Copyshop">
+                    <MenuItem.Icon>
+                        <iconPacks:PackIconFontAwesome Height="16" Margin="4,0,0,0" Kind="AddressCardSolid" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Tolarian Copyshop on GitHub">
+                    <MenuItem.Icon>
+                        <iconPacks:PackIconFontAwesome Height="16" Margin="4,0,0,0" Kind="GithubSquareBrands" />
+                    </MenuItem.Icon>
+                </MenuItem>
+            </MenuItem>
+        </Menu>
         <TabControl Grid.Row="1">
             <TabItem Header="Build Deck">
                 <local:DeckBuilderView x:Name="_DeckBuilderView" />

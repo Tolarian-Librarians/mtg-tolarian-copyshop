@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 
 namespace Tolarian.Copyshop.Business
 {
     public interface IPrintRequester
     {
-        void PrintDeck(List<Uri> deckCards);
+        void PrintDeck(PrintDialog printDlg, List<Uri> deckCards);
     }
 }

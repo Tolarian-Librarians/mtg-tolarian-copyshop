@@ -11,8 +11,12 @@ namespace Tolarian.Copyshop.ScreenPresenter.Ninject
     {
         public override void Load()
         {
+            // Business
             this.Bind<ICardDataRequester>().To<CardInteractor>().InSingletonScope();
+            this.Bind<IPrintRequester>().To<PrintInteractor>().InSingletonScope();
             this.Bind<ICardDataGateway>().To<CardDataMapper>().InSingletonScope();
+
+            // View
             this.Bind<IDialogCoordinator>().To<DialogCoordinator>().InSingletonScope();
             this.Bind<DeckCardModel>().To<DeckCardModel>().InSingletonScope();
         }

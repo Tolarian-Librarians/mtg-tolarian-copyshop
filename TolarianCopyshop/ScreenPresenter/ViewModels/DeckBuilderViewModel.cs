@@ -149,13 +149,13 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
 
         private void OnSearchTextChanged()
         {
-            var result = this._controller.GetCardNamesAndIdsBySearchQuery(this.SearchText, 10, out string errMessage);
+            var result = this._controller.GetCardNamesAndIdsBySearchQuery(this.SearchText, 10);
             if (this.token.IsCancellationRequested)
             {
                 return;
             }
 
-            this.SendErrorMessage(errMessage);
+            this.SendErrorMessage(this._controller.ErrorMessage);
             this.SearchResults = new ObservableCollection<CardNameResponse>(result);
             if (this.SearchResults.Count > 0)
             {
@@ -171,8 +171,8 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             }
 
             this.SearchText = string.Empty;
-            List<FullCardResponse> newCards = this._controller.GetCardById(this.SelectedSearchItem.Id, out string errMessage);
-            this.SendErrorMessage(errMessage);
+            List<FullCardResponse> newCards = this._controller.GetCardById(this.SelectedSearchItem.Id);
+            this.SendErrorMessage(this._controller.ErrorMessage);
             this.DeckCards = new ObservableCollection<FullCardResponse>(this.DeckCards.Concat(newCards));
             this.SelectedSearchItem = null;
             this.SearchResults = new ObservableCollection<CardNameResponse>();
