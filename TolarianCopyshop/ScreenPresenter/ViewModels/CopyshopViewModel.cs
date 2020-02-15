@@ -20,29 +20,21 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
         private static CopyShopViewModel _copyshop;
         private readonly CardController _controller;
         private readonly IDialogCoordinator _dialogCoordinator;
-        private Command importCommand;
 
         public CopyShopViewModel(CardController controller, DialogCoordinator dialogCoordinator)
         {
             _copyshop = this;
             this._controller = controller;
             this._dialogCoordinator = dialogCoordinator;
+
+            // Commands
+            this.ImportCommand = new Command(this.ImportDeck);
         }
 
         internal static CopyShopViewModel GetInstance()
             => _copyshop;
 
-        public Command ImportCommand
-        {
-            get
-            {
-                if (this.importCommand is null)
-                {
-                    this.importCommand = new Command(this.ImportDeck);
-                }
-                return this.importCommand;
-            }
-        }
+        public Command ImportCommand { get; }
 
         private async void ImportDeck(object obj)
         {

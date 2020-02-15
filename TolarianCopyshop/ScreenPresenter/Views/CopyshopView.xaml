@@ -18,24 +18,34 @@
                       mc:Ignorable="d">
 
     <Controls:MetroWindow.LeftWindowCommands>
-        <Controls:WindowCommands>
+        <Controls:WindowCommands />
+    </Controls:MetroWindow.LeftWindowCommands>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="35" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="20" />
+        </Grid.RowDefinitions>
+        <ToolBar>
             <Button Command="{Binding ImportCommand}">
                 <StackPanel Orientation="Horizontal">
                     <iconPacks:PackIconFontAwesome Width="24" Height="24" Kind="FileImportSolid" />
                     <TextBlock Margin="4,0,0,0" VerticalAlignment="Center" Text="Import" />
                 </StackPanel>
             </Button>
-        </Controls:WindowCommands>
-    </Controls:MetroWindow.LeftWindowCommands>
-
-    <Grid>
-        <TabControl>
+        </ToolBar>
+        <TabControl Grid.Row="1">
             <TabItem Header="Build Deck">
-                <local:DeckBuilderView />
+                <local:DeckBuilderView x:Name="_DeckBuilderView" />
             </TabItem>
             <TabItem Header="View Deck">
-                <local:DeckViewerView />
+                <local:DeckViewerView x:Name="_DeckViewerView" />
             </TabItem>
         </TabControl>
+        <StatusBar Grid.Row="2">
+            <StatusBarItem Content="Total Cards:" />
+            <StatusBarItem Content="{Binding ElementName=_DeckBuilderView, Path=DataContext.DeckCards.Count}" />
+        </StatusBar>
     </Grid>
 </Controls:MetroWindow>

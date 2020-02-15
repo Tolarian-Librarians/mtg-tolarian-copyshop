@@ -45,7 +45,7 @@ namespace Tolarian.Copyshop.Business
 
             PrintDialog printDlg = new PrintDialog();
             printDlg.PrintVisual(vis, "Image printing.");
-            
+
         }
 
         private Rect GetA4Rect()
@@ -60,7 +60,7 @@ namespace Tolarian.Copyshop.Business
 
         private Rect[,] GetCardPositions()
         {
-            int cardCount = _cardsPerRowAndCol; 
+            int cardCount = _cardsPerRowAndCol;
 
             Rect[,] result = new Rect[cardCount, cardCount];
 
