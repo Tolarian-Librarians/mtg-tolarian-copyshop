@@ -15,6 +15,7 @@ namespace Tolarian.Copyshop.Controller
     {
         private readonly ICardDataRequester _requester;
         private readonly IMapper _mapper;
+        private string errorMessage;
 
         public CardController(ICardDataRequester requester, IMapper mapper)
         {
@@ -22,12 +23,23 @@ namespace Tolarian.Copyshop.Controller
             _mapper = mapper;
         }
 
+        public string ErrorMessage
+        {
+            get
+            {
+                string returnValue = this.errorMessage;
+                this.errorMessage = string.Empty;
+                return returnValue;
+            }
+            set => this.errorMessage = value;
+        }
+
+
         /// <summary>
         /// Gets the information for one Card by ID. This returns a List because the target card may be multifaced.
         /// </summary>
-        public List<FullCardResponse> GetCardById(Guid id, out string message)
+        public List<FullCardResponse> GetCardById(Guid id)
         {
-            message = string.Empty;
             List<FullCardResponse> response = null;
             try
             {
@@ -37,19 +49,18 @@ namespace Tolarian.Copyshop.Controller
             }
             catch (HttpException ex)
             {
-                message = BuildErrorMessage(ex);
+                this.ErrorMessage = BuildErrorMessage(ex);
             }
             catch (AggregateException ex)
             {
-                message = BuildErrorMessage(ex);
+                this.ErrorMessage = BuildErrorMessage(ex);
             }
 
             return response;
         }
 
-        public List<CardNameResponse> GetCardNamesAndIdsBySearchQuery(string query, int maxCountOfItems, out string message)
+        public List<CardNameResponse> GetCardNamesAndIdsBySearchQuery(string query, int maxCountOfItems)
         {
-            message = string.Empty;
             var response = new List<CardNameResponse>();
 
             try
@@ -58,11 +69,11 @@ namespace Tolarian.Copyshop.Controller
             }
             catch (HttpException ex)
             {
-                message = BuildErrorMessage(ex);
+                this.ErrorMessage = BuildErrorMessage(ex);
             }
             catch (AggregateException ex)
             {
-                message = BuildErrorMessage(ex);
+                this.ErrorMessage = BuildErrorMessage(ex);
             }
 
             return response;
@@ -71,9 +82,8 @@ namespace Tolarian.Copyshop.Controller
         private static string BuildErrorMessage(Exception ex)
             => ex.Message + Environment.NewLine + (ex.InnerException != null ? ex.InnerException.Message : "");
 
-        public List<FullCardResponse> GetCardsByNameList(string importString, out string message)
+        public List<FullCardResponse> GetCardsByNameList(string importString)
         {
-            message = string.Empty;
             List<FullCardResponse> response = new List<FullCardResponse>();
 
             try
@@ -85,11 +95,11 @@ namespace Tolarian.Copyshop.Controller
             }
             catch (HttpException ex)
             {
-                message = BuildErrorMessage(ex);
+                this.ErrorMessage = BuildErrorMessage(ex);
             }
             catch (AggregateException ex)
             {
-                message = BuildErrorMessage(ex);
+                this.ErrorMessage = BuildErrorMessage(ex);
             }
 
             return response;
@@ -109,5 +119,11 @@ namespace Tolarian.Copyshop.Controller
         {
             return card.CardFaces != null && card.ImageUris == null;
         }
+
+        public List<FullCardResponse> OpenFrom(string fileName)
+            => throw new NotImplementedException();
+
+        public bool SaveTo(string fileName, List<FullCardResponse> deckCards)
+            => throw new NotImplementedException();
     }
 }
