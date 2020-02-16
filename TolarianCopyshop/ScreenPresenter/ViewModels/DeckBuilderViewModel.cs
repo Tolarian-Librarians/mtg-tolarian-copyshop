@@ -41,8 +41,8 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             _deckBuilder = this;
             this._controller = controller;
             this._deckCardModel = deckCardModel;
-            this.AddCardCommand = new Command(this.AddSelectedCard);
-            this.RemoveCardCommand = new Command(this.RemoveSelectedCard);
+            this.AddCardCommand = new Command(this.IncreaseSelectedCard);
+            this.RemoveCardCommand = new Command(this.ReduceSelectedCard);
             this.DeleteCardCommand = new Command(this.DeleteSelectedCard);
         }
 
@@ -138,7 +138,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             }
         }
 
-        private void AddSelectedCard(object clickedCard)
+        private void IncreaseSelectedCard(object clickedCard)
         {
             if (clickedCard is FullCard card)
             {
@@ -146,11 +146,31 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             }
         }
 
-        private void RemoveSelectedCard(object clickedCard)
+        private void ReduceSelectedCard(object clickedCard)
         {
             if (clickedCard is FullCard card && --this.DeckCards.First(o => o == card).CardCount < 1)
             {
                 this.DeleteSelectedCard(clickedCard);
+            }
+        }
+
+        internal void AddCards(IEnumerable<FullCard> cardList)
+        {
+            foreach (FullCard card in cardList)
+            {
+                this.AddCard(card);
+            }
+        }
+
+        private void AddCard(FullCard card)
+        {
+            if (this.DeckCards.FirstOrDefault(o => o.Id == card.Id && o.Name == card.Name) is FullCard ExistingCard)
+            {
+                ExistingCard.CardCount++;
+            }
+            else
+            {
+                this.DeckCards.Add(card);
             }
         }
 
@@ -200,7 +220,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
 
             var newCards = this._controller.GetCardById(this.SelectedSearchItem.Id);
             this.SendErrorMessage(this._controller.ErrorMessage);
-            this.DeckCards = new ObservableCollection<FullCard>(this.DeckCards.Concat(newCards.ConvertAll(card => new FullCard(card))));
+            this.AddCards(newCards.ConvertAll(card => new FullCard(card)));
 
             this.SearchText = string.Empty;
             this.ResetSearchedItems();
