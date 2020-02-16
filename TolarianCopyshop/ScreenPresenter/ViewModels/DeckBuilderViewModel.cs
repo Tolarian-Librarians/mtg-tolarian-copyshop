@@ -41,14 +41,16 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             _deckBuilder = this;
             this._controller = controller;
             this._deckCardModel = deckCardModel;
-            this.DeleteCommand = new Command(DeleteSelectedCard);
+            this.AddCardCommand = new Command(this.AddSelectedCard);
+            this.RemoveCardCommand = new Command(this.RemoveSelectedCard);
+            this.DeleteCardCommand = new Command(this.DeleteSelectedCard);
         }
 
         #endregion
 
         #region Properties
 
-        public ObservableCollection<FullCardResponse> DeckCards
+        public ObservableCollection<FullCard> DeckCards
         {
             get => this._deckCardModel.DeckCards;
             set
@@ -100,7 +102,11 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             }
         }
 
-        public Command DeleteCommand { get; set; }
+        public Command AddCardCommand { get; set; }
+
+        public Command RemoveCardCommand { get; set; }
+
+        public Command DeleteCardCommand { get; set; }
 
         #endregion
 
@@ -126,9 +132,25 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
 
         private void DeleteSelectedCard(object clickedCard)
         {
-            if (clickedCard is FullCardResponse card)
+            if (clickedCard is FullCard card)
             {
                 this.DeckCards.Remove(card);
+            }
+        }
+
+        private void AddSelectedCard(object clickedCard)
+        {
+            if (clickedCard is FullCard card)
+            {
+                this.DeckCards.First(o => o == card).CardCount++;
+            }
+        }
+
+        private void RemoveSelectedCard(object clickedCard)
+        {
+            if (clickedCard is FullCard card && --this.DeckCards.First(o => o == card).CardCount < 1)
+            {
+                this.DeleteSelectedCard(clickedCard);
             }
         }
 
@@ -149,6 +171,12 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
 
         private void OnSearchTextChanged()
         {
+            if (this.SearchText.Length < 1)
+            {
+                this.ResetSearchedItems();
+                return;
+            }
+
             var result = this._controller.GetCardNamesAndIdsBySearchQuery(this.SearchText, 10);
             if (this.token.IsCancellationRequested)
             {
@@ -170,10 +198,16 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
                 return;
             }
 
-            this.SearchText = string.Empty;
-            List<FullCardResponse> newCards = this._controller.GetCardById(this.SelectedSearchItem.Id);
+            var newCards = this._controller.GetCardById(this.SelectedSearchItem.Id);
             this.SendErrorMessage(this._controller.ErrorMessage);
-            this.DeckCards = new ObservableCollection<FullCardResponse>(this.DeckCards.Concat(newCards));
+            this.DeckCards = new ObservableCollection<FullCard>(this.DeckCards.Concat(newCards.ConvertAll(card => new FullCard(card))));
+
+            this.SearchText = string.Empty;
+            this.ResetSearchedItems();
+        }
+
+        private void ResetSearchedItems()
+        {
             this.SelectedSearchItem = null;
             this.SearchResults = new ObservableCollection<CardNameResponse>();
             this.SearchResultVisibility = Visibility.Hidden;

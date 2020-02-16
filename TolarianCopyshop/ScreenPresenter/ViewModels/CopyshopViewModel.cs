@@ -11,8 +11,10 @@ using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Threading;
 using Tolarian.Copyshop.Controller;
+using Tolarian.Copyshop.Controller.Interfaces;
 using Tolarian.Copyshop.Controller.ResponseObjects;
 using Tolarian.Copyshop.ScreenPresenter.Base;
+using Tolarian.Copyshop.ScreenPresenter.Model;
 using Tolarian.Copyshop.ScreenPresenter.Views;
 using static MahApps.Metro.SimpleChildWindow.ChildWindowManager;
 
@@ -26,7 +28,6 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
         private readonly CardController _cardController;
         private readonly PrintController _printController;
         private readonly IDialogCoordinator _dialogCoordinator;
-
 
         #endregion
 
@@ -81,7 +82,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             if (this.HandleRequestSave())
             {
                 this.SaveFile = string.Empty;
-                DeckBuilderViewModel.GetInstance().DeckCards = new ObservableCollection<FullCardResponse>();
+                DeckBuilderViewModel.GetInstance().DeckCards = new ObservableCollection<FullCard>();
             }
         }
 
@@ -90,7 +91,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             if (this.HandleRequestSave())
             {
                 this.SaveFile = string.Empty;
-                DeckBuilderViewModel.GetInstance().DeckCards = new ObservableCollection<FullCardResponse>();
+                DeckBuilderViewModel.GetInstance().DeckCards = new ObservableCollection<FullCard>();
             }
         }
 
@@ -108,7 +109,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
                 };
                 if (openFileDialog.ShowDialog() == true)
                 {
-                    DeckBuilderViewModel.GetInstance().DeckCards = new ObservableCollection<FullCardResponse>(this._cardController.OpenFrom(openFileDialog.FileName));
+                    DeckBuilderViewModel.GetInstance().DeckCards = new ObservableCollection<FullCard>(this._cardController.OpenFrom(openFileDialog.FileName).Cast<FullCard>());
                     this.SaveFile = openFileDialog.FileName;
                 }
             }
@@ -138,7 +139,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
         {
             if (!saveAs && !string.IsNullOrEmpty(this.SaveFile))
             {
-                return this._cardController.SaveTo(this.SaveFile, DeckBuilderViewModel.GetInstance().DeckCards.ToList());
+                return this._cardController.SaveTo(this.SaveFile, DeckBuilderViewModel.GetInstance().DeckCards.Cast<IFullCard>().ToList());
             }
 
             SaveFileDialog saveFileDialog = new SaveFileDialog()
@@ -152,7 +153,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             if (saveFileDialog.ShowDialog() == true)
             {
                 this.SaveFile = saveFileDialog.FileName;
-                return this._cardController.SaveTo(saveFileDialog.FileName, DeckBuilderViewModel.GetInstance().DeckCards.ToList());
+                return this._cardController.SaveTo(saveFileDialog.FileName, DeckBuilderViewModel.GetInstance().DeckCards.Cast<IFullCard>().ToList());
             }
 
             return false;
@@ -170,13 +171,14 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             {
                 string importCards = await CopyShopView.GetInstance().ShowChildWindowAsync<string>(new ImportCardsChildView() { IsModal = false }).ConfigureAwait(false);
 
-                List<FullCardResponse> importedCards = this.ShowProgress("IMPORT", "Please wait while your cards getting imported from text..."
-                    , new Func<List<FullCardResponse>>(() => this._cardController.GetCardsByNameList(importCards ?? ""))).Result;
+                List<IFullCard> importedCards = this.ShowProgress("IMPORT", "Please wait while your cards getting imported from text..."
+                    , new Func<List<IFullCard>>(() => this._cardController.GetCardsByNameList(importCards ?? ""))).Result;
 
                 this.SendErrorMessage(this._cardController.ErrorMessage);
                 if (importedCards.Count > 0)
                 {
-                    DeckBuilderViewModel.GetInstance().DeckCards = new ObservableCollection<FullCardResponse>(importedCards);
+                    DeckBuilderViewModel.GetInstance().DeckCards = new ObservableCollection<FullCard>();
+                    importedCards.ForEach(card => DeckBuilderViewModel.GetInstance().DeckCards.Add(new FullCard(card)));
                 }
             }
         }
@@ -191,7 +193,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
 
             if (printDlg.ShowDialog() == true)
             {
-                _printController.PrintDeck(printDlg, DeckBuilderViewModel.GetInstance().DeckCards.ToList());
+                _printController.PrintDeck(printDlg, DeckBuilderViewModel.GetInstance().DeckCards.Cast<IFullCard>().ToList());
             }
         }
 

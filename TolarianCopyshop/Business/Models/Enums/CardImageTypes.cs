@@ -9,5 +9,4 @@
         Art_Crop,
         Border_Crop
     }
-
 }

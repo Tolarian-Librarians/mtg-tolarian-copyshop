@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Web;
 using Tolarian.Copyshop.Business;
 using Tolarian.Copyshop.Business.Models;
+using Tolarian.Copyshop.Controller.Interfaces;
 using Tolarian.Copyshop.Controller.ResponseObjects;
 
 namespace Tolarian.Copyshop.Controller
@@ -38,9 +39,9 @@ namespace Tolarian.Copyshop.Controller
         /// <summary>
         /// Gets the information for one Card by ID. This returns a List because the target card may be multifaced.
         /// </summary>
-        public List<FullCardResponse> GetCardById(Guid id)
+        public List<IFullCard> GetCardById(Guid id)
         {
-            List<FullCardResponse> response = null;
+            List<IFullCard> response = null;
             try
             {
                 SfCard card = _requester.GetCardById(id);
@@ -82,9 +83,9 @@ namespace Tolarian.Copyshop.Controller
         private static string BuildErrorMessage(Exception ex)
             => ex.Message + Environment.NewLine + (ex.InnerException != null ? ex.InnerException.Message : "");
 
-        public List<FullCardResponse> GetCardsByNameList(string importString)
+        public List<IFullCard> GetCardsByNameList(string importString)
         {
-            List<FullCardResponse> response = new List<FullCardResponse>();
+            List<IFullCard> response = new List<IFullCard>();
 
             try
             {
@@ -105,13 +106,13 @@ namespace Tolarian.Copyshop.Controller
             return response;
         }
 
-        private List<FullCardResponse> MapCardToFullCardResponse(SfCard card)
+        private List<IFullCard> MapCardToFullCardResponse(SfCard card)
         {
-            List<FullCardResponse> response;
+            List<IFullCard> response;
             if (IsDoubleFacedCard(card))
-                response = _mapper.Map<List<FullCardResponse>>(card);
+                response = _mapper.Map<List<IFullCard>>(card);
             else
-                response = new List<FullCardResponse> { _mapper.Map<FullCardResponse>(card) };
+                response = new List<IFullCard> { _mapper.Map<IFullCard>(card) };
             return response;
         }
 
@@ -120,10 +121,10 @@ namespace Tolarian.Copyshop.Controller
             return card.CardFaces != null && card.ImageUris == null;
         }
 
-        public List<FullCardResponse> OpenFrom(string fileName)
+        public List<IFullCard> OpenFrom(string fileName)
             => throw new NotImplementedException();
 
-        public bool SaveTo(string fileName, List<FullCardResponse> deckCards)
+        public bool SaveTo(string fileName, List<IFullCard> deckCards)
             => throw new NotImplementedException();
     }
 }

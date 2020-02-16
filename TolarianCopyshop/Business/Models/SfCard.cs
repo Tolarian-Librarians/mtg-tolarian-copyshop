@@ -12,7 +12,7 @@ namespace Tolarian.Copyshop.Business.Models
     {
         [JsonProperty(PropertyName = "Name")]
         public string Name { get; set; }
-        
+
         [JsonProperty(PropertyName = "id")]
         public Guid Id { get; set; }
 

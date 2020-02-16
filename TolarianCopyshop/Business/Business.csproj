@@ -56,6 +56,7 @@
     <Compile Include="ICardDataRequester.cs" />
     <Compile Include="IPrintRequester.cs" />
     <Compile Include="Models\Enums\CardImageTypes.cs" />
+    <Compile Include="Models\Enums\CardTypes.cs" />
     <Compile Include="Models\Enums\MtgPlayModes.cs" />
     <Compile Include="Models\SfIdentifier.cs" />
     <Compile Include="Models\SfCard.cs" />
