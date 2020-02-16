@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
+using System.Windows.Markup;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
@@ -17,60 +19,68 @@ namespace Tolarian.Copyshop.Business
         const double _cardHeight = 321.26016;
         const int _cardsPerRowAndCol = 3;
 
-        public void PrintDeck(PrintDialog printDlg, List<Uri> deckCards)
+        public void PrintDeck(PrintDialog printDlg, Stack<Uri> deckCards)
         {
-            FlowDocument doc = new FlowDocument();
-            doc.Name = "FlowDoc";
+            FixedDocument doc = GetDocByDialogueSettings(printDlg);
 
-            IDocumentPaginatorSource idpSource = doc;
-            //printDlg.PrintDocument(idpSource.DocumentPaginator, "Hello WPF Printing.");
+            AddCardImagesToDoc(deckCards, doc);
 
-            Rect[,] cardSlots = GetCardPositions();
-            Stack<BitmapImage> stack = new Stack<BitmapImage>(deckCards.Select(u => new BitmapImage(u)));
+            printDlg.PrintDocument(doc.DocumentPaginator, "Job name");
+        }
+        private static FixedDocument GetDocByDialogueSettings(PrintDialog printDlg)
+        {
+            FixedDocument doc = new FixedDocument();
+            doc.DocumentPaginator.PageSize = new Size(printDlg.PrintableAreaWidth, printDlg.PrintableAreaHeight);
+            return doc;
+        }
 
-            var vis = new DrawingVisual();
-            using (var dc = vis.RenderOpen())
+        private void AddCardImagesToDoc(Stack<Uri> deckCards, FixedDocument doc)
+        {
+            while (deckCards.Count > 0)
             {
-                dc.DrawRectangle(Brushes.Black, null, GetA4Rect());
+                PageContent pageContent = new PageContent();
+                FixedPage page = GetPage(doc);
 
-                for (int i = 0; i < _cardsPerRowAndCol; i++)
+                AddCardImagesToPage(deckCards, page);
+
+                ((IAddChild)pageContent).AddChild(page);
+                doc.Pages.Add(pageContent);
+            }
+        }
+        private static FixedPage GetPage(FixedDocument doc)
+        {
+            FixedPage page = new FixedPage();
+            page.Width = doc.DocumentPaginator.PageSize.Width;
+            page.Height = doc.DocumentPaginator.PageSize.Height;
+            page.Background = Brushes.Black;
+            return page;
+        }
+
+        private void AddCardImagesToPage(Stack<Uri> deckCards, FixedPage page)
+        {
+            for (int xPos = 0; xPos < _cardsPerRowAndCol; xPos++)
+            {
+                for (int yPos = 0; yPos < _cardsPerRowAndCol; yPos++)
                 {
-                    for (int j = 0; j < _cardsPerRowAndCol; j++)
-                    {
-                        dc.DrawImage(stack.Pop(), cardSlots[i, j]);
-                    }
+                    if (deckCards.Count == 0)
+                        break;
+
+                    Image img = GetImageForSlotFromUri(deckCards.Pop(), xPos, yPos);
+                    page.Children.Add(img);
                 }
             }
-
-            printDlg.PrintVisual(vis, "Image printing.");
-
         }
 
-        private Rect GetA4Rect()
+        private Image GetImageForSlotFromUri(Uri source, int xPos, int yPos)
         {
-            return new Rect { Width = 793.92, Height = 1122.24 };
+            BitmapImage bitmap = new BitmapImage(source);
+
+            var img = new Image { Source = bitmap };
+            img.RenderSize = new Size(_cardWidth, _cardHeight);
+            img.RenderTransform = new TranslateTransform(_cardWidth * xPos, _cardHeight * yPos);
+            img.Width = _cardWidth;
+            return img;
         }
 
-        private Rect GetCardRect()
-        {
-            return new Rect { Width = 226.7712, Height = 321.26016 };
-        }
-
-        private Rect[,] GetCardPositions()
-        {
-            int cardCount = _cardsPerRowAndCol;
-
-            Rect[,] result = new Rect[cardCount, cardCount];
-
-            for (int i = 0; i < cardCount; i++)
-            {
-                for (int j = 0; j < cardCount; j++)
-                {
-                    result[i, j] = new Rect { Width = _cardWidth, Height = _cardHeight, Location = new Point { X = i * _cardWidth, Y = j * _cardHeight } };
-                }
-            }
-
-            return result;
-        }
     }
 }
