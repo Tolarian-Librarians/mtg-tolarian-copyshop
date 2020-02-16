@@ -178,7 +178,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
                 if (importedCards.Count > 0)
                 {
                     DeckBuilderViewModel.GetInstance().DeckCards = new ObservableCollection<FullCard>();
-                    importedCards.ForEach(card => DeckBuilderViewModel.GetInstance().DeckCards.Add(new FullCard(card)));
+                    DeckBuilderViewModel.GetInstance().AddCards(importedCards.ConvertAll(card => new FullCard(card)));
                 }
             }
         }
