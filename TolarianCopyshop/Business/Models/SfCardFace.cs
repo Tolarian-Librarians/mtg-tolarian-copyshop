@@ -16,6 +16,9 @@ namespace Tolarian.Copyshop.Business.Models
         [JsonProperty(PropertyName = "oracle_text")]
         public string Text { get; set; }
 
+        [JsonProperty(PropertyName = "type_line")]
+        public string CardType { get; set; }
+
         [JsonProperty(PropertyName = "image_uris")]
         public Dictionary<CardImageTypes, Uri> ImageUris { get; set; }
 

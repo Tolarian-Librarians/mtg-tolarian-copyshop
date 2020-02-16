@@ -25,7 +25,7 @@ namespace Tolarian.Copyshop.Business.Models
         {
             return new SfPaginatedCardList
             {
-                Data = new SfCard[0]
+                Data = Array.Empty<SfCard>()
             };
         }
     }

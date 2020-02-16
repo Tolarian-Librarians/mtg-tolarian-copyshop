@@ -12,6 +12,7 @@ using Tolarian.Copyshop.Business.Models;
 using Tolarian.Copyshop.Controller.ResponseObjects;
 using Tolarian.Copyshop.ScreenPresenter.AutoMapper;
 using Tolarian.Copyshop.Business.Models.Enums;
+using Tolarian.Copyshop.Controller.Interfaces;
 
 namespace Tests.ControllerTests
 {
@@ -40,7 +41,7 @@ namespace Tests.ControllerTests
             CardController unitUnterTest = new CardController(_requesterMock.Object, GetMapper());
 
             //Act
-            List<FullCardResponse> response = unitUnterTest.GetCardById(Guid.Empty);
+            List<IFullCard> response = unitUnterTest.GetCardById(Guid.Empty);
 
             //Assert
             Assert.IsNotNull(response);
@@ -57,7 +58,7 @@ namespace Tests.ControllerTests
             CardController unitUnterTest = new CardController(_requesterMock.Object, GetMapper());
 
             //Act
-            List<FullCardResponse> response = unitUnterTest.GetCardById(Guid.Empty);
+            List<IFullCard> response = unitUnterTest.GetCardById(Guid.Empty);
 
             //Assert
             Assert.IsNotNull(response);
@@ -82,7 +83,7 @@ namespace Tests.ControllerTests
             CardController unitUnterTest = new CardController(_requesterMock.Object, GetMapper());
 
             //Act
-            List<FullCardResponse> response = unitUnterTest.GetCardById(Guid.Empty);
+            List<IFullCard> response = unitUnterTest.GetCardById(Guid.Empty);
 
             //Assert
             Assert.IsNotNull(response);
@@ -102,7 +103,7 @@ namespace Tests.ControllerTests
             CardController unitUnterTest = new CardController(_requesterMock.Object, GetMapper());
 
             //Act
-            List<FullCardResponse> response = unitUnterTest.GetCardById(Guid.Empty);
+            List<IFullCard> response = unitUnterTest.GetCardById(Guid.Empty);
 
             //Assert
             Assert.IsNotNull(response);

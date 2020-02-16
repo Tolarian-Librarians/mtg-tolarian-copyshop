@@ -79,7 +79,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="CollectionExtension.cs" />
     <Compile Include="Model\DeckCardModel.cs" />
+    <Compile Include="Model\FullCard.cs" />
     <Compile Include="ViewModels\DeckViewerDesignViewModel.cs" />
     <Compile Include="ViewModels\DeckViewerViewModel.cs" />
     <Compile Include="ViewModels\ImportCardViewModel.cs" />

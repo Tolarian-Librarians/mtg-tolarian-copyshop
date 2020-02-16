@@ -5,6 +5,7 @@
              xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
              xmlns:local="clr-namespace:Tolarian.Copyshop.ScreenPresenter.Views"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
              xmlns:vm="clr-namespace:Tolarian.Copyshop.ScreenPresenter.ViewModels"
              d:DataContext="{d:DesignInstance Type=vm:DeckBuilderDesignViewModel,
                                               IsDesignTimeCreatable=True}"
@@ -13,6 +14,18 @@
              Background="{DynamicResource MahApps.Brushes.White}"
              DataContext="{Binding Path=DeckBuilderViewModel, Source={StaticResource ServiceLocator}}"
              mc:Ignorable="d">
+    <UserControl.Resources>
+        <CollectionViewSource x:Key="_deckCardCollection" x:Name="_deckCardCollection" Source="{Binding DeckCards}">
+            <CollectionViewSource.GroupDescriptions>
+                <PropertyGroupDescription PropertyName="CardType" StringComparison="OrdinalIgnoreCase" />
+            </CollectionViewSource.GroupDescriptions>
+            <CollectionViewSource.SortDescriptions>
+                <scm:SortDescription PropertyName="CardType" />
+                <scm:SortDescription PropertyName="Name" />
+            </CollectionViewSource.SortDescriptions>
+        </CollectionViewSource>
+    </UserControl.Resources>
+
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
@@ -48,44 +61,72 @@
 
             <ListView x:Name="_DeckListView"
                       Grid.Row="1"
-                      ItemsSource="{Binding DeckCards}"
+                      ItemsSource="{Binding Source={StaticResource _deckCardCollection}}"
                       SelectedItem="{Binding SelectedCard}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <Grid Width="{Binding ElementName=_DeckListView, Path=ActualWidth}">
                             <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="30" />
                                 <ColumnDefinition Width="80" />
-                                <ColumnDefinition Width="5" />
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="30" />
-                                <RowDefinition Height="70" />
+                                <RowDefinition Height="40" />
+                                <RowDefinition Height="30" />
                             </Grid.RowDefinitions>
-                            <Image Grid.RowSpan="2"
-                                   Grid.Column="0"
+                            <Button Grid.Row="0"
+                                    Grid.Column="0"
+                                    Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.AddCardCommand}"
+                                    CommandParameter="{Binding}">
+                                <iconPacks:PackIconFontAwesome Width="12"
+                                                               Height="12"
+                                                               Foreground="Black"
+                                                               Kind="PlusSolid" />
+                            </Button>
+                            <TextBlock Grid.Row="1"
+                                       Grid.Column="0"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"
+                                       FontSize="20"
+                                       FontWeight="Bold"
+                                       Text="{Binding CardCount}" />
+                            <Button Grid.Row="3"
+                                    Grid.Column="0"
+                                    Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.RemoveCardCommand}"
+                                    CommandParameter="{Binding}">
+                                <iconPacks:PackIconFontAwesome Width="12"
+                                                               Height="12"
+                                                               Foreground="Black"
+                                                               Kind="MinusSolid" />
+                            </Button>
+                            <Image Grid.RowSpan="3"
+                                   Grid.Column="1"
                                    Height="100"
                                    Source="{Binding SmallImage}" />
                             <TextBlock Grid.Row="0"
                                        Grid.Column="2"
+                                       Margin="5,0,0,0"
                                        HorizontalAlignment="Left"
                                        VerticalAlignment="Top"
                                        FontSize="20"
                                        FontWeight="Bold"
                                        Text="{Binding Name}" />
                             <TextBlock Grid.Row="1"
+                                       Grid.RowSpan="2"
                                        Grid.Column="2"
-                                       Margin="0,0,60,0"
+                                       Margin="5,0,55,0"
                                        Text="{Binding Text}"
                                        TextWrapping="Wrap" />
-                            <Button Grid.RowSpan="2"
+                            <Button Grid.RowSpan="3"
                                     Grid.Column="2"
                                     Margin="10,10,20,10"
                                     HorizontalAlignment="Right"
                                     VerticalAlignment="Center"
                                     Background="Transparent"
                                     BorderBrush="Transparent"
-                                    Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.DeleteCommand}"
+                                    Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.DeleteCardCommand}"
                                     CommandParameter="{Binding}">
                                 <iconPacks:PackIconFontAwesome Width="24"
                                                                Height="24"
@@ -97,12 +138,63 @@
                 </ListView.ItemTemplate>
                 <ListView.ItemContainerStyle>
                     <Style TargetType="ListViewItem">
-                        <Setter Property="Margin" Value="1" />
+                        <Setter Property="Margin" Value="2" />
                     </Style>
                 </ListView.ItemContainerStyle>
+                <ListView.GroupStyle>
+                    <GroupStyle>
+                        <GroupStyle.ContainerStyle>
+                            <Style TargetType="{x:Type GroupItem}">
+                                <Setter Property="Margin" Value="0,0,0,5" />
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="{x:Type GroupItem}">
+                                            <Expander Background="{DynamicResource AccentColorBrush}" BorderThickness="0" IsExpanded="True">
+                                                <Expander.Header>
+                                                    <Grid Width="{Binding ElementName=_DeckListView, Path=ActualWidth}">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="*" />
+                                                            <ColumnDefinition Width="100" />
+                                                        </Grid.ColumnDefinitions>
+                                                        <TextBlock Grid.Column="0"
+                                                                   Margin="5,0,0,0"
+                                                                   VerticalAlignment="Bottom"
+                                                                   FontSize="20"
+                                                                   FontWeight="DemiBold"
+                                                                   Foreground="White"
+                                                                   Text="{Binding Name}" />
+                                                        <TextBlock Grid.Column="0"
+                                                                   HorizontalAlignment="Right"
+                                                                   VerticalAlignment="Bottom"
+                                                                   FontSize="16"
+                                                                   FontStyle="Italic"
+                                                                   FontWeight="Bold"
+                                                                   Foreground="White"
+                                                                   Text="{Binding ItemCount}" />
+                                                        <TextBlock Grid.Column="1"
+                                                                   VerticalAlignment="Bottom"
+                                                                   FontSize="16"
+                                                                   FontStyle="Italic"
+                                                                   Foreground="White"
+                                                                   Text=" card(s)" />
+                                                    </Grid>
+                                                </Expander.Header>
+                                                <Expander.Content>
+                                                    <ItemsPresenter />
+                                                </Expander.Content>
+                                            </Expander>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </GroupStyle.ContainerStyle>
+                    </GroupStyle>
+                </ListView.GroupStyle>
             </ListView>
         </Grid>
+
         <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" />
+
         <Grid Grid.Column="2" Margin="20">
             <Grid.RowDefinitions>
                 <RowDefinition Height="3.5*" />

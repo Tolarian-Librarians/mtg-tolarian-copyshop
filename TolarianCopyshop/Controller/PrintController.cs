@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using Tolarian.Copyshop.Business;
+using Tolarian.Copyshop.Controller.Interfaces;
 using Tolarian.Copyshop.Controller.ResponseObjects;
 
 namespace Tolarian.Copyshop.Controller
@@ -18,7 +19,7 @@ namespace Tolarian.Copyshop.Controller
             _requester = requester;
         }
 
-        public void PrintDeck(PrintDialog printDlg, List<FullCardResponse> deckCards)
+        public void PrintDeck(PrintDialog printDlg, List<IFullCard> deckCards)
         {
             _requester.PrintDeck(printDlg, deckCards.Select(o => o.PngImage).ToList());
         }
