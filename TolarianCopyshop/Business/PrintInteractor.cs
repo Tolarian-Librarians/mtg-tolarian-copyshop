@@ -17,7 +17,7 @@ namespace Tolarian.Copyshop.Business
         const double _cardHeight = 321.26016;
         const int _cardsPerRowAndCol = 3;
 
-        public void PrintDeck(List<Uri> deckCards)
+        public void PrintDeck(PrintDialog printDlg, List<Uri> deckCards)
         {
             FlowDocument doc = new FlowDocument();
             doc.Name = "FlowDoc";
@@ -42,10 +42,8 @@ namespace Tolarian.Copyshop.Business
                 }
             }
 
-
-            PrintDialog printDlg = new PrintDialog();
             printDlg.PrintVisual(vis, "Image printing.");
-            
+
         }
 
         private Rect GetA4Rect()
@@ -60,7 +58,7 @@ namespace Tolarian.Copyshop.Business
 
         private Rect[,] GetCardPositions()
         {
-            int cardCount = _cardsPerRowAndCol; 
+            int cardCount = _cardsPerRowAndCol;
 
             Rect[,] result = new Rect[cardCount, cardCount];
 

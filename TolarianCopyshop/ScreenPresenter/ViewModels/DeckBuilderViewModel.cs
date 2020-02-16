@@ -41,14 +41,16 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             _deckBuilder = this;
             this._controller = controller;
             this._deckCardModel = deckCardModel;
-            this.DeleteCommand = new Command(DeleteSelectedCard);
+            this.AddCardCommand = new Command(this.IncreaseSelectedCard);
+            this.RemoveCardCommand = new Command(this.ReduceSelectedCard);
+            this.DeleteCardCommand = new Command(this.DeleteSelectedCard);
         }
 
         #endregion
 
         #region Properties
 
-        public ObservableCollection<FullCardResponse> DeckCards
+        public ObservableCollection<FullCard> DeckCards
         {
             get => this._deckCardModel.DeckCards;
             set
@@ -100,7 +102,11 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             }
         }
 
-        public Command DeleteCommand { get; set; }
+        public Command AddCardCommand { get; set; }
+
+        public Command RemoveCardCommand { get; set; }
+
+        public Command DeleteCardCommand { get; set; }
 
         #endregion
 
@@ -126,9 +132,45 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
 
         private void DeleteSelectedCard(object clickedCard)
         {
-            if (clickedCard is FullCardResponse card)
+            if (clickedCard is FullCard card)
             {
                 this.DeckCards.Remove(card);
+            }
+        }
+
+        private void IncreaseSelectedCard(object clickedCard)
+        {
+            if (clickedCard is FullCard card)
+            {
+                this.DeckCards.First(o => o == card).CardCount++;
+            }
+        }
+
+        private void ReduceSelectedCard(object clickedCard)
+        {
+            if (clickedCard is FullCard card && --this.DeckCards.First(o => o == card).CardCount < 1)
+            {
+                this.DeleteSelectedCard(clickedCard);
+            }
+        }
+
+        internal void AddCards(IEnumerable<FullCard> cardList)
+        {
+            foreach (FullCard card in cardList)
+            {
+                this.AddCard(card);
+            }
+        }
+
+        private void AddCard(FullCard card)
+        {
+            if (this.DeckCards.FirstOrDefault(o => o.Id == card.Id && o.Name == card.Name) is FullCard ExistingCard)
+            {
+                ExistingCard.CardCount++;
+            }
+            else
+            {
+                this.DeckCards.Add(card);
             }
         }
 
@@ -149,13 +191,19 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
 
         private void OnSearchTextChanged()
         {
-            var result = this._controller.GetCardNamesAndIdsBySearchQuery(this.SearchText, 10, out string errMessage);
+            if (this.SearchText.Length < 1)
+            {
+                this.ResetSearchedItems();
+                return;
+            }
+
+            var result = this._controller.GetCardNamesAndIdsBySearchQuery(this.SearchText, 10);
             if (this.token.IsCancellationRequested)
             {
                 return;
             }
 
-            this.SendErrorMessage(errMessage);
+            this.SendErrorMessage(this._controller.ErrorMessage);
             this.SearchResults = new ObservableCollection<CardNameResponse>(result);
             if (this.SearchResults.Count > 0)
             {
@@ -170,10 +218,16 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
                 return;
             }
 
+            var newCards = this._controller.GetCardById(this.SelectedSearchItem.Id);
+            this.SendErrorMessage(this._controller.ErrorMessage);
+            this.AddCards(newCards.ConvertAll(card => new FullCard(card)));
+
             this.SearchText = string.Empty;
-            List<FullCardResponse> newCards = this._controller.GetCardById(this.SelectedSearchItem.Id, out string errMessage);
-            this.SendErrorMessage(errMessage);
-            this.DeckCards = new ObservableCollection<FullCardResponse>(this.DeckCards.Concat(newCards));
+            this.ResetSearchedItems();
+        }
+
+        private void ResetSearchedItems()
+        {
             this.SelectedSearchItem = null;
             this.SearchResults = new ObservableCollection<CardNameResponse>();
             this.SearchResultVisibility = Visibility.Hidden;

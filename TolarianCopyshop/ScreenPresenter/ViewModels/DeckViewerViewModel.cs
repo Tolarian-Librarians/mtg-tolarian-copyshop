@@ -27,7 +27,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
         public static DeckViewerViewModel GetInstance()
             => _deckViewer;
 
-        public ObservableCollection<FullCardResponse> DeckCards
+        public ObservableCollection<FullCard> DeckCards
         {
             get => this._deckCardModel.DeckCards;
             set
