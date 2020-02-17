@@ -25,5 +25,14 @@ namespace Tolarian.Copyshop.ScreenPresenter.Views
         {
             InitializeComponent();
         }
+
+        private void TextBox_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Down)
+            {
+                _SearchResultBox.Focus();
+                _SearchResultBox.SelectedIndex++;
+            }
+        }
     }
 }

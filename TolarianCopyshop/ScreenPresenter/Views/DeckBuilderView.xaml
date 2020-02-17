@@ -1,21 +1,25 @@
-﻿<UserControl x:Class="Tolarian.Copyshop.ScreenPresenter.Views.DeckBuilderView"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
-             xmlns:local="clr-namespace:Tolarian.Copyshop.ScreenPresenter.Views"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
-             xmlns:vm="clr-namespace:Tolarian.Copyshop.ScreenPresenter.ViewModels"
-             d:DataContext="{d:DesignInstance Type=vm:DeckBuilderDesignViewModel,
-                                              IsDesignTimeCreatable=True}"
-             d:DesignHeight="600"
-             d:DesignWidth="800"
-             Background="{DynamicResource MahApps.Brushes.White}"
-             DataContext="{Binding Path=DeckBuilderViewModel, Source={StaticResource ServiceLocator}}"
-             mc:Ignorable="d">
+﻿<UserControl
+    x:Class="Tolarian.Copyshop.ScreenPresenter.Views.DeckBuilderView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+    xmlns:local="clr-namespace:Tolarian.Copyshop.ScreenPresenter.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
+    xmlns:vm="clr-namespace:Tolarian.Copyshop.ScreenPresenter.ViewModels"
+    d:DataContext="{d:DesignInstance Type=vm:DeckBuilderDesignViewModel,
+                                     IsDesignTimeCreatable=True}"
+    d:DesignHeight="600"
+    d:DesignWidth="1200"
+    Background="{DynamicResource MahApps.Brushes.White}"
+    DataContext="{Binding Path=DeckBuilderViewModel, Source={StaticResource ServiceLocator}}"
+    mc:Ignorable="d">
     <UserControl.Resources>
-        <CollectionViewSource x:Key="_deckCardCollection" x:Name="_deckCardCollection" Source="{Binding DeckCards}">
+        <CollectionViewSource
+            x:Key="_deckCardCollection"
+            x:Name="_deckCardCollection"
+            Source="{Binding DeckCards}">
             <CollectionViewSource.GroupDescriptions>
                 <PropertyGroupDescription PropertyName="CardType" StringComparison="OrdinalIgnoreCase" />
             </CollectionViewSource.GroupDescriptions>
@@ -38,36 +42,69 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
-            <TextBox Grid.Row="0" Margin="2" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged, Delay=200}" />
-            <ListView Grid.Row="1"
-                      Height="250"
-                      Margin="2,-2,2,2"
-                      VerticalAlignment="Top"
-                      Panel.ZIndex="1000"
-                      BorderThickness="1"
-                      ItemsSource="{Binding SearchResults}"
-                      SelectedItem="{Binding SelectedSearchItem}"
-                      Visibility="{Binding SearchResultVisibility}">
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <TextBlock HorizontalAlignment="Left"
-                                   VerticalAlignment="Top"
-                                   FontSize="12"
-                                   FontWeight="Bold"
-                                   Text="{Binding Name}" />
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="50" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
 
-            <ListView x:Name="_DeckListView"
-                      Grid.Row="1"
-                      ItemsSource="{Binding Source={StaticResource _deckCardCollection}}"
-                      SelectedItem="{Binding SelectedCard}">
+            <iconPacks:PackIconFontAwesome
+                Grid.Row="0"
+                Grid.Column="0"
+                Width="24"
+                Height="24"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Kind="SearchenginBrands" />
+            <TextBox
+                Grid.Row="0"
+                Grid.Column="1"
+                Margin="2"
+                AcceptsReturn="False"
+                PreviewKeyDown="TextBox_PreviewKeyDown"
+                Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged, Delay=200}" />
+            <ListBox
+                x:Name="_SearchResultBox"
+                Grid.Row="1"
+                Grid.Column="1"
+                Height="250"
+                Margin="2,-2,2,2"
+                VerticalAlignment="Top"
+                Panel.ZIndex="1000"
+                BorderThickness="1"
+                ItemsSource="{Binding SearchResults}"
+                SelectedIndex="{Binding SelectedSearchIndex}"
+                SelectedItem="{Binding SelectedSearchItem}"
+                Visibility="{Binding SearchResultVisibility}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel>
+                            <TextBlock
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Top"
+                                FontSize="12"
+                                FontWeight="DemiBold"
+                                Text="{Binding Name}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+                <ListBox.InputBindings>
+                    <KeyBinding Key="Enter" Command="{Binding ApplySelectedItem}" />
+                    <MouseBinding Command="{Binding ApplySelectedItem}" MouseAction="LeftDoubleClick" />
+                </ListBox.InputBindings>
+            </ListBox>
+
+            <ListView
+                x:Name="_DeckListView"
+                Grid.Row="1"
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                ItemsSource="{Binding Source={StaticResource _deckCardCollection}}"
+                SelectedItem="{Binding SelectedCard}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <Grid Width="{Binding ElementName=_DeckListView, Path=ActualWidth}">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="30" />
+                                <ColumnDefinition Width="38" />
                                 <ColumnDefinition Width="80" />
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
@@ -76,62 +113,74 @@
                                 <RowDefinition Height="40" />
                                 <RowDefinition Height="30" />
                             </Grid.RowDefinitions>
-                            <Button Grid.Row="0"
-                                    Grid.Column="0"
-                                    Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.AddCardCommand}"
-                                    CommandParameter="{Binding}">
-                                <iconPacks:PackIconFontAwesome Width="12"
-                                                               Height="12"
-                                                               Foreground="Black"
-                                                               Kind="PlusSolid" />
+                            <Button
+                                Grid.Row="0"
+                                Grid.Column="0"
+                                Width="30"
+                                Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.AddCardCommand}"
+                                CommandParameter="{Binding}">
+                                <iconPacks:PackIconFontAwesome
+                                    Width="12"
+                                    Height="12"
+                                    Foreground="Black"
+                                    Kind="PlusSolid" />
                             </Button>
-                            <TextBlock Grid.Row="1"
-                                       Grid.Column="0"
-                                       HorizontalAlignment="Center"
-                                       VerticalAlignment="Center"
-                                       FontSize="20"
-                                       FontWeight="Bold"
-                                       Text="{Binding CardCount}" />
-                            <Button Grid.Row="3"
-                                    Grid.Column="0"
-                                    Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.RemoveCardCommand}"
-                                    CommandParameter="{Binding}">
-                                <iconPacks:PackIconFontAwesome Width="12"
-                                                               Height="12"
-                                                               Foreground="Black"
-                                                               Kind="MinusSolid" />
+                            <TextBlock
+                                Grid.Row="1"
+                                Grid.Column="0"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                FontSize="20"
+                                FontWeight="Bold"
+                                Text="{Binding CardCount}" />
+                            <Button
+                                Grid.Row="3"
+                                Grid.Column="0"
+                                Width="30"
+                                Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.RemoveCardCommand}"
+                                CommandParameter="{Binding}">
+                                <iconPacks:PackIconFontAwesome
+                                    Width="12"
+                                    Height="12"
+                                    Foreground="Black"
+                                    Kind="MinusSolid" />
                             </Button>
-                            <Image Grid.RowSpan="3"
-                                   Grid.Column="1"
-                                   Height="100"
-                                   Source="{Binding SmallImage}" />
-                            <TextBlock Grid.Row="0"
-                                       Grid.Column="2"
-                                       Margin="5,0,0,0"
-                                       HorizontalAlignment="Left"
-                                       VerticalAlignment="Top"
-                                       FontSize="20"
-                                       FontWeight="Bold"
-                                       Text="{Binding Name}" />
-                            <TextBlock Grid.Row="1"
-                                       Grid.RowSpan="2"
-                                       Grid.Column="2"
-                                       Margin="5,0,55,0"
-                                       Text="{Binding Text}"
-                                       TextWrapping="Wrap" />
-                            <Button Grid.RowSpan="3"
-                                    Grid.Column="2"
-                                    Margin="10,10,20,10"
-                                    HorizontalAlignment="Right"
-                                    VerticalAlignment="Center"
-                                    Background="Transparent"
-                                    BorderBrush="Transparent"
-                                    Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.DeleteCardCommand}"
-                                    CommandParameter="{Binding}">
-                                <iconPacks:PackIconFontAwesome Width="24"
-                                                               Height="24"
-                                                               Foreground="Red"
-                                                               Kind="TrashSolid" />
+                            <Image
+                                Grid.RowSpan="3"
+                                Grid.Column="1"
+                                Height="100"
+                                Source="{Binding SmallImage}" />
+                            <TextBlock
+                                Grid.Row="0"
+                                Grid.Column="2"
+                                Margin="5,0,0,0"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Top"
+                                FontSize="20"
+                                FontWeight="Bold"
+                                Text="{Binding Name}" />
+                            <TextBlock
+                                Grid.Row="1"
+                                Grid.RowSpan="2"
+                                Grid.Column="2"
+                                Margin="5,0,55,0"
+                                Text="{Binding Text}"
+                                TextWrapping="Wrap" />
+                            <Button
+                                Grid.RowSpan="3"
+                                Grid.Column="2"
+                                Margin="10,10,20,10"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Center"
+                                Background="Transparent"
+                                BorderBrush="Transparent"
+                                Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.DeleteCardCommand}"
+                                CommandParameter="{Binding}">
+                                <iconPacks:PackIconFontAwesome
+                                    Width="24"
+                                    Height="24"
+                                    Foreground="Red"
+                                    Kind="TrashSolid" />
                             </Button>
                         </Grid>
                     </DataTemplate>
@@ -149,34 +198,40 @@
                                 <Setter Property="Template">
                                     <Setter.Value>
                                         <ControlTemplate TargetType="{x:Type GroupItem}">
-                                            <Expander Background="{DynamicResource AccentColorBrush}" BorderThickness="0" IsExpanded="True">
+                                            <Expander
+                                                Background="{DynamicResource AccentColorBrush}"
+                                                BorderThickness="0"
+                                                IsExpanded="True">
                                                 <Expander.Header>
                                                     <Grid Width="{Binding ElementName=_DeckListView, Path=ActualWidth}">
                                                         <Grid.ColumnDefinitions>
                                                             <ColumnDefinition Width="*" />
                                                             <ColumnDefinition Width="100" />
                                                         </Grid.ColumnDefinitions>
-                                                        <TextBlock Grid.Column="0"
-                                                                   Margin="5,0,0,0"
-                                                                   VerticalAlignment="Bottom"
-                                                                   FontSize="20"
-                                                                   FontWeight="DemiBold"
-                                                                   Foreground="White"
-                                                                   Text="{Binding Name}" />
-                                                        <TextBlock Grid.Column="0"
-                                                                   HorizontalAlignment="Right"
-                                                                   VerticalAlignment="Bottom"
-                                                                   FontSize="16"
-                                                                   FontStyle="Italic"
-                                                                   FontWeight="Bold"
-                                                                   Foreground="White"
-                                                                   Text="{Binding ItemCount}" />
-                                                        <TextBlock Grid.Column="1"
-                                                                   VerticalAlignment="Bottom"
-                                                                   FontSize="16"
-                                                                   FontStyle="Italic"
-                                                                   Foreground="White"
-                                                                   Text=" card(s)" />
+                                                        <TextBlock
+                                                            Grid.Column="0"
+                                                            Margin="5,0,0,0"
+                                                            VerticalAlignment="Bottom"
+                                                            FontSize="20"
+                                                            FontWeight="DemiBold"
+                                                            Foreground="White"
+                                                            Text="{Binding Name}" />
+                                                        <TextBlock
+                                                            Grid.Column="0"
+                                                            HorizontalAlignment="Right"
+                                                            VerticalAlignment="Bottom"
+                                                            FontSize="16"
+                                                            FontStyle="Italic"
+                                                            FontWeight="Bold"
+                                                            Foreground="White"
+                                                            Text="{Binding ItemCount}" />
+                                                        <TextBlock
+                                                            Grid.Column="1"
+                                                            VerticalAlignment="Bottom"
+                                                            FontSize="16"
+                                                            FontStyle="Italic"
+                                                            Foreground="White"
+                                                            Text=" card(s)" />
                                                     </Grid>
                                                 </Expander.Header>
                                                 <Expander.Content>
@@ -193,7 +248,10 @@
             </ListView>
         </Grid>
 
-        <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" />
+        <GridSplitter
+            Grid.Column="1"
+            Width="5"
+            HorizontalAlignment="Stretch" />
 
         <Grid Grid.Column="2" Margin="20">
             <Grid.RowDefinitions>
@@ -205,13 +263,20 @@
                 <ColumnDefinition Width="15" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <Image Grid.Row="0" Grid.ColumnSpan="3" Source="{Binding SelectedCard.PngImage}" />
+            <Image
+                Grid.Row="0"
+                Grid.ColumnSpan="3"
+                Source="{Binding SelectedCard.PngImage}" />
 
-            <Grid Grid.Row="1" Grid.Column="0" Margin="0,15,0,0">
-                <DataGrid HorizontalAlignment="Right"
-                          AutoGenerateColumns="False"
-                          HeadersVisibility="None"
-                          ItemsSource="{Binding SelectedCard.Legalities1}">
+            <Grid
+                Grid.Row="1"
+                Grid.Column="0"
+                Margin="0,15,0,0">
+                <DataGrid
+                    HorizontalAlignment="Right"
+                    AutoGenerateColumns="False"
+                    HeadersVisibility="None"
+                    ItemsSource="{Binding SelectedCard.Legalities1}">
                     <DataGrid.Columns>
                         <DataGridTextColumn Width="80" Binding="{Binding Key}" />
                         <DataGridTextColumn Width="80" Binding="{Binding Value}">
@@ -244,11 +309,15 @@
                 </DataGrid>
             </Grid>
 
-            <Grid Grid.Row="1" Grid.Column="3" Margin="0,15,0,0">
-                <DataGrid HorizontalAlignment="Left"
-                          AutoGenerateColumns="False"
-                          HeadersVisibility="None"
-                          ItemsSource="{Binding SelectedCard.Legalities2}">
+            <Grid
+                Grid.Row="1"
+                Grid.Column="3"
+                Margin="0,15,0,0">
+                <DataGrid
+                    HorizontalAlignment="Left"
+                    AutoGenerateColumns="False"
+                    HeadersVisibility="None"
+                    ItemsSource="{Binding SelectedCard.Legalities2}">
                     <DataGrid.Columns>
                         <DataGridTextColumn Width="80" Binding="{Binding Key}" />
                         <DataGridTextColumn Width="80" Binding="{Binding Value}">

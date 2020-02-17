@@ -172,7 +172,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
                 string importCards = await CopyShopView.GetInstance().ShowChildWindowAsync<string>(new ImportCardsChildView() { IsModal = false }).ConfigureAwait(false);
 
                 List<IFullCard> importedCards = this.ShowProgress("IMPORT", "Please wait while your cards getting imported from text..."
-                    , new Func<List<IFullCard>>(() => this._cardController.GetCardsByNameList(importCards ?? ""))).Result;
+                    , new Func<List<IFullCard>>(() => this._cardController.GetCardsByNameList(importCards ?? ""))).GetAwaiter().GetResult();
 
                 this.SendErrorMessage(this._cardController.ErrorMessage);
                 if (importedCards.Count > 0)
@@ -225,14 +225,14 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
         internal async Task<T> ShowProgress<T>(string header, string message, Func<T> FunctionWhileProgress)
         {
             // Show...
-            ProgressDialogController controller = await this._dialogCoordinator.ShowProgressAsync(this, header, message).ConfigureAwait(false);
+            ProgressDialogController controller = await this._dialogCoordinator.ShowProgressAsync(this, header, message).ConfigureAwait(true);
             controller.SetIndeterminate();
 
             // Do your work...
-            T result = await Task.Run(FunctionWhileProgress).ConfigureAwait(false);
+            T result = await Task.Run(FunctionWhileProgress).ConfigureAwait(true);
 
             // Close...
-            await controller.CloseAsync().ConfigureAwait(false);
+            await controller.CloseAsync().ConfigureAwait(true);
 
             // return value
             return result;

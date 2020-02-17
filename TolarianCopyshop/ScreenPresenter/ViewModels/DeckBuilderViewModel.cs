@@ -28,6 +28,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
         private string _searchText;
         private ObservableCollection<CardNameResponse> _searchResults;
         private CardNameResponse _selectedSearchItem;
+        private int _selectedSearchIndex;
         private Task task;
         private CancellationTokenSource tokenSource;
         private CancellationToken token;
@@ -44,6 +45,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             this.AddCardCommand = new Command(this.IncreaseSelectedCard);
             this.RemoveCardCommand = new Command(this.ReduceSelectedCard);
             this.DeleteCardCommand = new Command(this.DeleteSelectedCard);
+            this.ApplySelectedItem = new Command(this.ApplySelectedSearchItem);
         }
 
         #endregion
@@ -101,12 +103,21 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
                 this.OnSelectedSearchItemChanged();
             }
         }
+            
+        public int SelectedSearchIndex
+        {
+            get => this._selectedSearchIndex;
+            set => this.SetProperty(ref this._selectedSearchIndex, value);
+        }
+
 
         public Command AddCardCommand { get; set; }
 
         public Command RemoveCardCommand { get; set; }
 
         public Command DeleteCardCommand { get; set; }
+
+        public Command ApplySelectedItem { get; set; }
 
         #endregion
 
@@ -170,7 +181,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             }
             else
             {
-                this.DeckCards.Add(card);
+                Application.Current.Dispatcher.Invoke(new Action(() => this.DeckCards.Add(card)), DispatcherPriority.Normal);
             }
         }
 
@@ -191,7 +202,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
 
         private void OnSearchTextChanged()
         {
-            if (this.SearchText.Length < 1)
+            if (this.SearchText.Length < 4)
             {
                 this.ResetSearchedItems();
                 return;
@@ -208,10 +219,24 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             if (this.SearchResults.Count > 0)
             {
                 this.SearchResultVisibility = Visibility.Visible;
+                if (this.SelectedSearchItem is null || !this.SearchResults.Contains(this.SelectedSearchItem))
+                {
+                    this.SelectedSearchIndex = 0;
+                    this.SelectedSearchItem = this.SearchResults[this.SelectedSearchIndex];
+                }
+            }
+            else
+            {
+                this.SearchResultVisibility = Visibility.Collapsed;
             }
         }
 
         private void OnSelectedSearchItemChanged()
+        {
+
+        }
+
+        private void ApplySelectedSearchItem(object _)
         {
             if (this.SelectedSearchItem is null)
             {
@@ -230,7 +255,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
         {
             this.SelectedSearchItem = null;
             this.SearchResults = new ObservableCollection<CardNameResponse>();
-            this.SearchResultVisibility = Visibility.Hidden;
+            this.SearchResultVisibility = Visibility.Collapsed;
         }
 
         #endregion
