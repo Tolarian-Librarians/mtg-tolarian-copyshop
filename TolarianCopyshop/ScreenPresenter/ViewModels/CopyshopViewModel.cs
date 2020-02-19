@@ -171,15 +171,18 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             {
                 string importCards = await CopyShopView.GetInstance().ShowChildWindowAsync<string>(new ImportCardsChildView() { IsModal = false }).ConfigureAwait(false);
 
-                List<IFullCard> importedCards = this.ShowProgress("IMPORT", "Please wait while your cards getting imported from text..."
-                    , new Func<List<IFullCard>>(() => this._cardController.GetCardsByNameList(importCards ?? ""))).GetAwaiter().GetResult();
+                this.ShowProgress("IMPORT", "Please wait while your cards getting imported from text...", new Action(() => this.ImportDeckCards(importCards)));
+            }
+        }
 
-                this.SendErrorMessage(this._cardController.ErrorMessage);
-                if (importedCards.Count > 0)
-                {
-                    DeckBuilderViewModel.GetInstance().DeckCards = new ObservableCollection<FullCard>();
-                    DeckBuilderViewModel.GetInstance().AddCards(importedCards.ConvertAll(card => new FullCard(card)));
-                }
+        private void ImportDeckCards(string cards)
+        {
+            List<IFullCard> importedCards = this._cardController.GetCardsByNameList(cards ?? "");
+            this.SendErrorMessage(this._cardController.ErrorMessage);
+            if (importedCards.Count > 0)
+            {
+                DeckBuilderViewModel.GetInstance().DeckCards = new ObservableCollection<FullCard>();
+                DeckBuilderViewModel.GetInstance().AddCards(importedCards.ConvertAll(card => new FullCard(card)));
             }
         }
 
@@ -222,20 +225,17 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
                      FirstAuxiliaryButtonText = "CANCEL"
                  });
 
-        internal async Task<T> ShowProgress<T>(string header, string message, Func<T> FunctionWhileProgress)
+        internal async void ShowProgress(string header, string message, Action FunctionWhileProgress)
         {
             // Show...
             ProgressDialogController controller = await this._dialogCoordinator.ShowProgressAsync(this, header, message).ConfigureAwait(true);
             controller.SetIndeterminate();
 
             // Do your work...
-            T result = await Task.Run(FunctionWhileProgress).ConfigureAwait(true);
+            await Task.Run(FunctionWhileProgress).ConfigureAwait(true);
 
             // Close...
             await controller.CloseAsync().ConfigureAwait(true);
-
-            // return value
-            return result;
         }
 
         #endregion

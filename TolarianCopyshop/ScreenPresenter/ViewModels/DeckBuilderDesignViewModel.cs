@@ -22,7 +22,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
                 {
                     Id = new Guid(),
                     SmallImage = new Uri("https://img.scryfall.com/cards/small/front/3/2/32982ed2-96e4-4cc5-8562-744b06bca239.jpg?1572491355"),
-                    PngImage = new Uri("https://img.scryfall.com/cards/large/front/3/2/32982ed2-96e4-4cc5-8562-744b06bca239.jpg?1572491355"),
+                    PngImage = new Uri("https://img.scryfall.com/cards/large/front/a/f/af951b7c-21ba-4a40-aa19-20059b8ca63f.jpg?1567840489"),
                     Name = "Mountain",
                     Text="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet."
                 },

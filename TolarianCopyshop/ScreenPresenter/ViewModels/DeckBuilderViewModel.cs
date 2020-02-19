@@ -42,10 +42,10 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             _deckBuilder = this;
             this._controller = controller;
             this._deckCardModel = deckCardModel;
-            this.AddCardCommand = new Command(this.IncreaseSelectedCard);
-            this.RemoveCardCommand = new Command(this.ReduceSelectedCard);
+            this.IncreaseCardAmountCommand = new Command(this.IncreaseAmountSelectedCard);
+            this.ReduceCardAmountCommand = new Command(this.ReduceAmountSelectedCard);
             this.DeleteCardCommand = new Command(this.DeleteSelectedCard);
-            this.ApplySelectedItem = new Command(this.ApplySelectedSearchItem);
+            this.ApplySelectedSearchItemCommand = new Command(this.ApplySelectedSearchItem);
         }
 
         #endregion
@@ -66,7 +66,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             }
         }
 
-        public FullCardResponse SelectedCard
+        public FullCard SelectedCard
         {
             get => this._selectedCard;
             set => this.SetProperty(ref this._selectedCard, value);
@@ -103,7 +103,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
                 this.OnSelectedSearchItemChanged();
             }
         }
-            
+
         public int SelectedSearchIndex
         {
             get => this._selectedSearchIndex;
@@ -111,13 +111,13 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
         }
 
 
-        public Command AddCardCommand { get; set; }
+        public Command IncreaseCardAmountCommand { get; set; }
 
-        public Command RemoveCardCommand { get; set; }
+        public Command ReduceCardAmountCommand { get; set; }
 
         public Command DeleteCardCommand { get; set; }
 
-        public Command ApplySelectedItem { get; set; }
+        public Command ApplySelectedSearchItemCommand { get; set; }
 
         #endregion
 
@@ -149,7 +149,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             }
         }
 
-        private void IncreaseSelectedCard(object clickedCard)
+        private void IncreaseAmountSelectedCard(object clickedCard)
         {
             if (clickedCard is FullCard card)
             {
@@ -157,7 +157,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             }
         }
 
-        private void ReduceSelectedCard(object clickedCard)
+        private void ReduceAmountSelectedCard(object clickedCard)
         {
             if (clickedCard is FullCard card && --this.DeckCards.First(o => o == card).CardCount < 1)
             {

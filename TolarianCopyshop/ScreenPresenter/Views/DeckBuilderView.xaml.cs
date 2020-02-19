@@ -34,5 +34,13 @@ namespace Tolarian.Copyshop.ScreenPresenter.Views
                 _SearchResultBox.SelectedIndex++;
             }
         }
+
+        private void _SearchResultBox_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Released && this.DataContext is DeckBuilderViewModel oModel)
+            {
+                oModel.ApplySelectedSearchItemCommand.Execute(new object());
+            }
+        }
     }
 }
