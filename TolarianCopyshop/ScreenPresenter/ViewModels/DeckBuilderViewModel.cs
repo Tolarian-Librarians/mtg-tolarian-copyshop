@@ -28,6 +28,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
         private string _searchText;
         private ObservableCollection<CardNameResponse> _searchResults;
         private CardNameResponse _selectedSearchItem;
+        private int _selectedSearchIndex;
         private Task task;
         private CancellationTokenSource tokenSource;
         private CancellationToken token;
@@ -41,9 +42,10 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             _deckBuilder = this;
             this._controller = controller;
             this._deckCardModel = deckCardModel;
-            this.AddCardCommand = new Command(this.IncreaseSelectedCard);
-            this.RemoveCardCommand = new Command(this.ReduceSelectedCard);
+            this.IncreaseCardAmountCommand = new Command(this.IncreaseAmountSelectedCard);
+            this.ReduceCardAmountCommand = new Command(this.ReduceAmountSelectedCard);
             this.DeleteCardCommand = new Command(this.DeleteSelectedCard);
+            this.ApplySelectedSearchItemCommand = new Command(this.ApplySelectedSearchItem);
         }
 
         #endregion
@@ -64,7 +66,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             }
         }
 
-        public FullCardResponse SelectedCard
+        public FullCard SelectedCard
         {
             get => this._selectedCard;
             set => this.SetProperty(ref this._selectedCard, value);
@@ -102,11 +104,20 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             }
         }
 
-        public Command AddCardCommand { get; set; }
+        public int SelectedSearchIndex
+        {
+            get => this._selectedSearchIndex;
+            set => this.SetProperty(ref this._selectedSearchIndex, value);
+        }
 
-        public Command RemoveCardCommand { get; set; }
+
+        public Command IncreaseCardAmountCommand { get; set; }
+
+        public Command ReduceCardAmountCommand { get; set; }
 
         public Command DeleteCardCommand { get; set; }
+
+        public Command ApplySelectedSearchItemCommand { get; set; }
 
         #endregion
 
@@ -138,7 +149,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             }
         }
 
-        private void IncreaseSelectedCard(object clickedCard)
+        private void IncreaseAmountSelectedCard(object clickedCard)
         {
             if (clickedCard is FullCard card)
             {
@@ -146,7 +157,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             }
         }
 
-        private void ReduceSelectedCard(object clickedCard)
+        private void ReduceAmountSelectedCard(object clickedCard)
         {
             if (clickedCard is FullCard card && --this.DeckCards.First(o => o == card).CardCount < 1)
             {
@@ -170,7 +181,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             }
             else
             {
-                this.DeckCards.Add(card);
+                Application.Current.Dispatcher.Invoke(new Action(() => this.DeckCards.Add(card)), DispatcherPriority.Normal);
             }
         }
 
@@ -191,7 +202,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
 
         private void OnSearchTextChanged()
         {
-            if (this.SearchText.Length < 1)
+            if (this.SearchText.Length < 4)
             {
                 this.ResetSearchedItems();
                 return;
@@ -208,10 +219,24 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             if (this.SearchResults.Count > 0)
             {
                 this.SearchResultVisibility = Visibility.Visible;
+                if (this.SelectedSearchItem is null || !this.SearchResults.Contains(this.SelectedSearchItem))
+                {
+                    this.SelectedSearchIndex = 0;
+                    this.SelectedSearchItem = this.SearchResults[this.SelectedSearchIndex];
+                }
+            }
+            else
+            {
+                this.SearchResultVisibility = Visibility.Collapsed;
             }
         }
 
         private void OnSelectedSearchItemChanged()
+        {
+
+        }
+
+        private void ApplySelectedSearchItem(object _)
         {
             if (this.SelectedSearchItem is null)
             {
@@ -230,7 +255,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
         {
             this.SelectedSearchItem = null;
             this.SearchResults = new ObservableCollection<CardNameResponse>();
-            this.SearchResultVisibility = Visibility.Hidden;
+            this.SearchResultVisibility = Visibility.Collapsed;
         }
 
         #endregion

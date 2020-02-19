@@ -17,7 +17,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.AutoMapper
             CreateMap<SfCard, CardNameResponse>();
 
             CreateMap<SfCard, IFullCard>()
-                .ForMember(dest => dest.PngImage, opt => opt.MapFrom(s => s.ImageUris.ContainsKey(CardImageTypes.Png) ? s.ImageUris[CardImageTypes.Png] : null))
+                .ForMember(dest => dest.PngImage, opt => opt.MapFrom(s => s.ImageUris.ContainsKey(CardImageTypes.Large) ? s.ImageUris[CardImageTypes.Large] : null))
                 .ForMember(dest => dest.SmallImage, opt => opt.MapFrom(s => s.ImageUris.ContainsKey(CardImageTypes.Small) ? s.ImageUris[CardImageTypes.Small] : null))
                 .ForMember(dest => dest.Legalities1, opt => opt.MapFrom(s => GetFirstHalfOfLegalities(s)))
                 .ForMember(dest => dest.Legalities2, opt => opt.MapFrom(s => GetSecondHalfOfLegalities(s)))
@@ -29,7 +29,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.AutoMapper
                     Text = c.Text,
                     Name = c.Name,
                     CardType = c.CardType,
-                    PngImage = c.ImageUris.ContainsKey(CardImageTypes.Png) ? c.ImageUris[CardImageTypes.Png] : null,
+                    PngImage = c.ImageUris.ContainsKey(CardImageTypes.Large) ? c.ImageUris[CardImageTypes.Large] : null,
                     SmallImage = c.ImageUris.ContainsKey(CardImageTypes.Small) ? c.ImageUris[CardImageTypes.Small] : null,
                     Legalities1 = GetFirstHalfOfLegalities(source),
                     Legalities2 = GetSecondHalfOfLegalities(source)

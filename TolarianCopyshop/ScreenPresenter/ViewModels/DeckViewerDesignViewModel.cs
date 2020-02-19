@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Tolarian.Copyshop.Controller.ResponseObjects;
+﻿using System.Collections.ObjectModel;
+using Tolarian.Copyshop.ScreenPresenter.Model;
 
 namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
 {
@@ -18,6 +13,6 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             this.DeckCards = _deckBuilderDesignViewModel.DeckCards;
         }
 
-        public ObservableCollection<FullCardResponse> DeckCards { get; set; }
+        public ObservableCollection<FullCard> DeckCards { get; set; }
     }
 }

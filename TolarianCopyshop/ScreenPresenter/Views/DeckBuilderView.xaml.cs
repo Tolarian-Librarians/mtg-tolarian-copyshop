@@ -25,5 +25,22 @@ namespace Tolarian.Copyshop.ScreenPresenter.Views
         {
             InitializeComponent();
         }
+
+        private void TextBox_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Down)
+            {
+                _SearchResultBox.Focus();
+                _SearchResultBox.SelectedIndex++;
+            }
+        }
+
+        private void _SearchResultBox_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Released && this.DataContext is DeckBuilderViewModel oModel)
+            {
+                oModel.ApplySelectedSearchItemCommand.Execute(new object());
+            }
+        }
     }
 }

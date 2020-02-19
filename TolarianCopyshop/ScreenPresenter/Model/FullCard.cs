@@ -34,14 +34,17 @@ namespace Tolarian.Copyshop.ScreenPresenter.Model
 
         public FullCard(IFullCard card)
         {
-            this.CardType = card.CardType;
-            this.Id = card.Id;
-            this.Legalities1 = card.Legalities1;
-            this.Legalities2 = card.Legalities2;
-            this.Name = card.Name;
-            this.PngImage = card.PngImage;
-            this.SmallImage = card.SmallImage;
-            this.Text = card.Text;
+            if (card != null)
+            {
+                this.CardType = card.CardType;
+                this.Id = card.Id;
+                this.Legalities1 = card.Legalities1;
+                this.Legalities2 = card.Legalities2;
+                this.Name = card.Name;
+                this.PngImage = card.PngImage;
+                this.SmallImage = card.SmallImage;
+                this.Text = card.Text;
+            }
         }
 
         #endregion
