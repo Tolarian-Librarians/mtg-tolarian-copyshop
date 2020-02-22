@@ -14,7 +14,7 @@ namespace Tolarian.Copyshop.Business.Models.SfCardInfo
         public string Text { get; set; }
 
         [JsonProperty(PropertyName = "type_line")]
-        public string CardType { get; set; }
+        public string TypeLine { get; set; }
 
         [JsonProperty(PropertyName = "image_uris")]
         public Dictionary<CardImageTypes, Uri> ImageUris { get; set; }

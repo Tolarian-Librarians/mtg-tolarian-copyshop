@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using Tolarian.Copyshop.Controller.ResponseObjects.Enums;
 
 namespace Tolarian.Copyshop.Controller.Interfaces
 {
     public interface IFullCard
     {
-        string CardType { get; set; }
+        CardType CardType { get; set; }
         int CardCount { get; set; }
         Guid Id { get; set; }
         Dictionary<string, string> Legalities1 { get; set; }

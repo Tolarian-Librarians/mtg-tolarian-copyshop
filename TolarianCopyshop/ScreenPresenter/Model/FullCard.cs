@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Tolarian.Copyshop.Controller.Interfaces;
 using Tolarian.Copyshop.Controller.ResponseObjects;
+using Tolarian.Copyshop.Controller.ResponseObjects.Enums;
 using Tolarian.Copyshop.ScreenPresenter.Base;
 
 namespace Tolarian.Copyshop.ScreenPresenter.Model
@@ -13,7 +11,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.Model
     {
         #region Fields
 
-        private string _cardType;
+        private CardType _cardType;
         private Guid _id;
         private int _cardCount = 1;
         private Dictionary<string, string> _legalities1;
@@ -52,7 +50,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.Model
 
         #region Properties
 
-        public string CardType
+        public CardType CardType
         {
             get => this._cardType;
             set => this.SetProperty(ref this._cardType, value);
