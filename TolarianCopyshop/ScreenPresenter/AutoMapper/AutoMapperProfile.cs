@@ -25,7 +25,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.AutoMapper
                 .ForMember(dest => dest.Legalities2, opt => opt.MapFrom(s => GetSecondHalfOfLegalities(s)))
                 .ForMember(dest => dest.CardCount, opt => opt.MapFrom(_ => 1))
                 .ForMember(dest => dest.Text, opt => opt.MapFrom(s => GetTextOfCard(s)))
-                .ForMember(dest => dest.CardType, opt => opt.MapFrom(s => GetBaseCardTypeFromtypeLine(s.CardType)));
+                .ForMember(dest => dest.CardType, opt => opt.MapFrom(s => GetBaseCardTypeFromTypeLine(s.TypeLine)));
 
             CreateMap<List<IFullCard>, List<DeckInfoCard>>().ConvertUsing(i => GetBusinessCardsFromApiCards(i));
 
@@ -34,7 +34,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.AutoMapper
                     Id =  source.Id,
                     Text = c.Text,
                     Name = c.Name,
-                    CardType = GetBaseCardTypeFromtypeLine(c.CardType),
+                    CardType = GetBaseCardTypeFromTypeLine(c.TypeLine),
                     CardCount = 1,
                     LargeImage = c.ImageUris.ContainsKey(CardImageTypes.Large) ? c.ImageUris[CardImageTypes.Large] : null,
                     SmallImage = c.ImageUris.ContainsKey(CardImageTypes.Small) ? c.ImageUris[CardImageTypes.Small] : null,
@@ -44,7 +44,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.AutoMapper
             ).AsEnumerable().Cast<IFullCard>().ToList());
         }
 
-        private CardType GetBaseCardTypeFromtypeLine(string cardType)
+        private CardType GetBaseCardTypeFromTypeLine(string cardType)
         {
             List<string> typesOfCard = cardType.Split(' ').ToList();
 

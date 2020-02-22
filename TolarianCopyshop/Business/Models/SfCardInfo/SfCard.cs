@@ -26,7 +26,7 @@ namespace Tolarian.Copyshop.Business.Models.SfCardInfo
         public List<SfCardFace> CardFaces { get; set; }
 
         [JsonProperty(PropertyName = "type_line")]
-        public string CardType { get; set; }
+        public string TypeLine { get; set; }
 
         public override string ToString()
         {
