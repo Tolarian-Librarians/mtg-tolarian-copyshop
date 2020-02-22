@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Controls;
 using Tolarian.Copyshop.Business.Interfaces;
 using Tolarian.Copyshop.Controller.Interfaces;
-using Tolarian.Copyshop.Controller.ResponseObjects;
 
 namespace Tolarian.Copyshop.Controller
 {
@@ -21,7 +18,15 @@ namespace Tolarian.Copyshop.Controller
 
         public void PrintDeck(PrintDialog printDlg, List<IFullCard> deckCards)
         {
-            _requester.PrintDeck(printDlg, new Stack<Uri>(deckCards.Select(o => o.LargeImage)));
+            _requester.PrintDeck(printDlg, new Stack<Uri>(deckCards.SelectMany(card =>
+            {
+                var cards = new List<Uri>();
+                for(int i = 0; i < card.CardCount; i++)
+                    cards.Add(card.LargeImage);
+
+                return cards;
+            }
+            )));
         }
     }
 }
