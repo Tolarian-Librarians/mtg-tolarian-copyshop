@@ -138,10 +138,10 @@ namespace Tolarian.Copyshop.Controller
             return card.CardFaces != null && card.ImageUris == null;
         }
 
-        public List<IFullCard> OpenFrom(string fileName)
+        public List<IFullCard> LoadDeckFromFile(string fileName)
             => throw new NotImplementedException();
 
-        public bool SaveTo(string fileName, List<IFullCard> deckCards)
+        public bool SaveDeckToFile(string fileName, List<IFullCard> deckCards)
             => throw new NotImplementedException();
     }
 }

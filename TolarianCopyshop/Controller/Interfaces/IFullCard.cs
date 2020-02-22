@@ -17,7 +17,7 @@ namespace Tolarian.Copyshop.Controller.Interfaces
 
         string Name { get; set; }
 
-        Uri PngImage { get; set; }
+        Uri LargeImage { get; set; }
 
         Uri SmallImage { get; set; }
 

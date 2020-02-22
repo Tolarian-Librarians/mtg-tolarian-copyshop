@@ -42,7 +42,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.Model
                 this.Legalities1 = card.Legalities1;
                 this.Legalities2 = card.Legalities2;
                 this.Name = card.Name;
-                this.PngImage = card.PngImage;
+                this.LargeImage = card.LargeImage;
                 this.SmallImage = card.SmallImage;
                 this.Text = card.Text;
             }
@@ -88,7 +88,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.Model
             set => this.SetProperty(ref this._name, value);
         }
 
-        public Uri PngImage
+        public Uri LargeImage
         {
             get => this._pngImage;
             set => this.SetProperty(ref this._pngImage, value);

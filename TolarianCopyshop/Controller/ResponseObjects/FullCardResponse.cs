@@ -25,7 +25,7 @@ namespace Tolarian.Copyshop.Controller.ResponseObjects
                 this.Legalities1 = card.Legalities1;
                 this.Legalities2 = card.Legalities2;
                 this.Name = card.Name;
-                this.PngImage = card.PngImage;
+                this.LargeImage = card.LargeImage;
                 this.SmallImage = card.SmallImage;
                 this.Text = card.Text;
             }
@@ -43,7 +43,7 @@ namespace Tolarian.Copyshop.Controller.ResponseObjects
 
         public Uri SmallImage { get; set; }
 
-        public Uri PngImage { get; set; }
+        public Uri LargeImage { get; set; }
 
         public Dictionary<string, string> Legalities1 { get; set; }
 

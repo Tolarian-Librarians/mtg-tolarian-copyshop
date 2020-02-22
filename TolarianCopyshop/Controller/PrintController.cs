@@ -21,7 +21,7 @@ namespace Tolarian.Copyshop.Controller
 
         public void PrintDeck(PrintDialog printDlg, List<IFullCard> deckCards)
         {
-            _requester.PrintDeck(printDlg, new Stack<Uri>(deckCards.Select(o => o.PngImage)));
+            _requester.PrintDeck(printDlg, new Stack<Uri>(deckCards.Select(o => o.LargeImage)));
         }
     }
 }

@@ -109,7 +109,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
                 };
                 if (openFileDialog.ShowDialog() == true)
                 {
-                    DeckBuilderViewModel.GetInstance().DeckCards = new ObservableCollection<FullCard>(this._cardController.OpenFrom(openFileDialog.FileName).Cast<FullCard>());
+                    DeckBuilderViewModel.GetInstance().DeckCards = new ObservableCollection<FullCard>(this._cardController.LoadDeckFromFile(openFileDialog.FileName).Cast<FullCard>());
                     this.SaveFile = openFileDialog.FileName;
                 }
             }
@@ -139,7 +139,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
         {
             if (!saveAs && !string.IsNullOrEmpty(this.SaveFile))
             {
-                return this._cardController.SaveTo(this.SaveFile, DeckBuilderViewModel.GetInstance().DeckCards.Cast<IFullCard>().ToList());
+                return this._cardController.SaveDeckToFile(this.SaveFile, DeckBuilderViewModel.GetInstance().DeckCards.Cast<IFullCard>().ToList());
             }
 
             SaveFileDialog saveFileDialog = new SaveFileDialog()
@@ -153,7 +153,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             if (saveFileDialog.ShowDialog() == true)
             {
                 this.SaveFile = saveFileDialog.FileName;
-                return this._cardController.SaveTo(saveFileDialog.FileName, DeckBuilderViewModel.GetInstance().DeckCards.Cast<IFullCard>().ToList());
+                return this._cardController.SaveDeckToFile(saveFileDialog.FileName, DeckBuilderViewModel.GetInstance().DeckCards.Cast<IFullCard>().ToList());
             }
 
             return false;
