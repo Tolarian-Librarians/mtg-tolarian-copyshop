@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using Tolarian.Copyshop.Business.Interfaces;
-using Tolarian.Copyshop.Business.Models;
+using Tolarian.Copyshop.Business.Models.SfCardInfo;
 using Tolarian.Copyshop.Controller.Interfaces;
 using Tolarian.Copyshop.Controller.ResponseObjects;
 

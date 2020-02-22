@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace Tolarian.Copyshop.Business.Models
+namespace Tolarian.Copyshop.Business.Models.SfCardInfo
 {
     public class SfIdentifier
     {

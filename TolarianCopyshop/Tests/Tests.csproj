@@ -111,8 +111,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ControllerTests\CardControllerTest.cs" />
+    <Compile Include="ControllerTests\ControllerTestUtils.cs" />
+    <Compile Include="ControllerTests\DeckControllerTest.cs" />
     <Compile Include="InteractorTests\CardInteractorTests.cs" />
     <Compile Include="InteractorTests\PrintInteractorTests.cs" />
+    <Compile Include="InteractorTests\DeckInfoInteractorTest.cs" />
     <Compile Include="ScryfallDataAccessTests\CardDataMapperTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

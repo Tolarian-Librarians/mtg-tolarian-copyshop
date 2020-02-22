@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 using Moq;
 using Tolarian.Copyshop.Controller;
 using AutoMapper;
-using Tolarian.Copyshop.Business.Models;
 using Tolarian.Copyshop.Controller.ResponseObjects;
 using Tolarian.Copyshop.ScreenPresenter.AutoMapper;
 using Tolarian.Copyshop.Business.Models.Enums;
 using Tolarian.Copyshop.Controller.Interfaces;
 using Tolarian.Copyshop.Business.Interfaces;
+using Tolarian.Copyshop.Business.Models.SfCardInfo;
 
 namespace Tests.ControllerTests
 {
@@ -38,7 +38,7 @@ namespace Tests.ControllerTests
             expected.Legalities = null;
             expected.ImageUris = null;
             _requesterMock.Setup(m => m.GetCardById(It.IsAny<Guid>())).Returns(expected);
-            CardController unitUnterTest = new CardController(_requesterMock.Object, GetMapper());
+            CardController unitUnterTest = new CardController(_requesterMock.Object, ControllerTestUtils.GetMapper());
 
             //Act
             List<IFullCard> response = unitUnterTest.GetCardById(Guid.Empty);
@@ -55,7 +55,7 @@ namespace Tests.ControllerTests
             //Arrange
             SfCard expected = GetDummyCard();
             _requesterMock.Setup(m => m.GetCardById(It.IsAny<Guid>())).Returns(expected);
-            CardController unitUnterTest = new CardController(_requesterMock.Object, GetMapper());
+            CardController unitUnterTest = new CardController(_requesterMock.Object, ControllerTestUtils.GetMapper());
 
             //Act
             List<IFullCard> response = unitUnterTest.GetCardById(Guid.Empty);
@@ -80,7 +80,7 @@ namespace Tests.ControllerTests
             SfCard expected = GetDummyDoubleCard();
 
             _requesterMock.Setup(m => m.GetCardById(It.IsAny<Guid>())).Returns(expected);
-            CardController unitUnterTest = new CardController(_requesterMock.Object, GetMapper());
+            CardController unitUnterTest = new CardController(_requesterMock.Object, ControllerTestUtils.GetMapper());
 
             //Act
             List<IFullCard> response = unitUnterTest.GetCardById(Guid.Empty);
@@ -100,7 +100,7 @@ namespace Tests.ControllerTests
             SfCard expected = GetDummyDualFacedCard();
 
             _requesterMock.Setup(m => m.GetCardById(It.IsAny<Guid>())).Returns(expected);
-            CardController unitUnterTest = new CardController(_requesterMock.Object, GetMapper());
+            CardController unitUnterTest = new CardController(_requesterMock.Object, ControllerTestUtils.GetMapper());
 
             //Act
             List<IFullCard> response = unitUnterTest.GetCardById(Guid.Empty);
@@ -139,17 +139,6 @@ namespace Tests.ControllerTests
                 Legalities = new Dictionary<MtgPlayModes, string> { { MtgPlayModes.Commander, "legal" }, { MtgPlayModes.Brawl, "legal" }, { MtgPlayModes.Duel, "legal" }, { MtgPlayModes.Future, "legal" }, { MtgPlayModes.Historic, "legal" }, { MtgPlayModes.Legacy, "legal" }, { MtgPlayModes.Modern, "legal" } },
                 Text = "Does dummy stuff."
             };
-        }
-
-        private IMapper GetMapper()
-        {
-            var config = new MapperConfiguration(cfg =>
-            {
-                // Add all profiles in current assembly
-                cfg.AddProfile(new AutoMapperProfile());
-            });
-
-            return new Mapper(config);
         }
     }
 }

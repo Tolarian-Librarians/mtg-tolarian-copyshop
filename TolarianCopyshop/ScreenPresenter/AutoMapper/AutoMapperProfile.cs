@@ -1,11 +1,13 @@
 ﻿using AutoMapper;
-using Tolarian.Copyshop.Business.Models;
 using Tolarian.Copyshop.Controller.ResponseObjects;
 using System.Linq;
 using Tolarian.Copyshop.Business.Models.Enums;
 using System.Collections;
 using System.Collections.Generic;
 using Tolarian.Copyshop.Controller.Interfaces;
+using System;
+using Tolarian.Copyshop.Business.Models.SfCardInfo;
+using Tolarian.Copyshop.Business.Models.DeckInfo;
 
 namespace Tolarian.Copyshop.ScreenPresenter.AutoMapper
 {
@@ -23,6 +25,8 @@ namespace Tolarian.Copyshop.ScreenPresenter.AutoMapper
                 .ForMember(dest => dest.CardCount, opt => opt.MapFrom(_ => 1))
                 .ForMember(dest => dest.Text, opt => opt.MapFrom(s => GetTextOfCard(s)));
 
+            CreateMap<List<IFullCard>, List<DeckInfoCard>>().ConvertUsing(i => GetBusinessCardsFromApiCards(i));
+
             CreateMap<SfCard, List<IFullCard>>().ConvertUsing(source => source.CardFaces.Select(c => new FullCardResponse
                 {
                     Id =  source.Id,
@@ -36,6 +40,41 @@ namespace Tolarian.Copyshop.ScreenPresenter.AutoMapper
                     Legalities2 = GetSecondHalfOfLegalities(source)
                 }
             ).AsEnumerable().Cast<IFullCard>().ToList());
+        }
+
+        private List<DeckInfoCard> GetBusinessCardsFromApiCards(List<IFullCard> apiCards)
+        {
+            var result = new List<DeckInfoCard>();
+            var alreadyMapped = new List<IFullCard>();
+
+            foreach (IFullCard fullCard in apiCards)
+            {
+                if (alreadyMapped.Contains(fullCard))
+                    continue;
+
+                DeckInfoCard mappedCard = new DeckInfoCard
+                {
+                    Id = fullCard.Id,
+                    CardType = "",
+                    Copies = fullCard.CardCount,
+                    cardFaces = new List<DeckInfoCardFace>
+                    {
+                        new DeckInfoCardFace{ CardType = fullCard.CardType },
+                    }
+                };
+
+                IFullCard otherFace = apiCards.FirstOrDefault(card => card.Id == fullCard.Id && card.Name != fullCard.Name && card != fullCard);
+                if(otherFace != null)
+                {
+                    mappedCard.cardFaces.Add(new DeckInfoCardFace { CardType = otherFace.CardType });
+
+                    //Remember the other face so it wont be mapped as well
+                    alreadyMapped.Add(otherFace);
+                }
+
+                result.Add(mappedCard);
+            }
+            return result;
         }
 
         private Dictionary<string, string> GetFirstHalfOfLegalities(SfCard source)

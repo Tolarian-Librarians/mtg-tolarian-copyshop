@@ -51,7 +51,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\DeckInfo\DeckInfoCard.cs" />
+    <Compile Include="Models\DeckInfo\DeckInfoCardFace.cs" />
+    <Compile Include="Models\SfCardInfo\SfCard.cs" />
     <Compile Include="UseCaseInteractors\CardInteractor.cs" />
+    <Compile Include="UseCaseInteractors\DeckInfoInteractor.cs" />
     <Compile Include="Utility\DeckImportHelper.cs" />
     <Compile Include="Interfaces\ICardDataGateway.cs" />
     <Compile Include="Interfaces\ICardDataRequester.cs" />
@@ -60,11 +64,10 @@
     <Compile Include="Models\Enums\CardImageTypes.cs" />
     <Compile Include="Models\Enums\CardTypes.cs" />
     <Compile Include="Models\Enums\MtgPlayModes.cs" />
-    <Compile Include="Models\SfIdentifier.cs" />
-    <Compile Include="Models\SfCard.cs" />
-    <Compile Include="Models\SfCardFace.cs" />
-    <Compile Include="Models\SfIdentifierContainer.cs" />
-    <Compile Include="Models\SfPaginatedCardList.cs" />
+    <Compile Include="Models\SfCardInfo\SfIdentifier.cs" />
+    <Compile Include="Models\SfCardInfo\SfCardFace.cs" />
+    <Compile Include="Models\SfCardInfo\SfIdentifierContainer.cs" />
+    <Compile Include="Models\SfCardInfo\SfPaginatedCardList.cs" />
     <Compile Include="UseCaseInteractors\PrintInteractor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

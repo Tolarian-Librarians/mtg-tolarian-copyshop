@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using Tolarian.Copyshop.Business.Interfaces;
-using Tolarian.Copyshop.Business.Models;
+using Tolarian.Copyshop.Business.Models.SfCardInfo;
 
 namespace Tolarian.Copyshop.ScryfallDataAccess
 {

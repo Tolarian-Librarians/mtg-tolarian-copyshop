@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Tolarian.Copyshop.Business.Interfaces;
-using Tolarian.Copyshop.Business.Models;
+using Tolarian.Copyshop.Business.Models.SfCardInfo;
 using Tolarian.Copyshop.Business.Utility;
 
 namespace Tolarian.Copyshop.Business.UseCaseInteractors

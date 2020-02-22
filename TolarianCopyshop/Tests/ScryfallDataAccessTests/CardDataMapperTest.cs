@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Refit;
-using Tolarian.Copyshop.Business.Models;
 using Tolarian.Copyshop.ScryfallDataAccess;
 using System.Linq;
+using Tolarian.Copyshop.Business.Models.SfCardInfo;
 
 namespace Tests.ScryfallDataAccessTests
 {

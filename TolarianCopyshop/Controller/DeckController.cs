@@ -1,12 +1,24 @@
-﻿using System;
+﻿using AutoMapper;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using Tolarian.Copyshop.Business.Interfaces;
+using Tolarian.Copyshop.Business.Models.DeckInfo;
 using Tolarian.Copyshop.Controller.Interfaces;
 
 namespace Tolarian.Copyshop.Controller
 {
     public class DeckController
     {
+        private readonly IDeckInfoInteractor _deckInfoInteractor;
+        private readonly IMapper _mapper;
+
+        public DeckController(IDeckInfoInteractor deckInfoInteractor, IMapper mapper)
+        {
+            this._deckInfoInteractor = deckInfoInteractor;
+            this._mapper = mapper;
+        }
+
         public List<IFullCard> LoadDeckFromFile(string fileName)
             => throw new NotImplementedException();
 
@@ -15,18 +27,8 @@ namespace Tolarian.Copyshop.Controller
 
         public int GetTotalCardCountOfDeck(List<IFullCard> deckCards)
         {
-            IEnumerable<(Guid Key, int Count, int CardCount)> groupedCards = deckCards.GroupBy(o => o.Id, (id, cards) => (
-                Key: id,
-                Count: cards.Count(),
-                CardCount: cards.Max(card => card.CardCount)
-            ));
-
-            int totalCardCount = 0;
-            foreach ((Guid Key, int Count, int CardCount) in groupedCards)
-            {
-                totalCardCount += CardCount;
-            }
-            return totalCardCount;
+            List<DeckInfoCard> businessModel = _mapper.Map<List<DeckInfoCard>>(deckCards);
+            return _deckInfoInteractor.GetTotalCardCountOfDeck(businessModel);
         }
     }
 }
