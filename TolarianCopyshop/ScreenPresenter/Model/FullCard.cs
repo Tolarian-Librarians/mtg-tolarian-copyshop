@@ -37,6 +37,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.Model
             if (card != null)
             {
                 this.CardType = card.CardType;
+                this.CardCount = card.CardCount;
                 this.Id = card.Id;
                 this.Legalities1 = card.Legalities1;
                 this.Legalities2 = card.Legalities2;

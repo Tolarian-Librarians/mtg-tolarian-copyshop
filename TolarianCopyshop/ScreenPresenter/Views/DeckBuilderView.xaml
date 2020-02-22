@@ -226,7 +226,7 @@
                                                     <Grid Width="{Binding ElementName=_DeckListView, Path=ActualWidth}">
                                                         <Grid.ColumnDefinitions>
                                                             <ColumnDefinition Width="*" />
-                                                            <ColumnDefinition Width="100" />
+                                                            <ColumnDefinition Width="40" />
                                                         </Grid.ColumnDefinitions>
                                                         <TextBlock Grid.Column="0"
                                                                    Margin="5,0,0,0"
@@ -241,14 +241,13 @@
                                                                    FontSize="16"
                                                                    FontStyle="Italic"
                                                                    FontWeight="Bold"
-                                                                   Foreground="White"
-                                                                   Text="{Binding ItemCount}" />
-                                                        <TextBlock Grid.Column="1"
-                                                                   VerticalAlignment="Bottom"
-                                                                   FontSize="16"
-                                                                   FontStyle="Italic"
-                                                                   Foreground="White"
-                                                                   Text=" card(s)" />
+                                                                   Foreground="White">
+                                                            <TextBlock.Text>
+                                                                <MultiBinding StringFormat="{}{0} card(s)">
+                                                                    <Binding Path="ItemCount" />
+                                                                </MultiBinding>
+                                                            </TextBlock.Text>
+                                                        </TextBlock>
                                                     </Grid>
                                                 </Expander.Header>
                                                 <Expander.Content>
