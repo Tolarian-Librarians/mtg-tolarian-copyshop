@@ -238,7 +238,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             this.SearchResultCount = maxResults;
             this.SearchResults = new ObservableCollection<CardNameResponse>(result);
             this.SearchResultVisibility = Visibility.Visible;
-            if (this.SelectedSearchItem is null || !this.SearchResults.Contains(this.SelectedSearchItem))
+            if (this.SearchResults.Count > 0 && (this.SelectedSearchItem is null || !this.SearchResults.Contains(this.SelectedSearchItem)))
             {
                 this.SelectedSearchIndex = 0;
                 this.SelectedSearchItem = this.SearchResults[this.SelectedSearchIndex];
