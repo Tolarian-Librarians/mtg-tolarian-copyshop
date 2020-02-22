@@ -26,6 +26,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
 
         private static CopyShopViewModel _copyshop;
         private readonly CardController _cardController;
+        private readonly DeckController _deckController;
         private readonly PrintController _printController;
         private readonly IDialogCoordinator _dialogCoordinator;
 
@@ -33,11 +34,12 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
 
         #region Constructor
 
-        public CopyShopViewModel(CardController cardController, PrintController printController, DialogCoordinator dialogCoordinator)
+        public CopyShopViewModel(CardController cardController, PrintController printController, DeckController deckController, DialogCoordinator dialogCoordinator)
         {
             _copyshop = this;
             this._cardController = cardController;
             this._printController = printController;
+            _deckController = deckController;
             this._dialogCoordinator = dialogCoordinator;
 
             // Commands
@@ -109,7 +111,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
                 };
                 if (openFileDialog.ShowDialog() == true)
                 {
-                    DeckBuilderViewModel.GetInstance().DeckCards = new ObservableCollection<FullCard>(this._cardController.OpenFrom(openFileDialog.FileName).Cast<FullCard>());
+                    DeckBuilderViewModel.GetInstance().DeckCards = new ObservableCollection<FullCard>(this._deckController.LoadDeckFromFile(openFileDialog.FileName).Cast<FullCard>());
                     this.SaveFile = openFileDialog.FileName;
                 }
             }
@@ -139,7 +141,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
         {
             if (!saveAs && !string.IsNullOrEmpty(this.SaveFile))
             {
-                return this._cardController.SaveTo(this.SaveFile, DeckBuilderViewModel.GetInstance().DeckCards.Cast<IFullCard>().ToList());
+                return this._deckController.SaveDeckToFile(this.SaveFile, DeckBuilderViewModel.GetInstance().DeckCards.Cast<IFullCard>().ToList());
             }
 
             SaveFileDialog saveFileDialog = new SaveFileDialog()
@@ -153,7 +155,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             if (saveFileDialog.ShowDialog() == true)
             {
                 this.SaveFile = saveFileDialog.FileName;
-                return this._cardController.SaveTo(saveFileDialog.FileName, DeckBuilderViewModel.GetInstance().DeckCards.Cast<IFullCard>().ToList());
+                return this._deckController.SaveDeckToFile(saveFileDialog.FileName, DeckBuilderViewModel.GetInstance().DeckCards.Cast<IFullCard>().ToList());
             }
 
             return false;

@@ -48,6 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CardController.cs" />
+    <Compile Include="DeckController.cs" />
     <Compile Include="PrintController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResponseObjects\CardNameResponse.cs" />

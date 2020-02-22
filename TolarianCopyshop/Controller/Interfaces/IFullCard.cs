@@ -6,21 +6,13 @@ namespace Tolarian.Copyshop.Controller.Interfaces
     public interface IFullCard
     {
         string CardType { get; set; }
-
         int CardCount { get; set; }
-
         Guid Id { get; set; }
-
         Dictionary<string, string> Legalities1 { get; set; }
-
         Dictionary<string, string> Legalities2 { get; set; }
-
         string Name { get; set; }
-
-        Uri PngImage { get; set; }
-
+        Uri LargeImage { get; set; }
         Uri SmallImage { get; set; }
-
         string Text { get; set; }
     }
 }

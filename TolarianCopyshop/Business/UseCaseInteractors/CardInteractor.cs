@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Tolarian.Copyshop.Business.Models;
+using Tolarian.Copyshop.Business.Interfaces;
+using Tolarian.Copyshop.Business.Models.SfCardInfo;
+using Tolarian.Copyshop.Business.Utility;
 
-namespace Tolarian.Copyshop.Business
+namespace Tolarian.Copyshop.Business.UseCaseInteractors
 {
     public class CardInteractor : ICardDataRequester
     {
@@ -29,7 +29,7 @@ namespace Tolarian.Copyshop.Business
 
             List<string> resolvedNames = DeckImportHelper.ResolveCardNamesFromList(cardNames);
 
-            List<List<string>> requestLists = ChunkListBySize<string>(resolvedNames, scryfallApiReturnCountMaximum);
+            List<List<string>> requestLists = ChunkListBySize(resolvedNames, scryfallApiReturnCountMaximum);
 
             List<SfCard> result = requestLists.SelectMany(r => _gateway.GetCardsByNameList(r).Data.ToList()).ToList();
             return result;

@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Tolarian.Copyshop.Business.Models;
+using Tolarian.Copyshop.Business.Models.SfCardInfo;
 
-namespace Tolarian.Copyshop.Business
+namespace Tolarian.Copyshop.Business.Interfaces
 {
     public interface ICardDataRequester
     {

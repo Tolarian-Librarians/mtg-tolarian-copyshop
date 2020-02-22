@@ -1,12 +1,9 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Tolarian.Copyshop.Business.Models.Enums;
 
-namespace Tolarian.Copyshop.Business.Models
+namespace Tolarian.Copyshop.Business.Models.SfCardInfo
 {
     public class SfCard
     {

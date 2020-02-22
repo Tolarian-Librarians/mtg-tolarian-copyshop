@@ -1,12 +1,10 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Moq;
-using Tolarian.Copyshop.Business;
-using Tolarian.Copyshop.Business.Models;
+using Tolarian.Copyshop.Business.Interfaces;
+using Tolarian.Copyshop.Business.UseCaseInteractors;
+using Tolarian.Copyshop.Business.Models.SfCardInfo;
 
 namespace Tests.InteractorTests
 {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Windows.Controls;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Tolarian.Copyshop.Business;
+using Tolarian.Copyshop.Business.UseCaseInteractors;
 
 namespace Tests.PrintTests
 {
