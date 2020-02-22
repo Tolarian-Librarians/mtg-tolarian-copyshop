@@ -52,6 +52,7 @@
     <Compile Include="PrintController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResponseObjects\CardNameResponse.cs" />
+    <Compile Include="ResponseObjects\Enums\CardType.cs" />
     <Compile Include="ResponseObjects\FullCardResponse.cs" />
     <Compile Include="Interfaces\IFullCard.cs" />
   </ItemGroup>
