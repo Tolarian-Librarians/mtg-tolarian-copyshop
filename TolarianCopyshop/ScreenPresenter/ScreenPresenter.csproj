@@ -84,6 +84,8 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="CollectionExtension.cs" />
+    <Compile Include="Converter\BoolToVisibilityConverter.cs" />
+    <Compile Include="Converter\InvertedBoolToVisibilityConverter.cs" />
     <Compile Include="Model\DeckCardModel.cs" />
     <Compile Include="Model\FullCard.cs" />
     <Compile Include="ViewModels\DeckViewerDesignViewModel.cs" />
