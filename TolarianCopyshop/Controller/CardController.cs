@@ -2,8 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web;
 using Tolarian.Copyshop.Business.Interfaces;
 using Tolarian.Copyshop.Business.Models;
@@ -121,11 +119,5 @@ namespace Tolarian.Copyshop.Controller
         {
             return card.CardFaces != null && card.ImageUris == null;
         }
-
-        public List<IFullCard> LoadDeckFromFile(string fileName)
-            => throw new NotImplementedException();
-
-        public bool SaveDeckToFile(string fileName, List<IFullCard> deckCards)
-            => throw new NotImplementedException();
     }
 }

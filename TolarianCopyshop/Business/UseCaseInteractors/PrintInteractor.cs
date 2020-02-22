@@ -8,7 +8,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Tolarian.Copyshop.Business.Interfaces;
 
-namespace Tolarian.Copyshop.Business
+namespace Tolarian.Copyshop.Business.UseCaseInteractors
 {
     public class PrintInteractor : IPrintRequester
     {
@@ -81,7 +81,7 @@ namespace Tolarian.Copyshop.Business
             int offsetY = cropTop + cropBottom;
 
             BitmapImage bitmap = new BitmapImage(source);
-           
+
             var img = new Image();
             img.Source = bitmap;
             img.Width = _cardWidth + offsetX;

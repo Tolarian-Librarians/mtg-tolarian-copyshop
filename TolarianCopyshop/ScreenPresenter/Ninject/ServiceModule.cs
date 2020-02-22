@@ -1,7 +1,7 @@
 ﻿using MahApps.Metro.Controls.Dialogs;
 using Ninject.Modules;
-using Tolarian.Copyshop.Business;
 using Tolarian.Copyshop.Business.Interfaces;
+using Tolarian.Copyshop.Business.UseCaseInteractors;
 using Tolarian.Copyshop.Controller;
 using Tolarian.Copyshop.ScreenPresenter.Model;
 using Tolarian.Copyshop.ScryfallDataAccess;

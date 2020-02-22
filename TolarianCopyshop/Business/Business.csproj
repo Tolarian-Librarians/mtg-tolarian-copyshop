@@ -51,10 +51,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CardInteractor.cs" />
-    <Compile Include="DeckImportHelper.cs" />
+    <Compile Include="UseCaseInteractors\CardInteractor.cs" />
+    <Compile Include="Utility\DeckImportHelper.cs" />
     <Compile Include="Interfaces\ICardDataGateway.cs" />
     <Compile Include="Interfaces\ICardDataRequester.cs" />
+    <Compile Include="Interfaces\IDeckInfoInteractor.cs" />
     <Compile Include="Interfaces\IPrintRequester.cs" />
     <Compile Include="Models\Enums\CardImageTypes.cs" />
     <Compile Include="Models\Enums\CardTypes.cs" />
@@ -64,7 +65,7 @@
     <Compile Include="Models\SfCardFace.cs" />
     <Compile Include="Models\SfIdentifierContainer.cs" />
     <Compile Include="Models\SfPaginatedCardList.cs" />
-    <Compile Include="PrintInteractor.cs" />
+    <Compile Include="UseCaseInteractors\PrintInteractor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

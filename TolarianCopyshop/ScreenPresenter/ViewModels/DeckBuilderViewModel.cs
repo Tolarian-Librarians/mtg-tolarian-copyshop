@@ -183,7 +183,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             => this.CalculateDeckCardCount();
 
         private void CalculateDeckCardCount() 
-            => this.DeckCardCount = this._deckController.GetTotalCardsOfDeck(this.DeckCards.Cast<IFullCard>().ToList());
+            => this.DeckCardCount = this._deckController.GetTotalCardCountOfDeck(this.DeckCards.Cast<IFullCard>().ToList());
 
         private void IncreaseAmountSelectedCard(object clickedCard)
         {

@@ -7,7 +7,13 @@ namespace Tolarian.Copyshop.Controller
 {
     public class DeckController
     {
-        public int GetTotalCardsOfDeck(List<IFullCard> deckCards)
+        public List<IFullCard> LoadDeckFromFile(string fileName)
+            => throw new NotImplementedException();
+
+        public bool SaveDeckToFile(string fileName, List<IFullCard> deckCards)
+            => throw new NotImplementedException();
+
+        public int GetTotalCardCountOfDeck(List<IFullCard> deckCards)
         {
             IEnumerable<(Guid Key, int Count, int CardCount)> groupedCards = deckCards.GroupBy(o => o.Id, (id, cards) => (
                 Key: id,
