@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Tolarian.Copyshop.Business.Models.Enums;
 using Tolarian.Copyshop.Controller.Interfaces;
+using Tolarian.Copyshop.Controller.ResponseObjects.Enums;
 
 namespace Tolarian.Copyshop.Controller.ResponseObjects
 {
@@ -37,7 +34,7 @@ namespace Tolarian.Copyshop.Controller.ResponseObjects
 
         public string Text { get; set; }
 
-        public string CardType { get; set; }
+        public CardType CardType { get; set; }
 
         public int CardCount { get; set; }
 

@@ -8,6 +8,7 @@ using Tolarian.Copyshop.Controller.Interfaces;
 using System;
 using Tolarian.Copyshop.Business.Models.SfCardInfo;
 using Tolarian.Copyshop.Business.Models.DeckInfo;
+using Tolarian.Copyshop.Controller.ResponseObjects.Enums;
 
 namespace Tolarian.Copyshop.ScreenPresenter.AutoMapper
 {
@@ -23,7 +24,8 @@ namespace Tolarian.Copyshop.ScreenPresenter.AutoMapper
                 .ForMember(dest => dest.Legalities1, opt => opt.MapFrom(s => GetFirstHalfOfLegalities(s)))
                 .ForMember(dest => dest.Legalities2, opt => opt.MapFrom(s => GetSecondHalfOfLegalities(s)))
                 .ForMember(dest => dest.CardCount, opt => opt.MapFrom(_ => 1))
-                .ForMember(dest => dest.Text, opt => opt.MapFrom(s => GetTextOfCard(s)));
+                .ForMember(dest => dest.Text, opt => opt.MapFrom(s => GetTextOfCard(s)))
+                .ForMember(dest => dest.CardType, opt => opt.MapFrom(s => GetBaseCardTypeFromtypeLine(s.CardType)));
 
             CreateMap<List<IFullCard>, List<DeckInfoCard>>().ConvertUsing(i => GetBusinessCardsFromApiCards(i));
 
@@ -32,7 +34,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.AutoMapper
                     Id =  source.Id,
                     Text = c.Text,
                     Name = c.Name,
-                    CardType = c.CardType,
+                    CardType = GetBaseCardTypeFromtypeLine(c.CardType),
                     CardCount = 1,
                     LargeImage = c.ImageUris.ContainsKey(CardImageTypes.Large) ? c.ImageUris[CardImageTypes.Large] : null,
                     SmallImage = c.ImageUris.ContainsKey(CardImageTypes.Small) ? c.ImageUris[CardImageTypes.Small] : null,
@@ -40,6 +42,37 @@ namespace Tolarian.Copyshop.ScreenPresenter.AutoMapper
                     Legalities2 = GetSecondHalfOfLegalities(source)
                 }
             ).AsEnumerable().Cast<IFullCard>().ToList());
+        }
+
+        private CardType GetBaseCardTypeFromtypeLine(string cardType)
+        {
+            List<string> typesOfCard = cardType.Split(' ').ToList();
+
+            typesOfCard = typesOfCard.Select(str => str.ToLower().Trim()).ToList();
+            typesOfCard.RemoveAll(str => string.IsNullOrWhiteSpace(str) || str == "-");
+
+            if (typesOfCard.Contains("creature"))
+                return CardType.Creature;
+
+            if (typesOfCard.Contains("enchantment"))
+                return CardType.Enchantment;
+
+            if (typesOfCard.Contains("sorcery"))
+                return CardType.Sorcery;
+            
+            if (typesOfCard.Contains("instant"))
+                return CardType.Instant;
+            
+            if (typesOfCard.Contains("land"))
+                return CardType.Land;
+            
+            if (typesOfCard.Contains("artifact"))
+                return CardType.Artifact;
+            
+            if (typesOfCard.Contains("planeswalker"))
+                return CardType.Planeswalker;                       
+
+            return CardType.Unknown;
         }
 
         private List<DeckInfoCard> GetBusinessCardsFromApiCards(List<IFullCard> apiCards)
@@ -59,14 +92,14 @@ namespace Tolarian.Copyshop.ScreenPresenter.AutoMapper
                     Copies = fullCard.CardCount,
                     cardFaces = new List<DeckInfoCardFace>
                     {
-                        new DeckInfoCardFace{ CardType = fullCard.CardType },
+                        new DeckInfoCardFace{ CardType = fullCard.CardType.ToString() },
                     }
                 };
 
                 IFullCard otherFace = apiCards.FirstOrDefault(card => card.Id == fullCard.Id && card.Name != fullCard.Name && card != fullCard);
                 if(otherFace != null)
                 {
-                    mappedCard.cardFaces.Add(new DeckInfoCardFace { CardType = otherFace.CardType });
+                    mappedCard.cardFaces.Add(new DeckInfoCardFace { CardType = otherFace.CardType.ToString() });
 
                     //Remember the other face so it wont be mapped as well
                     alreadyMapped.Add(otherFace);
