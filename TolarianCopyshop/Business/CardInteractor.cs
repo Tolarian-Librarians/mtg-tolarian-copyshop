@@ -35,19 +35,18 @@ namespace Tolarian.Copyshop.Business
             return result;
         }
 
-        public List<SfCard> GetCardsBySearchQuery(string searchQuery, int maxCountOfItems)
+        public List<SfCard> GetCardsBySearchQuery(string searchQuery, int maxCountOfItems, out int maxResults)
         {
             const int minimumQueryLength = 3;
             if (searchQuery.Length < minimumQueryLength)
             {
+                maxResults = 0;
                 return new List<SfCard>();
             }
 
             List<SfCard> result = _gateway.GetCardsByQuery(searchQuery).Data.ToList();
-
-            result = TruncateListToMaxSize(maxCountOfItems, result);
-
-            return result;
+            maxResults = result.Count;
+            return TruncateListToMaxSize(maxCountOfItems, result);
         }
 
         private List<SfCard> TruncateListToMaxSize(int maxCountOfItems, List<SfCard> targetList)

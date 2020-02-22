@@ -26,6 +26,8 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
         private FullCardResponse _selectedCard;
         private Visibility _searchResultVisibility = Visibility.Hidden;
         private string _searchText;
+        private int _searchResultCount;
+        private bool _hasSearchText;
         private ObservableCollection<CardNameResponse> _searchResults;
         private CardNameResponse _selectedSearchItem;
         private int _selectedSearchIndex;
@@ -46,6 +48,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             this.ReduceCardAmountCommand = new Command(this.ReduceAmountSelectedCard);
             this.DeleteCardCommand = new Command(this.DeleteSelectedCard);
             this.ApplySelectedSearchItemCommand = new Command(this.ApplySelectedSearchItem);
+            this.ClearSearchCommand = new Command(this.ClearSearch);
         }
 
         #endregion
@@ -94,6 +97,13 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             }
         }
 
+        public bool HasSearchText
+        {
+            get => this._hasSearchText;
+            set => this.SetProperty(ref this._hasSearchText, value);
+        }
+
+
         public CardNameResponse SelectedSearchItem
         {
             get => this._selectedSearchItem;
@@ -110,6 +120,12 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             set => this.SetProperty(ref this._selectedSearchIndex, value);
         }
 
+        public int SearchResultCount
+        {
+            get => this._searchResultCount;
+            set => this.SetProperty(ref this._searchResultCount, value);
+        }
+
 
         public Command IncreaseCardAmountCommand { get; set; }
 
@@ -118,6 +134,8 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
         public Command DeleteCardCommand { get; set; }
 
         public Command ApplySelectedSearchItemCommand { get; set; }
+
+        public Command ClearSearchCommand { get; set; }
 
         #endregion
 
@@ -202,32 +220,28 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
 
         private void OnSearchTextChanged()
         {
+            this.HasSearchText = this.SearchText.Length > 0;
+
             if (this.SearchText.Length < 4)
             {
                 this.ResetSearchedItems();
                 return;
             }
 
-            var result = this._controller.GetCardNamesAndIdsBySearchQuery(this.SearchText, 10);
+            var result = this._controller.GetCardNamesAndIdsBySearchQuery(this.SearchText, 10, out int maxResults);
             if (this.token.IsCancellationRequested)
             {
                 return;
             }
 
             this.SendErrorMessage(this._controller.ErrorMessage);
+            this.SearchResultCount = maxResults;
             this.SearchResults = new ObservableCollection<CardNameResponse>(result);
-            if (this.SearchResults.Count > 0)
+            this.SearchResultVisibility = Visibility.Visible;
+            if (this.SelectedSearchItem is null || !this.SearchResults.Contains(this.SelectedSearchItem))
             {
-                this.SearchResultVisibility = Visibility.Visible;
-                if (this.SelectedSearchItem is null || !this.SearchResults.Contains(this.SelectedSearchItem))
-                {
-                    this.SelectedSearchIndex = 0;
-                    this.SelectedSearchItem = this.SearchResults[this.SelectedSearchIndex];
-                }
-            }
-            else
-            {
-                this.SearchResultVisibility = Visibility.Collapsed;
+                this.SelectedSearchIndex = 0;
+                this.SelectedSearchItem = this.SearchResults[this.SelectedSearchIndex];
             }
         }
 
@@ -253,10 +267,14 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
 
         private void ResetSearchedItems()
         {
+            this.SearchResultCount = 0;
             this.SelectedSearchItem = null;
             this.SearchResults = new ObservableCollection<CardNameResponse>();
             this.SearchResultVisibility = Visibility.Collapsed;
         }
+
+        private void ClearSearch(object obj)
+            => this.SearchText = string.Empty;
 
         #endregion
 

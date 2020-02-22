@@ -60,13 +60,14 @@ namespace Tolarian.Copyshop.Controller
             return response;
         }
 
-        public List<CardNameResponse> GetCardNamesAndIdsBySearchQuery(string query, int maxCountOfItems)
+        public List<CardNameResponse> GetCardNamesAndIdsBySearchQuery(string query, int maxCountOfItems, out int maxResults)
         {
+            maxResults = 0;
             var response = new List<CardNameResponse>();
 
             try
             {
-                response = _mapper.Map<List<CardNameResponse>>(_requester.GetCardsBySearchQuery(query, maxCountOfItems));
+                response = _mapper.Map<List<CardNameResponse>>(_requester.GetCardsBySearchQuery(query, maxCountOfItems, out maxResults));
             }
             catch (HttpException ex)
             {
