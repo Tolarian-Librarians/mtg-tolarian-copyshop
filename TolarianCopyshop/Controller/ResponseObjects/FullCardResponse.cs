@@ -20,6 +20,7 @@ namespace Tolarian.Copyshop.Controller.ResponseObjects
             if (card != null)
             {
                 this.CardType = card.CardType;
+                this.CardCount = card.CardCount;
                 this.Id = card.Id;
                 this.Legalities1 = card.Legalities1;
                 this.Legalities2 = card.Legalities2;
@@ -37,6 +38,8 @@ namespace Tolarian.Copyshop.Controller.ResponseObjects
         public string Text { get; set; }
 
         public string CardType { get; set; }
+
+        public int CardCount { get; set; }
 
         public Uri SmallImage { get; set; }
 

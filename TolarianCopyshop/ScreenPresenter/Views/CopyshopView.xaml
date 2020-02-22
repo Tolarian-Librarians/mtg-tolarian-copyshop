@@ -103,7 +103,7 @@
         </TabControl>
         <StatusBar Grid.Row="2">
             <StatusBarItem Content="Total Cards:" />
-            <StatusBarItem Content="{Binding ElementName=_DeckBuilderView, Path=DataContext.DeckCards.Count}" />
+            <StatusBarItem Content="{Binding ElementName=_DeckBuilderView, Path=DataContext.DeckCardCount}" />
         </StatusBar>
     </Grid>
 </Controls:MetroWindow>

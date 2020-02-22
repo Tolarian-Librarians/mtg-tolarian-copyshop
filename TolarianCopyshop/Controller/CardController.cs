@@ -107,6 +107,22 @@ namespace Tolarian.Copyshop.Controller
             return response;
         }
 
+        public int GetCardCount(List<IFullCard> deckCards)
+        {
+            IEnumerable<(Guid Key, int Count, int CardCount)> groupedCards = deckCards.GroupBy(o => o.Id, (id, cards) => (
+                Key: id,
+                Count: cards.Count(),
+                CardCount: cards.Max(card => card.CardCount)
+            ));
+
+            int totalCardCount = 0;
+            foreach ((Guid Key, int Count, int CardCount) in groupedCards)
+            {
+                totalCardCount += CardCount;
+            }
+            return totalCardCount;
+        }
+
         private List<IFullCard> MapCardToFullCardResponse(SfCard card)
         {
             List<IFullCard> response;

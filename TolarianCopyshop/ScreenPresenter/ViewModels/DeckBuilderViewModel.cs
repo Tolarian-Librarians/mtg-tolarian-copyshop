@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
 using Tolarian.Copyshop.Controller;
+using Tolarian.Copyshop.Controller.Interfaces;
 using Tolarian.Copyshop.Controller.ResponseObjects;
 using Tolarian.Copyshop.ScreenPresenter.Base;
 using Tolarian.Copyshop.ScreenPresenter.Model;
@@ -23,6 +24,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
         private readonly CardController _controller;
         private readonly DeckCardModel _deckCardModel;
 
+        private int _deckCardCount;
         private FullCardResponse _selectedCard;
         private Visibility _searchResultVisibility = Visibility.Hidden;
         private string _searchText;
@@ -49,6 +51,8 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             this.DeleteCardCommand = new Command(this.DeleteSelectedCard);
             this.ApplySelectedSearchItemCommand = new Command(this.ApplySelectedSearchItem);
             this.ClearSearchCommand = new Command(this.ClearSearch);
+
+            this._deckCardModel.DeckCards.CollectionChanged += this.DeckCards_CollectionChanged;
         }
 
         #endregion
@@ -67,6 +71,12 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
                     DeckViewerViewModel.GetInstance().InvokeDeckCards();
                 }
             }
+        }
+
+        public int DeckCardCount
+        {
+            get => this._deckCardCount;
+            set => this.SetProperty(ref this._deckCardCount, value);
         }
 
         public FullCard SelectedCard
@@ -167,19 +177,30 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             }
         }
 
+        private void DeckCards_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+            => this.CalculateDeckCardCount();
+
+        private void CalculateDeckCardCount() 
+            => this.DeckCardCount = this._controller.GetCardCount(this.DeckCards.Cast<IFullCard>().ToList());
+
         private void IncreaseAmountSelectedCard(object clickedCard)
         {
             if (clickedCard is FullCard card)
             {
                 this.DeckCards.First(o => o == card).CardCount++;
+                this.CalculateDeckCardCount();
             }
         }
 
         private void ReduceAmountSelectedCard(object clickedCard)
         {
-            if (clickedCard is FullCard card && --this.DeckCards.First(o => o == card).CardCount < 1)
+            if (clickedCard is FullCard card)
             {
-                this.DeleteSelectedCard(clickedCard);
+                if (--this.DeckCards.First(o => o == card).CardCount < 1)
+                {
+                    this.DeleteSelectedCard(clickedCard);
+                }
+                this.CalculateDeckCardCount();
             }
         }
 

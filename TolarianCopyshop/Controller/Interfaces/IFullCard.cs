@@ -7,6 +7,8 @@ namespace Tolarian.Copyshop.Controller.Interfaces
     {
         string CardType { get; set; }
 
+        int CardCount { get; set; }
+
         Guid Id { get; set; }
 
         Dictionary<string, string> Legalities1 { get; set; }

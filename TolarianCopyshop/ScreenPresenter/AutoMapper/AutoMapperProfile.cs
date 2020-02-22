@@ -3,7 +3,6 @@ using Tolarian.Copyshop.Business.Models;
 using Tolarian.Copyshop.Controller.ResponseObjects;
 using System.Linq;
 using Tolarian.Copyshop.Business.Models.Enums;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using Tolarian.Copyshop.Controller.Interfaces;
@@ -21,6 +20,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.AutoMapper
                 .ForMember(dest => dest.SmallImage, opt => opt.MapFrom(s => s.ImageUris.ContainsKey(CardImageTypes.Small) ? s.ImageUris[CardImageTypes.Small] : null))
                 .ForMember(dest => dest.Legalities1, opt => opt.MapFrom(s => GetFirstHalfOfLegalities(s)))
                 .ForMember(dest => dest.Legalities2, opt => opt.MapFrom(s => GetSecondHalfOfLegalities(s)))
+                .ForMember(dest => dest.CardCount, opt => opt.MapFrom(_ => 1))
                 .ForMember(dest => dest.Text, opt => opt.MapFrom(s => GetTextOfCard(s)));
 
             CreateMap<SfCard, List<IFullCard>>().ConvertUsing(source => source.CardFaces.Select(c => new FullCardResponse
@@ -29,6 +29,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.AutoMapper
                     Text = c.Text,
                     Name = c.Name,
                     CardType = c.CardType,
+                    CardCount = 1,
                     PngImage = c.ImageUris.ContainsKey(CardImageTypes.Large) ? c.ImageUris[CardImageTypes.Large] : null,
                     SmallImage = c.ImageUris.ContainsKey(CardImageTypes.Small) ? c.ImageUris[CardImageTypes.Small] : null,
                     Legalities1 = GetFirstHalfOfLegalities(source),
