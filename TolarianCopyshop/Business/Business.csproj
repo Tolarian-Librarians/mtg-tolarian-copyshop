@@ -53,9 +53,9 @@
   <ItemGroup>
     <Compile Include="CardInteractor.cs" />
     <Compile Include="DeckImportHelper.cs" />
-    <Compile Include="ICardDataGateway.cs" />
-    <Compile Include="ICardDataRequester.cs" />
-    <Compile Include="IPrintRequester.cs" />
+    <Compile Include="Interfaces\ICardDataGateway.cs" />
+    <Compile Include="Interfaces\ICardDataRequester.cs" />
+    <Compile Include="Interfaces\IPrintRequester.cs" />
     <Compile Include="Models\Enums\CardImageTypes.cs" />
     <Compile Include="Models\Enums\CardTypes.cs" />
     <Compile Include="Models\Enums\MtgPlayModes.cs" />

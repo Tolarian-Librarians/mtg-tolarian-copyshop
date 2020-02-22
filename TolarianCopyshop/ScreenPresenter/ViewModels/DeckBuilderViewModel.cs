@@ -21,7 +21,8 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
         #region Fields
 
         private static DeckBuilderViewModel _deckBuilder;
-        private readonly CardController _controller;
+        private readonly CardController _cardController;
+        private readonly DeckController _deckController;
         private readonly DeckCardModel _deckCardModel;
 
         private int _deckCardCount;
@@ -41,10 +42,11 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
 
         #region Constructor
 
-        public DeckBuilderViewModel(CardController controller, DeckCardModel deckCardModel)
+        public DeckBuilderViewModel(CardController controller, DeckController deckController, DeckCardModel deckCardModel)
         {
             _deckBuilder = this;
-            this._controller = controller;
+            this._cardController = controller;
+            _deckController = deckController;
             this._deckCardModel = deckCardModel;
             this.IncreaseCardAmountCommand = new Command(this.IncreaseAmountSelectedCard);
             this.ReduceCardAmountCommand = new Command(this.ReduceAmountSelectedCard);
@@ -181,7 +183,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             => this.CalculateDeckCardCount();
 
         private void CalculateDeckCardCount() 
-            => this.DeckCardCount = this._controller.GetCardCount(this.DeckCards.Cast<IFullCard>().ToList());
+            => this.DeckCardCount = this._deckController.GetTotalCardsOfDeck(this.DeckCards.Cast<IFullCard>().ToList());
 
         private void IncreaseAmountSelectedCard(object clickedCard)
         {
@@ -249,13 +251,13 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
                 return;
             }
 
-            var result = this._controller.GetCardNamesAndIdsBySearchQuery(this.SearchText, 10, out int maxResults);
+            var result = this._cardController.GetCardNamesAndIdsBySearchQuery(this.SearchText, 10, out int maxResults);
             if (this.token.IsCancellationRequested)
             {
                 return;
             }
 
-            this.SendErrorMessage(this._controller.ErrorMessage);
+            this.SendErrorMessage(this._cardController.ErrorMessage);
             this.SearchResultCount = maxResults;
             this.SearchResults = new ObservableCollection<CardNameResponse>(result);
             this.SearchResultVisibility = Visibility.Visible;
@@ -278,8 +280,8 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
                 return;
             }
 
-            var newCards = this._controller.GetCardById(this.SelectedSearchItem.Id);
-            this.SendErrorMessage(this._controller.ErrorMessage);
+            var newCards = this._cardController.GetCardById(this.SelectedSearchItem.Id);
+            this.SendErrorMessage(this._cardController.ErrorMessage);
             this.AddCards(newCards.ConvertAll(card => new FullCard(card)));
 
             this.SearchText = string.Empty;

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Moq;
 using Tolarian.Copyshop.Business;
 using Tolarian.Copyshop.Business.Models;
+using Tolarian.Copyshop.Business.Interfaces;
 
 namespace Tests.InteractorTests
 {

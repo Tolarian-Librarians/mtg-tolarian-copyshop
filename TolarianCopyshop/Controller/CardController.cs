@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
-using Tolarian.Copyshop.Business;
+using Tolarian.Copyshop.Business.Interfaces;
 using Tolarian.Copyshop.Business.Models;
 using Tolarian.Copyshop.Controller.Interfaces;
 using Tolarian.Copyshop.Controller.ResponseObjects;
@@ -105,22 +105,6 @@ namespace Tolarian.Copyshop.Controller
             }
 
             return response;
-        }
-
-        public int GetCardCount(List<IFullCard> deckCards)
-        {
-            IEnumerable<(Guid Key, int Count, int CardCount)> groupedCards = deckCards.GroupBy(o => o.Id, (id, cards) => (
-                Key: id,
-                Count: cards.Count(),
-                CardCount: cards.Max(card => card.CardCount)
-            ));
-
-            int totalCardCount = 0;
-            foreach ((Guid Key, int Count, int CardCount) in groupedCards)
-            {
-                totalCardCount += CardCount;
-            }
-            return totalCardCount;
         }
 
         private List<IFullCard> MapCardToFullCardResponse(SfCard card)
