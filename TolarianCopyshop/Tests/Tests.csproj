@@ -131,9 +131,9 @@
       <Project>{0F505BFB-37D5-40F2-BD89-82A9F60599C9}</Project>
       <Name>Controller</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ScreenPresenter\ScreenPresenter.csproj">
+    <ProjectReference Include="..\ScreenPresenter\Frontend.WPF.csproj">
       <Project>{975c396e-40e5-4818-a781-2a8afba99b26}</Project>
-      <Name>ScreenPresenter</Name>
+      <Name>Frontend.WPF</Name>
     </ProjectReference>
     <ProjectReference Include="..\ScryfallDataAccess\ScryfallDataAccess.csproj">
       <Project>{96D19586-2AC8-4236-AD41-F25D739CF626}</Project>
