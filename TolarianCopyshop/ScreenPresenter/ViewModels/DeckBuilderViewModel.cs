@@ -71,6 +71,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
                     this._deckCardModel.DeckCards = value;
                     this.OnPropertyChanged(nameof(this.DeckCards));
                     DeckViewerViewModel.GetInstance().InvokeDeckCards();
+                    this.CalculateDeckCardCount();
                 }
             }
         }
@@ -182,7 +183,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
         private void DeckCards_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
             => this.CalculateDeckCardCount();
 
-        private void CalculateDeckCardCount() 
+        private void CalculateDeckCardCount()
             => this.DeckCardCount = this._deckController.GetTotalCardCountOfDeck(this.DeckCards.Cast<IFullCard>().ToList());
 
         private void IncreaseAmountSelectedCard(object clickedCard)
@@ -206,11 +207,19 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             }
         }
 
-        internal void AddCards(IEnumerable<FullCard> cardList)
+        internal void AddCards(IEnumerable<FullCard> cardList, bool asNewList = false)
         {
-            foreach (FullCard card in cardList)
+            if (asNewList)
             {
-                this.AddCard(card);
+                CreateNewDeckList();
+            }
+
+            if (cardList != null)
+            {
+                foreach (FullCard card in cardList)
+                {
+                    this.AddCard(card);
+                }
             }
         }
 
@@ -224,6 +233,13 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             {
                 Application.Current.Dispatcher.Invoke(new Action(() => this.DeckCards.Add(card)), DispatcherPriority.Normal);
             }
+        }
+
+        private void CreateNewDeckList()
+        {
+            this._deckCardModel.DeckCards.CollectionChanged -= this.DeckCards_CollectionChanged;
+            this.DeckCards = new ObservableCollection<FullCard>();
+            this._deckCardModel.DeckCards.CollectionChanged += this.DeckCards_CollectionChanged;
         }
 
         private async void OnSearchTextChangedAsync()

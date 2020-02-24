@@ -19,6 +19,11 @@ namespace Tolarian.Copyshop.Business.UseCaseInteractors
 
         public void PrintDeck(PrintDialog printDlg, Stack<Uri> deckCards)
         {
+            if (deckCards is null || deckCards.Count == 0)
+            {
+                return;
+            }
+
             FixedDocument doc = GetDocByDialogueSettings(printDlg);
 
             AddCardImagesToDoc(deckCards, doc);

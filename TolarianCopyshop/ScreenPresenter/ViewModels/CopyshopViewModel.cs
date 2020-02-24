@@ -5,9 +5,11 @@ using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
 using Tolarian.Copyshop.Controller;
@@ -46,29 +48,29 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             this.NewCommand = new Command(this.NewDeck);
             this.OpenCommand = new Command(this.OpenDeck);
             this.SaveCommand = new Command(this.SaveDeck);
-            this.SaveToCommand = new Command(this.SaveDeckTo);
-            this.ImportTextCommand = new Command(this.ImportDeck);
+            this.ImportCommand = new Command(this.ImportDeck);
             this.ClearCommand = new Command(this.ClearDeck);
             this.PrintCommand = new Command(this.PrintDeck);
+            this.OpenLinkCommand = new Command(this.OpenLink);
         }
 
         #endregion
 
         #region Properties
 
-        public Command NewCommand { get; set; }
+        public Command NewCommand { get; }
 
-        public Command OpenCommand { get; set; }
+        public Command OpenCommand { get; }
 
-        public Command SaveCommand { get; set; }
+        public Command SaveCommand { get; }
 
-        public Command SaveToCommand { get; set; }
-
-        public Command ImportTextCommand { get; }
+        public Command ImportCommand { get; }
 
         public Command PrintCommand { get; }
 
-        public Command ClearCommand { get; set; }
+        public Command ClearCommand { get; }
+
+        public Command OpenLinkCommand { get; }
 
         public string SaveFile { get; set; }
 
@@ -84,7 +86,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             if (this.HandleRequestSave())
             {
                 this.SaveFile = string.Empty;
-                DeckBuilderViewModel.GetInstance().DeckCards = new ObservableCollection<FullCard>();
+                DeckBuilderViewModel.GetInstance().AddCards(null, true);
             }
         }
 
@@ -93,7 +95,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             if (this.HandleRequestSave())
             {
                 this.SaveFile = string.Empty;
-                DeckBuilderViewModel.GetInstance().DeckCards = new ObservableCollection<FullCard>();
+                DeckBuilderViewModel.GetInstance().AddCards(null, true);
             }
         }
 
@@ -111,7 +113,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
                 };
                 if (openFileDialog.ShowDialog() == true)
                 {
-                    DeckBuilderViewModel.GetInstance().DeckCards = new ObservableCollection<FullCard>(this._deckController.LoadDeckFromFile(openFileDialog.FileName).Cast<FullCard>());
+                    DeckBuilderViewModel.GetInstance().AddCards(this._deckController.LoadDeckFromFile(openFileDialog.FileName).Cast<FullCard>(), true);
                     this.SaveFile = openFileDialog.FileName;
                 }
             }
@@ -119,6 +121,9 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
 
         private bool HandleRequestSave()
         {
+            // Till export is implemented...
+            return true;
+
             if (DeckBuilderViewModel.GetInstance().DeckCards.Count == 0)
             {
                 return true;
@@ -161,17 +166,31 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             return false;
         }
 
-        private void SaveDeck(object _)
-            => this.HandleSave(false);
-
-        private void SaveDeckTo(object _)
-            => this.HandleSave(true);
-
-        private async void ImportDeck(object _)
+        private void SaveDeck(object commandParameter)
         {
-            if (this.HandleRequestSave())
+            if (commandParameter is bool saveAs)
             {
-                string importCards = await CopyShopView.GetInstance().ShowChildWindowAsync<string>(new ImportCardsChildView() { IsModal = false }).ConfigureAwait(false);
+                this.HandleSave(saveAs);
+            }
+        }
+
+        private async void ImportDeck(object commandParameter)
+        {
+            if (commandParameter is string importType && this.HandleRequestSave())
+            {
+                string importCards = string.Empty;
+                if (importType.Equals("TEXT", StringComparison.OrdinalIgnoreCase))
+                {
+                    importCards = await CopyShopView.GetInstance().ShowChildWindowAsync<string>(new ImportCardsChildView() { IsModal = false }).ConfigureAwait(false);
+                }
+                else if (importType.Equals("CLIPBOARD", StringComparison.OrdinalIgnoreCase))
+                {
+                    importCards = Clipboard.GetText();
+                }
+                else
+                {
+                    return;
+                }
 
                 this.ShowProgress("IMPORT", "Please wait while your deck is imported...", new Action(() => this.ImportDeckCards(importCards)));
             }
@@ -183,8 +202,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             this.SendErrorMessage(this._cardController.ErrorMessage);
             if (importedCards.Count > 0)
             {
-                DeckBuilderViewModel.GetInstance().DeckCards = new ObservableCollection<FullCard>();
-                DeckBuilderViewModel.GetInstance().AddCards(importedCards.ConvertAll(card => new FullCard(card)));
+                DeckBuilderViewModel.GetInstance().AddCards(importedCards.ConvertAll(card => new FullCard(card)), true);
             }
         }
 
@@ -199,6 +217,14 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             if (printDlg.ShowDialog() == true)
             {
                 _printController.PrintDeck(printDlg, DeckBuilderViewModel.GetInstance().DeckCards.Cast<IFullCard>().ToList());
+            }
+        }
+
+        private void OpenLink(object commandParameter)
+        {
+            if (commandParameter is string link && Uri.TryCreate(link, UriKind.Absolute, out Uri hyperlink))
+            {
+                Process.Start(new ProcessStartInfo(hyperlink.AbsoluteUri));
             }
         }
 
