@@ -192,7 +192,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
                     return;
                 }
 
-                this.ShowProgress("IMPORT", "Please wait while your cards getting imported ...", new Action(() => this.ImportDeckCards(importCards)));
+                this.ShowProgress("IMPORT", "Please wait while your deck is imported...", new Action(() => this.ImportDeckCards(importCards)));
             }
         }
 
