@@ -277,7 +277,7 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <Image Grid.Row="0" Grid.ColumnSpan="3" Source="{Binding SelectedCard.PngImage}" />
+            <Image Grid.Row="0" Grid.ColumnSpan="3" Source="{Binding SelectedCard.LargeImage}" />
 
             <Grid Grid.Row="1" Grid.Column="0" Margin="0,15,0,0">
                 <DataGrid HorizontalAlignment="Right"
