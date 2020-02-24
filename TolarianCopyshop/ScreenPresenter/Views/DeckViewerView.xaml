@@ -25,7 +25,7 @@
                     <DataTemplate>
                         <Grid>
                             <Controls:ProgressRing Foreground="{DynamicResource AccentColorBrush}" />
-                            <Image Height="400" Margin="15" Source="{Binding PngImage}" />
+                            <Image Height="400" Margin="15" Source="{Binding LargeImage}" />
                         </Grid>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>

@@ -7,6 +7,7 @@
                       xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
                       xmlns:local="clr-namespace:Tolarian.Copyshop.ScreenPresenter.Views"
                       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                      xmlns:s="clr-namespace:System;assembly=mscorlib"
                       xmlns:vm="clr-namespace:Tolarian.Copyshop.ScreenPresenter.ViewModels"
                       Title="Tolarian Copyshop"
                       MinWidth="1200"
@@ -21,6 +22,12 @@
         <Controls:WindowCommands />
     </Controls:MetroWindow.LeftWindowCommands>
 
+    <Controls:MetroWindow.Resources>
+        <s:Boolean x:Key="FalseValue">False</s:Boolean>
+        <s:Boolean x:Key="TrueValue">True</s:Boolean>
+    </Controls:MetroWindow.Resources>
+
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="35" />
@@ -34,17 +41,23 @@
                         <iconPacks:PackIconFontAwesome Height="16" Margin="4,0,0,0" Kind="FileAltSolid" />
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Command="{Binding OpenCommand}" Header="Open">
+                <MenuItem Command="{Binding OpenCommand}" Header="Open" IsEnabled="False">
                     <MenuItem.Icon>
                         <iconPacks:PackIconFontAwesome Height="16" Margin="4,0,0,0" Kind="FolderOpenSolid" />
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Command="{Binding SaveCommand}" Header="Save">
+                <MenuItem Command="{Binding SaveCommand}"
+                          CommandParameter="{StaticResource FalseValue}"
+                          Header="Save"
+                          IsEnabled="False">
                     <MenuItem.Icon>
                         <iconPacks:PackIconFontAwesome Height="16" Margin="4,0,0,0" Kind="SaveSolid" />
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Command="{Binding SaveToCommand}" Header="Save to">
+                <MenuItem Command="{Binding SaveCommand}"
+                          CommandParameter="{StaticResource TrueValue}"
+                          Header="Save to"
+                          IsEnabled="False">
                     <MenuItem.Icon>
                         <iconPacks:PackIconFontAwesome Height="16" Margin="4,0,0,0" Kind="HddSolid" />
                     </MenuItem.Icon>
@@ -54,9 +67,14 @@
                     <MenuItem.Icon>
                         <iconPacks:PackIconFontAwesome Height="16" Margin="4,0,0,0" Kind="FileImportSolid" />
                     </MenuItem.Icon>
-                    <MenuItem Command="{Binding ImportTextCommand}" Header="Import from Text">
+                    <MenuItem Command="{Binding ImportCommand}" CommandParameter="Text" Header="Import from Text">
                         <MenuItem.Icon>
                             <iconPacks:PackIconFontAwesome Height="16" Margin="4,0,0,0" Kind="EnvelopeOpenTextSolid" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Command="{Binding ImportCommand}" CommandParameter="Clipboard" Header="Import from Clipboard">
+                        <MenuItem.Icon>
+                            <iconPacks:PackIconFontAwesome Height="16" Margin="4,0,0,0" Kind="ClipboardSolid" />
                         </MenuItem.Icon>
                     </MenuItem>
                 </MenuItem>
@@ -81,14 +99,14 @@
                 </MenuItem>
             </MenuItem>
             <MenuItem Header="HELP">
-                <MenuItem Header="About Tolarian Copyshop">
+                <MenuItem Header="About Tolarian Copyshop" IsEnabled="False">
                     <MenuItem.Icon>
                         <iconPacks:PackIconFontAwesome Height="16" Margin="4,0,0,0" Kind="AddressCardSolid" />
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header="Tolarian Copyshop on GitHub">
+                <MenuItem Command="{Binding OpenLinkCommand}" CommandParameter="https://bitbucket.org/tolarianlibrarians/mtg-tolarian-copyshop" Header="Tolarian Copyshop on BitBucket">
                     <MenuItem.Icon>
-                        <iconPacks:PackIconFontAwesome Height="16" Margin="4,0,0,0" Kind="GithubSquareBrands" />
+                        <iconPacks:PackIconFontAwesome Height="16" Margin="4,0,0,0" Kind="BitbucketBrands" />
                     </MenuItem.Icon>
                 </MenuItem>
             </MenuItem>
