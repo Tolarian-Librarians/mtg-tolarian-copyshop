@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScryfallDataAccess", "Scryf
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Business", "Business\Business.csproj", "{449C2407-79C0-4198-97CA-42CE7EB570AC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScreenPresenter", "ScreenPresenter\ScreenPresenter.csproj", "{975C396E-40E5-4818-A781-2A8AFBA99B26}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Frontend.WPF", "ScreenPresenter\Frontend.WPF.csproj", "{975C396E-40E5-4818-A781-2A8AFBA99B26}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Controller", "Controller\Controller.csproj", "{0F505BFB-37D5-40F2-BD89-82A9F60599C9}"
 EndProject
