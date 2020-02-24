@@ -23,7 +23,7 @@ namespace Tolarian.Copyshop.Business.UseCaseInteractors
 
             AddCardImagesToDoc(deckCards, doc);
 
-            printDlg.PrintDocument(doc.DocumentPaginator, "Job name");
+            printDlg.PrintDocument(doc.DocumentPaginator, "MtgProxyDeck");
         }
         private static FixedDocument GetDocByDialogueSettings(PrintDialog printDlg)
         {

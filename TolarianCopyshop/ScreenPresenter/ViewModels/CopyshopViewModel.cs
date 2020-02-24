@@ -173,7 +173,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             {
                 string importCards = await CopyShopView.GetInstance().ShowChildWindowAsync<string>(new ImportCardsChildView() { IsModal = false }).ConfigureAwait(false);
 
-                this.ShowProgress("IMPORT", "Please wait while your cards getting imported from text...", new Action(() => this.ImportDeckCards(importCards)));
+                this.ShowProgress("IMPORT", "Please wait while your deck is imported...", new Action(() => this.ImportDeckCards(importCards)));
             }
         }
 
