@@ -15,15 +15,20 @@ namespace Tolarian.Copyshop.Business.UseCaseInteractors
         const double _cardWidth = 226.7712;
         const double _cardHeight = 321.26016;
         const int _cardsPerRowAndCol = 3;
-        private const int _pageMargin = 50;
+        private const int _pageMargin = 40;
 
         public void PrintDeck(PrintDialog printDlg, Stack<Uri> deckCards)
         {
+            if (deckCards is null || deckCards.Count == 0)
+            {
+                return;
+            }
+
             FixedDocument doc = GetDocByDialogueSettings(printDlg);
 
             AddCardImagesToDoc(deckCards, doc);
 
-            printDlg.PrintDocument(doc.DocumentPaginator, "Job name");
+            printDlg.PrintDocument(doc.DocumentPaginator, "MtgProxyDeck");
         }
         private static FixedDocument GetDocByDialogueSettings(PrintDialog printDlg)
         {
