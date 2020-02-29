@@ -31,8 +31,8 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
         private string _searchText;
         private int _searchResultCount;
         private bool _hasSearchText;
-        private ObservableCollection<CardNameResponse> _searchResults;
-        private CardNameResponse _selectedSearchItem;
+        private ObservableCollection<CardSearchResult> _searchResults;
+        private CardSearchResult _selectedSearchItem;
         private int _selectedSearchIndex;
         private Task task;
         private CancellationTokenSource tokenSource;
@@ -88,7 +88,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             set => this.SetProperty(ref this._selectedCard, value);
         }
 
-        public ObservableCollection<CardNameResponse> SearchResults
+        public ObservableCollection<CardSearchResult> SearchResults
         {
             get => this._searchResults;
             set => this.SetProperty(ref this._searchResults, value);
@@ -117,7 +117,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
         }
 
 
-        public CardNameResponse SelectedSearchItem
+        public CardSearchResult SelectedSearchItem
         {
             get => this._selectedSearchItem;
             set
@@ -267,7 +267,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
                 return;
             }
 
-            var result = this._cardController.GetCardNamesAndIdsBySearchQuery(this.SearchText, 10, out int maxResults);
+            var result = this._cardController.GetSearchResults(this.SearchText, 10, out int maxResults);
             if (this.token.IsCancellationRequested)
             {
                 return;
@@ -275,7 +275,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
 
             this.SendErrorMessage(this._cardController.ErrorMessage);
             this.SearchResultCount = maxResults;
-            this.SearchResults = new ObservableCollection<CardNameResponse>(result);
+            this.SearchResults = new ObservableCollection<CardSearchResult>(result);
             this.SearchResultVisibility = Visibility.Visible;
             if (this.SearchResults.Count > 0 && (this.SelectedSearchItem is null || !this.SearchResults.Contains(this.SelectedSearchItem)))
             {
@@ -308,7 +308,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
         {
             this.SearchResultCount = 0;
             this.SelectedSearchItem = null;
-            this.SearchResults = new ObservableCollection<CardNameResponse>();
+            this.SearchResults = new ObservableCollection<CardSearchResult>();
             this.SearchResultVisibility = Visibility.Collapsed;
         }
 

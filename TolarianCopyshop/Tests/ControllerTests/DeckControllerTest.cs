@@ -4,7 +4,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Tolarian.Copyshop.Business.Interfaces;
 using Tolarian.Copyshop.Business.Models.DeckInfo;
-using Tolarian.Copyshop.Business.Models.SfCardInfo;
 using Tolarian.Copyshop.Controller;
 using Tolarian.Copyshop.Controller.Interfaces;
 using Tolarian.Copyshop.Controller.ResponseObjects;
@@ -31,12 +30,11 @@ namespace Tests.ControllerTests
             {
                 new FullCardResponse { CardCount = 3, Id = new Guid("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"), Name = "Emrakul"},
                 new FullCardResponse { CardCount = 1, Id = new Guid("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"), Name = "Dusk"},
-                new FullCardResponse { CardCount = 1, Id = new Guid("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"), Name = "Dawn"},                
+                new FullCardResponse { CardCount = 1, Id = new Guid("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"), Name = "Dawn"},
                 new FullCardResponse { CardCount = 2, Id = new Guid("cccccccccccccccccccccccccccccccc"), Name = "face1"},
                 new FullCardResponse { CardCount = 2, Id = new Guid("cccccccccccccccccccccccccccccccc"), Name = "face2"},
             };
-
-            DeckController unitUnderTest = new DeckController(_deckInfoMock.Object, ControllerTestUtils.GetMapper());
+            DeckController unitUnderTest = GetController();
 
             unitUnderTest.GetTotalCardCountOfDeck(dummyDeck);
 
@@ -47,6 +45,11 @@ namespace Tests.ControllerTests
             (It.Is<List<DeckInfoCard>>(
                 a => a.Count == expectedListCountAfterMapping && a[1].Copies == expectedCopiesOfSingleMultifacedCard && a[2].Copies == expectedCopiesOfDoubleMultifacedCard)
             ), Times.Once());
+        }
+
+        private DeckController GetController()
+        {
+            return new DeckController(_deckInfoMock.Object);
         }
     }
 }
