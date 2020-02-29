@@ -28,6 +28,12 @@ namespace Tolarian.Copyshop.Business.Models.SfCardInfo
         [JsonProperty(PropertyName = "type_line")]
         public string TypeLine { get; set; }
 
+        [JsonIgnore]
+        public bool IsMultifaced { get => CardFaces != null; }
+
+        [JsonIgnore]
+        public bool IsTransformable { get => CardFaces != null && ImageUris == null; }
+
         public override string ToString()
         {
             return $"{Name}";
@@ -37,5 +43,6 @@ namespace Tolarian.Copyshop.Business.Models.SfCardInfo
         {
             return new SfCard { Id = Guid.Empty };
         }
+
     }
 }

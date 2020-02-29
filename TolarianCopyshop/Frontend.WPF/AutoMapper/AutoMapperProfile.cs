@@ -16,32 +16,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.AutoMapper
     {
         public AutoMapperProfile()
         {
-            CreateMap<SfCard, CardNameResponse>();
-
-            CreateMap<SfCard, IFullCard>()
-                .ForMember(dest => dest.LargeImage, opt => opt.MapFrom(s => s.ImageUris.ContainsKey(CardImageTypes.Large) ? s.ImageUris[CardImageTypes.Large] : null))
-                .ForMember(dest => dest.SmallImage, opt => opt.MapFrom(s => s.ImageUris.ContainsKey(CardImageTypes.Small) ? s.ImageUris[CardImageTypes.Small] : null))
-                .ForMember(dest => dest.Legalities1, opt => opt.MapFrom(s => GetFirstHalfOfLegalities(s)))
-                .ForMember(dest => dest.Legalities2, opt => opt.MapFrom(s => GetSecondHalfOfLegalities(s)))
-                .ForMember(dest => dest.CardCount, opt => opt.MapFrom(_ => 1))
-                .ForMember(dest => dest.Text, opt => opt.MapFrom(s => GetTextOfCard(s)))
-                .ForMember(dest => dest.CardType, opt => opt.MapFrom(s => GetBaseCardTypeFromTypeLine(s.TypeLine)));
-
             CreateMap<List<IFullCard>, List<DeckInfoCard>>().ConvertUsing(i => GetBusinessCardsFromApiCards(i));
-
-            CreateMap<SfCard, List<IFullCard>>().ConvertUsing(source => source.CardFaces.Select(c => new FullCardResponse
-                {
-                    Id =  source.Id,
-                    Text = c.Text,
-                    Name = c.Name,
-                    CardType = GetBaseCardTypeFromTypeLine(c.TypeLine),
-                    CardCount = 1,
-                    LargeImage = c.ImageUris.ContainsKey(CardImageTypes.Large) ? c.ImageUris[CardImageTypes.Large] : null,
-                    SmallImage = c.ImageUris.ContainsKey(CardImageTypes.Small) ? c.ImageUris[CardImageTypes.Small] : null,
-                    Legalities1 = GetFirstHalfOfLegalities(source),
-                    Legalities2 = GetSecondHalfOfLegalities(source)
-                }
-            ).AsEnumerable().Cast<IFullCard>().ToList());
         }
 
         private CardType GetBaseCardTypeFromTypeLine(string cardType)

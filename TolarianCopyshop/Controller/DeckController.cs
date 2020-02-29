@@ -8,7 +8,7 @@ using Tolarian.Copyshop.Controller.Interfaces;
 
 namespace Tolarian.Copyshop.Controller
 {
-    public class DeckController
+    public class DeckController : TolarianControllerBase
     {
         private readonly IDeckInfoInteractor _deckInfoInteractor;
         private readonly IMapper _mapper;
