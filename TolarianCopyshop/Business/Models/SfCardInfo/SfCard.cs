@@ -34,15 +34,8 @@ namespace Tolarian.Copyshop.Business.Models.SfCardInfo
         [JsonIgnore]
         public bool IsTransformable { get => CardFaces != null && ImageUris == null; }
 
-        public override string ToString()
-        {
-            return $"{Name}";
-        }
+        public override string ToString() => Name;
 
-        public static SfCard GetEmpty()
-        {
-            return new SfCard { Id = Guid.Empty };
-        }
-
+        public static SfCard GetEmpty() => new SfCard { Id = Guid.Empty };
     }
 }

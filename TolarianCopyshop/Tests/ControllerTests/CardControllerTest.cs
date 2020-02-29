@@ -2,13 +2,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Moq;
 using Tolarian.Copyshop.Controller;
-using AutoMapper;
 using Tolarian.Copyshop.Controller.ResponseObjects;
-using Tolarian.Copyshop.ScreenPresenter.AutoMapper;
 using Tolarian.Copyshop.Business.Models.Enums;
 using Tolarian.Copyshop.Controller.Interfaces;
 using Tolarian.Copyshop.Business.Interfaces;
