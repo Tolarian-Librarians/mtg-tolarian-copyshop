@@ -116,7 +116,6 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             set => this.SetProperty(ref this._hasSearchText, value);
         }
 
-
         public CardSearchResult SelectedSearchItem
         {
             get => this._selectedSearchItem;
@@ -138,7 +137,6 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             get => this._searchResultCount;
             set => this.SetProperty(ref this._searchResultCount, value);
         }
-
 
         public Command IncreaseCardAmountCommand { get; set; }
 
@@ -228,6 +226,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             if (this.DeckCards.FirstOrDefault(o => o.Id == card.Id && o.Name == card.Name) is FullCard ExistingCard)
             {
                 ExistingCard.CardCount++;
+                this.CalculateDeckCardCount();
             }
             else
             {
@@ -261,7 +260,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
         {
             this.HasSearchText = this.SearchText.Length > 0;
 
-            if (this.SearchText.Length < 4)
+            if (this.SearchText.Length < 3)
             {
                 this.ResetSearchedItems();
                 return;
