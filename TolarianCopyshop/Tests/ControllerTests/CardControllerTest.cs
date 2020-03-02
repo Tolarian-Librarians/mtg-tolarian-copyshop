@@ -40,7 +40,7 @@ namespace Tests.ControllerTests
             //Assert
             Assert.IsNotNull(response);
             Assert.AreEqual(1, response.Count);
-            CardSearchResult result = response[0];
+            CardSearchResponse result = response[0];
             Assert.AreEqual(dummy.Name, result.Name);
             Assert.AreEqual(dummy.Id, result.Id);
         }
