@@ -31,8 +31,8 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
         private string _searchText;
         private int _searchResultCount;
         private bool _hasSearchText;
-        private ObservableCollection<CardSearchResponse> _searchResults;
-        private CardSearchResponse _selectedSearchItem;
+        private ObservableCollection<CardSearchCard> _searchResults;
+        private CardSearchCard _selectedSearchItem;
         private int _selectedSearchIndex;
         private Task task;
         private CancellationTokenSource tokenSource;
@@ -117,7 +117,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
         }
 
 
-        public CardSearchResponse SelectedSearchItem
+        public CardSearchCard SelectedSearchItem
         {
             get => this._selectedSearchItem;
             set
@@ -308,7 +308,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
         {
             this.SearchResultCount = 0;
             this.SelectedSearchItem = null;
-            this.SearchResults = new ObservableCollection<CardSearchResponse>();
+            this.SearchResults = new ObservableCollection<CardSearchCard>();
             this.SearchResultVisibility = Visibility.Collapsed;
         }
 
