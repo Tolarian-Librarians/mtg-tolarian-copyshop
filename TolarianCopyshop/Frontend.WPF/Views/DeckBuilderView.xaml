@@ -88,7 +88,7 @@
                     BorderBrush="Black"
                     BorderThickness="1"
                     Visibility="{Binding SearchResultVisibility}">
-                <Grid Height="275">
+                <Grid Height="275" Background="White">
                     <ListBox x:Name="_SearchResultBox"
                              Height="260"
                              VerticalAlignment="Top"

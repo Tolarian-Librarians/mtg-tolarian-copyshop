@@ -116,7 +116,6 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             set => this.SetProperty(ref this._hasSearchText, value);
         }
 
-
         public CardSearchCard SelectedSearchItem
         {
             get => this._selectedSearchItem;
@@ -138,7 +137,6 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             get => this._searchResultCount;
             set => this.SetProperty(ref this._searchResultCount, value);
         }
-
 
         public Command IncreaseCardAmountCommand { get; set; }
 
@@ -176,7 +174,10 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
         {
             if (clickedCard is FullCard card)
             {
-                this.DeckCards.Remove(card);
+                foreach (var deleteCard in this.DeckCards.Where(o => o.Id == card.Id).ToList())
+                {
+                    this.DeckCards.Remove(deleteCard);
+                }
             }
         }
 
@@ -190,7 +191,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
         {
             if (clickedCard is FullCard card)
             {
-                this.DeckCards.First(o => o == card).CardCount++;
+                this.DeckCards.Where(o => o.Id == card.Id).Select(o => o.CardCount++).ToList(); // ToList is needed in order to evaluate the select immediately due to lazy evaluation
                 this.CalculateDeckCardCount();
             }
         }
@@ -199,10 +200,8 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
         {
             if (clickedCard is FullCard card)
             {
-                if (--this.DeckCards.First(o => o == card).CardCount < 1)
-                {
-                    this.DeleteSelectedCard(clickedCard);
-                }
+                this.DeckCards.Where(o => o.Id == card.Id).Select(o => --o.CardCount).ToList(); // ToList is needed in order to evaluate the select immediately due to lazy evaluation
+                this.DeleteSelectedCard(this.DeckCards.Where(o => o.CardCount < 1).FirstOrDefault());
                 this.CalculateDeckCardCount();
             }
         }
@@ -228,6 +227,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             if (this.DeckCards.FirstOrDefault(o => o.Id == card.Id && o.Name == card.Name) is FullCard ExistingCard)
             {
                 ExistingCard.CardCount++;
+                this.CalculateDeckCardCount();
             }
             else
             {
@@ -261,7 +261,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
         {
             this.HasSearchText = this.SearchText.Length > 0;
 
-            if (this.SearchText.Length < 4)
+            if (this.SearchText.Length < 3)
             {
                 this.ResetSearchedItems();
                 return;
