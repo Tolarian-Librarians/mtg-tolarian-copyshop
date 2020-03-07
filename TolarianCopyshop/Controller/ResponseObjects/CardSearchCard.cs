@@ -1,16 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Tolarian.Copyshop.Controller.ResponseObjects
 {
-    public class CardSearchResult
+    public class CardSearchCard
     {
         public string Name { get; set; }
 
         public Guid Id { get; set; }
-
     }
 }

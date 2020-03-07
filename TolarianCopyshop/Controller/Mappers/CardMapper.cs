@@ -11,9 +11,9 @@ namespace Tolarian.Copyshop.Controller.Mappers
 {
     public abstract class CardMapper
     {
-        public static CardSearchResult MapToSearchResultDto(SfCard source)
+        public static CardSearchCard MapToSearchResultDto(SfCard source)
         {
-            var result = new CardSearchResult
+            var result = new CardSearchCard
             {
                 Name = source.Name,
                 Id = source.Id
@@ -22,10 +22,15 @@ namespace Tolarian.Copyshop.Controller.Mappers
             return result;
         }
         
-        public static List<CardSearchResult> MapToSearchResultDto(List<SfCard> source)
+        public static CardSearchResponse MapToSearchResultDto(List<SfCard> source, int resultsCount)
         {
-            List<CardSearchResult> result = source.Select(card => MapToSearchResultDto(card)).ToList();
-            return result;
+            List<CardSearchCard> foundCards = source.Select(card => MapToSearchResultDto(card)).ToList();
+
+            return new CardSearchResponse
+            {
+                ResultsCount = resultsCount,
+                Results = foundCards
+            };
         }
 
         public static List<IFullCard> MapToCardDto(List<SfCard> sources)

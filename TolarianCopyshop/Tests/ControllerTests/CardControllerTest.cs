@@ -31,16 +31,16 @@ namespace Tests.ControllerTests
         {
             //Arrange
             SfCard dummy = GetDummyCard();
-            _requesterMock.Setup(m => m.GetCardsBySearchQuery(It.IsAny<string>(), It.IsAny<int>(), out It.Ref<int>.IsAny)).Returns(new List<SfCard> { dummy });
+            _requesterMock.Setup(m => m.GetCardsBySearchQuery(It.IsAny<string>(), It.IsAny<int>())).Returns((new List<SfCard> { dummy }, 1));
             CardController unitUnterTest = GetController();
 
             //Act
-            var response = unitUnterTest.GetSearchResults("", 1, out _);
+            var response = unitUnterTest.GetSearchResults("", 1);
 
             //Assert
             Assert.IsNotNull(response);
-            Assert.AreEqual(1, response.Count);
-            CardSearchResult result = response[0];
+            Assert.AreEqual(1, response.ResultsCount);
+            CardSearchCard result = response.Results[0];
             Assert.AreEqual(dummy.Name, result.Name);
             Assert.AreEqual(dummy.Id, result.Id);
         }
