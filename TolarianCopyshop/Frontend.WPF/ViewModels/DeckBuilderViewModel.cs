@@ -121,15 +121,31 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             get => this._selectedSearchItem;
             set
             {
-                this.SetProperty(ref this._selectedSearchItem, value);
-                this.OnSelectedSearchItemChanged();
+                if (value != null || (value == null && string.IsNullOrEmpty(this.SearchText)))
+                {
+                    this.SetProperty(ref this._selectedSearchItem, value);
+                }
+                else
+                {
+                    this.OnPropertyChanged(nameof(SelectedSearchItem));
+                }
             }
         }
 
         public int SelectedSearchIndex
         {
             get => this._selectedSearchIndex;
-            set => this.SetProperty(ref this._selectedSearchIndex, value);
+            set
+            {
+                if (value >= 0 || (value < 0 && string.IsNullOrEmpty(this.SearchText)))
+                {
+                    this.SetProperty(ref this._selectedSearchIndex, value);
+                }
+                else
+                {
+                    this.OnPropertyChanged(nameof(SelectedSearchIndex));
+                }
+            }
         }
 
         public int SearchResultCount
@@ -201,7 +217,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             if (clickedCard is FullCard card)
             {
                 this.DeckCards.Where(o => o.Id == card.Id).Select(o => --o.CardCount).ToList(); // ToList is needed in order to evaluate the select immediately due to lazy evaluation
-                this.DeleteSelectedCard(this.DeckCards.Where(o => o.CardCount < 1).FirstOrDefault());
+                this.DeleteSelectedCard(this.DeckCards.FirstOrDefault(o => o.CardCount < 1));
                 this.CalculateDeckCardCount();
             }
         }
@@ -277,16 +293,14 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             this.SearchResultCount = result.ResultsCount;
             this.SearchResults = new ObservableCollection<CardSearchCard>(result.Results);
             this.SearchResultVisibility = Visibility.Visible;
-            if (this.SearchResults.Count > 0 && (this.SelectedSearchItem is null || !this.SearchResults.Contains(this.SelectedSearchItem)))
+            if (this.SearchResults.Count > 0)
             {
-                this.SelectedSearchIndex = 0;
-                this.SelectedSearchItem = this.SearchResults[this.SelectedSearchIndex];
+                Application.Current.Dispatcher.Invoke(new Action(() =>
+                {
+                    this.SelectedSearchItem = this.SearchResults.FirstOrDefault(o => o.Id == this.SelectedSearchItem?.Id) ?? this.SearchResults[0];
+                    this.SelectedSearchIndex = this.SearchResults.IndexOf(this.SelectedSearchItem);
+                }), DispatcherPriority.Normal);
             }
-        }
-
-        private void OnSelectedSearchItemChanged()
-        {
-
         }
 
         private void ApplySelectedSearchItem(object _)
