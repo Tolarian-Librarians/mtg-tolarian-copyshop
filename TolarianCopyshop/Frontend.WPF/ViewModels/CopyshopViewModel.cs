@@ -121,7 +121,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
 
         private bool HandleRequestSave()
         {
-            // Till export is implemented...
+            // Till save is implemented...
             return true;
 
             if (DeckBuilderViewModel.GetInstance().DeckCards.Count == 0)
@@ -178,6 +178,27 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
         {
             if (commandParameter is string importType && this.HandleRequestSave())
             {
+                bool overrideDeck = false;
+                if (DeckBuilderViewModel.GetInstance().DeckCards.Count > 0)
+                {
+                    switch (this.ShowQuestion("Import", "Do you want to override your Deck?", MessageDialogStyle.AffirmativeAndNegativeAndSingleAuxiliary, "Save Deck & Override", "Discard Deck & Override", "Add Cards"))
+                    {
+                        case MessageDialogResult.Canceled:
+                            return;
+                        case MessageDialogResult.Negative:
+                            overrideDeck = true;
+                            break;
+                        case MessageDialogResult.Affirmative:
+                            // Till save is implemented...
+                            //this.HandleSave(false);
+                            overrideDeck = true;
+                            break;
+                        case MessageDialogResult.FirstAuxiliary:
+                            overrideDeck = false;
+                            break;
+                    }
+                }
+
                 string importCards = string.Empty;
                 if (importType.Equals("TEXT", StringComparison.OrdinalIgnoreCase))
                 {
@@ -192,17 +213,17 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
                     return;
                 }
 
-                this.ShowProgress("IMPORT", "Please wait while your deck is imported...", new Action(() => this.ImportDeckCards(importCards)));
+                this.ShowProgress("IMPORT", "Please wait while your deck is imported...", new Action(() => this.ImportDeckCards(importCards, overrideDeck)));
             }
         }
 
-        private void ImportDeckCards(string cards)
+        private void ImportDeckCards(string cards, bool overrideDeck)
         {
             List<IFullCard> importedCards = this._cardController.GetCardsByNameList(cards ?? "");
             this.SendErrorMessage(this._cardController.ErrorMessage);
             if (importedCards.Count > 0)
             {
-                DeckBuilderViewModel.GetInstance().AddCards(importedCards.ConvertAll(card => new FullCard(card)), true);
+                DeckBuilderViewModel.GetInstance().AddCards(importedCards.ConvertAll(card => new FullCard(card)), overrideDeck);
             }
         }
 
@@ -244,13 +265,17 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
         internal async void ShowMessage(string header, string message)
             => await this._dialogCoordinator.ShowMessageAsync(this, header, message).ConfigureAwait(false);
 
-        internal MessageDialogResult ShowQuestion(string header, string message, MessageDialogStyle style)
+        internal MessageDialogResult ShowQuestion(string header, string message, MessageDialogStyle style,
+            string affirmativeButtonText = "YES", string negativeButtonText = "NO", string firstAuxiliaryButtonText = "CANCEL", string secondAuxiliaryButtonText = "")
             => CopyShopView.GetInstance().ShowModalMessageExternal(header, message, style,
                  new MetroDialogSettings()
                  {
-                     AffirmativeButtonText = "YES",
-                     NegativeButtonText = "NO",
-                     FirstAuxiliaryButtonText = "CANCEL"
+                     AffirmativeButtonText = affirmativeButtonText,
+                     NegativeButtonText = negativeButtonText,
+                     FirstAuxiliaryButtonText = firstAuxiliaryButtonText,
+                     SecondAuxiliaryButtonText = secondAuxiliaryButtonText,
+                     DialogResultOnCancel = MessageDialogResult.Canceled,
+                     DefaultButtonFocus = MessageDialogResult.Affirmative
                  });
 
         internal async void ShowProgress(string header, string message, Action FunctionWhileProgress)
