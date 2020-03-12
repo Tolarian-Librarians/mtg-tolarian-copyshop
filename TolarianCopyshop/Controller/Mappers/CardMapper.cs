@@ -16,12 +16,14 @@ namespace Tolarian.Copyshop.Controller.Mappers
             var result = new CardSearchCard
             {
                 Name = source.Name,
-                Id = source.Id
+                CardType = GetBaseCardTypeFromTypeLine(source.TypeLine),
+                Id = source.Id,
+                Image = source.ImageUris?[CardImageTypes.Normal] ?? source.CardFaces?[0]?.ImageUris?[CardImageTypes.Normal],
             };
 
             return result;
         }
-        
+
         public static CardSearchResponse MapToSearchResultDto(List<SfCard> source, int resultsCount)
         {
             List<CardSearchCard> foundCards = source.Select(card => MapToSearchResultDto(card)).ToList();
@@ -59,15 +61,15 @@ namespace Tolarian.Copyshop.Controller.Mappers
 
         private static List<FullCardResponse> MapDoubleSidedCardToDto(SfCard source)
         {
-            List<FullCardResponse> result = source.CardFaces.Select(c => new FullCardResponse
+            List<FullCardResponse> result = source.CardFaces.Select(card => new FullCardResponse
             {
-                Name = c.Name,
+                Name = card.Name,
                 Id = source.Id,
-                Text = c.Text,
-                CardType = GetBaseCardTypeFromTypeLine(c.TypeLine),
+                Text = card.Text,
+                CardType = GetBaseCardTypeFromTypeLine(card.TypeLine),
                 CardCount = 1,
-                LargeImage = c.ImageUris.ContainsKey(CardImageTypes.Large) ? c.ImageUris[CardImageTypes.Large] : null,
-                SmallImage = c.ImageUris.ContainsKey(CardImageTypes.Small) ? c.ImageUris[CardImageTypes.Small] : null,
+                LargeImage = card.ImageUris.ContainsKey(CardImageTypes.Large) ? card.ImageUris[CardImageTypes.Large] : null,
+                SmallImage = card.ImageUris.ContainsKey(CardImageTypes.Small) ? card.ImageUris[CardImageTypes.Small] : null,
                 Legalities1 = GetFirstHalfOfLegalities(source),
                 Legalities2 = GetSecondHalfOfLegalities(source)
             }).ToList();
@@ -109,7 +111,7 @@ namespace Tolarian.Copyshop.Controller.Mappers
             if (count % 2 == 0)
                 return count / 2;
             else
-                return count / 2 + 1;
+                return (count / 2) + 1;
         }
 
         private static string GetTextOfCard(SfCard source)
