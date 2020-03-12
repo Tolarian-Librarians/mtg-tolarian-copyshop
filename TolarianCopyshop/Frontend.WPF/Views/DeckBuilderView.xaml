@@ -89,9 +89,18 @@
                     BorderBrush="Black"
                     BorderThickness="1"
                     Visibility="{Binding SearchResultVisibility}">
-                <Grid Height="275" Background="White">
+                <Grid Height="325" Background="White">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="15" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="230" />
+                    </Grid.ColumnDefinitions>
                     <ListBox x:Name="_SearchResultBox"
-                             Height="260"
+                             Grid.Row="0"
+                             Grid.Column="0"
                              VerticalAlignment="Top"
                              BorderThickness="0"
                              ItemsSource="{Binding SearchResults}"
@@ -101,13 +110,26 @@
                              SelectedItem="{Binding SelectedSearchItem, Mode=TwoWay}">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
-                                <StackPanel>
-                                    <TextBlock HorizontalAlignment="Left"
-                                               VerticalAlignment="Top"
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="75" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0"
+                                               VerticalAlignment="Center"
                                                FontSize="12"
                                                FontWeight="DemiBold"
                                                Text="{Binding Name}" />
-                                </StackPanel>
+                                    <TextBlock Grid.Column="2"
+                                               Margin="0,0,10,0"
+                                               VerticalAlignment="Center"
+                                               FontSize="11"
+                                               FontStyle="Italic"
+                                               FontWeight="Medium"
+                                               Foreground="Gray"
+                                               Text="{Binding CardType}" />
+                                </Grid>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                         <ListBox.InputBindings>
@@ -115,11 +137,14 @@
                             <KeyBinding Key="Esc" Command="{Binding ClearSearchCommand}" />
                         </ListBox.InputBindings>
                     </ListBox>
-                    <Border Margin="0,0,-200,0" HorizontalAlignment="Right" BorderThickness="1">
-                        <Image Source="{Binding SelectedSearchItem.Image}" />
-                    </Border>
+                    <Image Grid.Row="0"
+                           Grid.Column="1"
+                           Margin="10,5,10,5"
+                           Source="{Binding SelectedSearchItem.Image}" />
 
-                    <TextBlock Margin="2"
+                    <TextBlock Grid.Row="2"
+                               Grid.ColumnSpan="2"
+                               Margin="1"
                                HorizontalAlignment="Right"
                                VerticalAlignment="Bottom"
                                FontSize="11"
