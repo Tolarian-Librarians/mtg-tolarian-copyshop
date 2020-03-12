@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -7,32 +6,18 @@ using Tolarian.Copyshop.Business.Interfaces;
 using Tolarian.Copyshop.Business.Models.SfCardInfo;
 using Tolarian.Copyshop.Controller.Interfaces;
 using Tolarian.Copyshop.Controller.ResponseObjects;
+using Tolarian.Copyshop.Controller.Mappers;
 
 namespace Tolarian.Copyshop.Controller
 {
-    public class CardController
+    public class CardController : TolarianControllerBase
     {
         private readonly ICardDataRequester _requester;
-        private readonly IMapper _mapper;
-        private string errorMessage;
 
-        public CardController(ICardDataRequester requester, IMapper mapper)
+        public CardController(ICardDataRequester requester)
         {
             _requester = requester;
-            _mapper = mapper;
         }
-
-        public string ErrorMessage
-        {
-            get
-            {
-                string returnValue = this.errorMessage;
-                this.errorMessage = string.Empty;
-                return returnValue;
-            }
-            set => this.errorMessage = value;
-        }
-
 
         /// <summary>
         /// Gets the information for one Card by ID. This returns a List because the target card may be multifaced.
@@ -44,7 +29,7 @@ namespace Tolarian.Copyshop.Controller
             {
                 SfCard card = _requester.GetCardById(id);
 
-                response = MapCardToFullCardResponse(card);
+                response = CardMapper.MapToCardDto(card);
             }
             catch (HttpException ex)
             {
@@ -58,14 +43,13 @@ namespace Tolarian.Copyshop.Controller
             return response;
         }
 
-        public List<CardNameResponse> GetCardNamesAndIdsBySearchQuery(string query, int maxCountOfItems, out int maxResults)
+        public CardSearchResponse GetSearchResults(string query, int maxCountOfItems)
         {
-            maxResults = 0;
-            var response = new List<CardNameResponse>();
-
+            CardSearchResponse response = null;
             try
             {
-                response = _mapper.Map<List<CardNameResponse>>(_requester.GetCardsBySearchQuery(query, maxCountOfItems, out maxResults));
+                (List<SfCard>, int) businessResponse = _requester.GetCardsBySearchQuery(query, maxCountOfItems);
+                response = CardMapper.MapToSearchResultDto(businessResponse.Item1, businessResponse.Item2);
             }
             catch (HttpException ex)
             {
@@ -78,9 +62,6 @@ namespace Tolarian.Copyshop.Controller
 
             return response;
         }
-
-        private static string BuildErrorMessage(Exception ex)
-            => ex.Message + Environment.NewLine + (ex.InnerException != null ? ex.InnerException.Message : "");
 
         public List<IFullCard> GetCardsByNameList(string importString)
         {
@@ -91,7 +72,8 @@ namespace Tolarian.Copyshop.Controller
                 List<string> lines = importString.Split(
                                 new[] { "\r\n", "\r", "\n" },
                                 StringSplitOptions.None).ToList();
-                return _requester.GetCardsByNameList(lines).SelectMany(c => MapCardToFullCardResponse(c)).ToList();
+
+                return CardMapper.MapToCardDto(_requester.GetCardsByNameList(lines));
             }
             catch (HttpException ex)
             {
@@ -103,21 +85,6 @@ namespace Tolarian.Copyshop.Controller
             }
 
             return response;
-        }
-
-        private List<IFullCard> MapCardToFullCardResponse(SfCard card)
-        {
-            List<IFullCard> response;
-            if (IsDoubleFacedCard(card))
-                response = _mapper.Map<List<IFullCard>>(card);
-            else
-                response = new List<IFullCard> { _mapper.Map<IFullCard>(card) };
-            return response;
-        }
-
-        private bool IsDoubleFacedCard(SfCard card)
-        {
-            return card.CardFaces != null && card.ImageUris == null;
         }
     }
 }

@@ -31,8 +31,8 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
         private string _searchText;
         private int _searchResultCount;
         private bool _hasSearchText;
-        private ObservableCollection<CardNameResponse> _searchResults;
-        private CardNameResponse _selectedSearchItem;
+        private ObservableCollection<CardSearchCard> _searchResults;
+        private CardSearchCard _selectedSearchItem;
         private int _selectedSearchIndex;
         private Task task;
         private CancellationTokenSource tokenSource;
@@ -88,7 +88,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             set => this.SetProperty(ref this._selectedCard, value);
         }
 
-        public ObservableCollection<CardNameResponse> SearchResults
+        public ObservableCollection<CardSearchCard> SearchResults
         {
             get => this._searchResults;
             set => this.SetProperty(ref this._searchResults, value);
@@ -116,21 +116,36 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             set => this.SetProperty(ref this._hasSearchText, value);
         }
 
-
-        public CardNameResponse SelectedSearchItem
+        public CardSearchCard SelectedSearchItem
         {
             get => this._selectedSearchItem;
             set
             {
-                this.SetProperty(ref this._selectedSearchItem, value);
-                this.OnSelectedSearchItemChanged();
+                if (value != null || (value == null && string.IsNullOrEmpty(this.SearchText)))
+                {
+                    this.SetProperty(ref this._selectedSearchItem, value);
+                }
+                else
+                {
+                    this.OnPropertyChanged(nameof(SelectedSearchItem));
+                }
             }
         }
 
         public int SelectedSearchIndex
         {
             get => this._selectedSearchIndex;
-            set => this.SetProperty(ref this._selectedSearchIndex, value);
+            set
+            {
+                if (value >= 0 || (value < 0 && string.IsNullOrEmpty(this.SearchText)))
+                {
+                    this.SetProperty(ref this._selectedSearchIndex, value);
+                }
+                else
+                {
+                    this.OnPropertyChanged(nameof(SelectedSearchIndex));
+                }
+            }
         }
 
         public int SearchResultCount
@@ -138,7 +153,6 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             get => this._searchResultCount;
             set => this.SetProperty(ref this._searchResultCount, value);
         }
-
 
         public Command IncreaseCardAmountCommand { get; set; }
 
@@ -176,7 +190,10 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
         {
             if (clickedCard is FullCard card)
             {
-                this.DeckCards.Remove(card);
+                foreach (var deleteCard in this.DeckCards.Where(o => o.Id == card.Id).ToList())
+                {
+                    this.DeckCards.Remove(deleteCard);
+                }
             }
         }
 
@@ -190,7 +207,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
         {
             if (clickedCard is FullCard card)
             {
-                this.DeckCards.First(o => o == card).CardCount++;
+                this.DeckCards.Where(o => o.Id == card.Id).Select(o => o.CardCount++).ToList(); // ToList is needed in order to evaluate the select immediately due to lazy evaluation
                 this.CalculateDeckCardCount();
             }
         }
@@ -199,10 +216,8 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
         {
             if (clickedCard is FullCard card)
             {
-                if (--this.DeckCards.First(o => o == card).CardCount < 1)
-                {
-                    this.DeleteSelectedCard(clickedCard);
-                }
+                this.DeckCards.Where(o => o.Id == card.Id).Select(o => --o.CardCount).ToList(); // ToList is needed in order to evaluate the select immediately due to lazy evaluation
+                this.DeleteSelectedCard(this.DeckCards.FirstOrDefault(o => o.CardCount < 1));
                 this.CalculateDeckCardCount();
             }
         }
@@ -228,6 +243,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             if (this.DeckCards.FirstOrDefault(o => o.Id == card.Id && o.Name == card.Name) is FullCard ExistingCard)
             {
                 ExistingCard.CardCount++;
+                this.CalculateDeckCardCount();
             }
             else
             {
@@ -261,32 +277,30 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
         {
             this.HasSearchText = this.SearchText.Length > 0;
 
-            if (this.SearchText.Length < 4)
+            if (this.SearchText.Length < 3)
             {
                 this.ResetSearchedItems();
                 return;
             }
 
-            var result = this._cardController.GetCardNamesAndIdsBySearchQuery(this.SearchText, 10, out int maxResults);
+            var result = this._cardController.GetSearchResults(this.SearchText, 12);
             if (this.token.IsCancellationRequested)
             {
                 return;
             }
 
             this.SendErrorMessage(this._cardController.ErrorMessage);
-            this.SearchResultCount = maxResults;
-            this.SearchResults = new ObservableCollection<CardNameResponse>(result);
+            this.SearchResultCount = result.ResultsCount;
+            this.SearchResults = new ObservableCollection<CardSearchCard>(result.Results);
             this.SearchResultVisibility = Visibility.Visible;
-            if (this.SearchResults.Count > 0 && (this.SelectedSearchItem is null || !this.SearchResults.Contains(this.SelectedSearchItem)))
+            if (this.SearchResults.Count > 0)
             {
-                this.SelectedSearchIndex = 0;
-                this.SelectedSearchItem = this.SearchResults[this.SelectedSearchIndex];
+                Application.Current.Dispatcher.Invoke(new Action(() =>
+                {
+                    this.SelectedSearchItem = this.SearchResults.FirstOrDefault(o => o.Id == this.SelectedSearchItem?.Id) ?? this.SearchResults[0];
+                    this.SelectedSearchIndex = this.SearchResults.IndexOf(this.SelectedSearchItem);
+                }), DispatcherPriority.Normal);
             }
-        }
-
-        private void OnSelectedSearchItemChanged()
-        {
-
         }
 
         private void ApplySelectedSearchItem(object _)
@@ -308,7 +322,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
         {
             this.SearchResultCount = 0;
             this.SelectedSearchItem = null;
-            this.SearchResults = new ObservableCollection<CardNameResponse>();
+            this.SearchResults = new ObservableCollection<CardSearchCard>();
             this.SearchResultVisibility = Visibility.Collapsed;
         }
 

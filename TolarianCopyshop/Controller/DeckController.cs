@@ -1,22 +1,19 @@
-﻿using AutoMapper;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Tolarian.Copyshop.Business.Interfaces;
 using Tolarian.Copyshop.Business.Models.DeckInfo;
 using Tolarian.Copyshop.Controller.Interfaces;
+using Tolarian.Copyshop.Controller.Mappers;
 
 namespace Tolarian.Copyshop.Controller
 {
-    public class DeckController
+    public class DeckController : TolarianControllerBase
     {
         private readonly IDeckInfoInteractor _deckInfoInteractor;
-        private readonly IMapper _mapper;
 
-        public DeckController(IDeckInfoInteractor deckInfoInteractor, IMapper mapper)
+        public DeckController(IDeckInfoInteractor deckInfoInteractor)
         {
             this._deckInfoInteractor = deckInfoInteractor;
-            this._mapper = mapper;
         }
 
         public List<IFullCard> LoadDeckFromFile(string fileName)
@@ -27,7 +24,7 @@ namespace Tolarian.Copyshop.Controller
 
         public int GetTotalCardCountOfDeck(List<IFullCard> deckCards)
         {
-            List<DeckInfoCard> businessModel = _mapper.Map<List<DeckInfoCard>>(deckCards);
+            List<DeckInfoCard> businessModel =  DeckMapper.MapDeckDtoToBusiness(deckCards);
             return _deckInfoInteractor.GetTotalCardCountOfDeck(businessModel);
         }
     }

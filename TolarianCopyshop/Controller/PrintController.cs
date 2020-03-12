@@ -7,7 +7,7 @@ using Tolarian.Copyshop.Controller.Interfaces;
 
 namespace Tolarian.Copyshop.Controller
 {
-    public class PrintController
+    public class PrintController : TolarianControllerBase
     {
         private readonly IPrintRequester _requester;
 
