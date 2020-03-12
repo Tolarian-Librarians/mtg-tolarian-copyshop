@@ -49,12 +49,13 @@ namespace Tolarian.Copyshop.Business.UseCaseInteractors
 
         private List<SfCard> TruncateListToMaxSize(int maxCountOfItems, List<SfCard> targetList)
         {
+            List<SfCard> resultList = new List<SfCard>(targetList);
             int firstInvalidIndex = maxCountOfItems;
 
-            if (targetList.Count > maxCountOfItems)
-                targetList.RemoveRange(firstInvalidIndex, targetList.Count - firstInvalidIndex);
+            if (resultList.Count > maxCountOfItems)
+                resultList.RemoveRange(firstInvalidIndex, resultList.Count - firstInvalidIndex);
 
-            return targetList;
+            return resultList;
         }
 
         public static List<List<T>> ChunkListBySize<T>(List<T> source, int chunkSize)

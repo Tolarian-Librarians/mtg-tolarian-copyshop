@@ -121,7 +121,8 @@
                                FontSize="11"
                                Foreground="Gray">
                         <TextBlock.Text>
-                            <MultiBinding StringFormat="{}{0} search result(s)">
+                            <MultiBinding StringFormat="{}{0} out of {1} search result(s)">
+                                <Binding Path="SearchResults.Count" />
                                 <Binding Path="SearchResultCount" />
                             </MultiBinding>
                         </TextBlock.Text>
@@ -245,7 +246,7 @@
                                                                    FontWeight="Bold"
                                                                    Foreground="White">
                                                             <TextBlock.Text>
-                                                                <MultiBinding StringFormat="{}{0} card(s)">
+                                                                <MultiBinding StringFormat="{}{0} different card(s)">
                                                                     <Binding Path="ItemCount" />
                                                                 </MultiBinding>
                                                             </TextBlock.Text>
