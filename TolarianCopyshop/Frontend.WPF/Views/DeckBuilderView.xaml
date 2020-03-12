@@ -115,6 +115,10 @@
                             <KeyBinding Key="Esc" Command="{Binding ClearSearchCommand}" />
                         </ListBox.InputBindings>
                     </ListBox>
+                    <Border Margin="0,0,-200,0" HorizontalAlignment="Right" BorderThickness="1">
+                        <Image Source="{Binding SelectedSearchItem.Image}" />
+                    </Border>
+
                     <TextBlock Margin="2"
                                HorizontalAlignment="Right"
                                VerticalAlignment="Bottom"

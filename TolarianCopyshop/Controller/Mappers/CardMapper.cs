@@ -16,12 +16,13 @@ namespace Tolarian.Copyshop.Controller.Mappers
             var result = new CardSearchCard
             {
                 Name = source.Name,
-                Id = source.Id
+                Id = source.Id,
+                Image = source.ImageUris[CardImageTypes.Normal],
             };
 
             return result;
         }
-        
+
         public static CardSearchResponse MapToSearchResultDto(List<SfCard> source, int resultsCount)
         {
             List<CardSearchCard> foundCards = source.Select(card => MapToSearchResultDto(card)).ToList();
