@@ -283,7 +283,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
                 return;
             }
 
-            var result = this._cardController.GetSearchResults(this.SearchText, 10);
+            var result = this._cardController.GetSearchResults(this.SearchText, 12);
             if (this.token.IsCancellationRequested)
             {
                 return;
