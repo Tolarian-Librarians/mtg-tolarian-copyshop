@@ -26,7 +26,7 @@ namespace Tolarian.Copyshop.Controller.Mappers
 
         private static string TruncateSetname(string setName)
         {
-            const int maxLength = 27;
+            const int maxLength = 20;
             if(setName.Length <= maxLength)
             {
                 return setName;

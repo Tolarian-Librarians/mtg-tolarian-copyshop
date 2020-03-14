@@ -34,8 +34,10 @@ namespace Tolarian.Copyshop.ScreenPresenter.Views
 
         private void HandleAffirmativeCommand(object commandParameter)
         {
-            if (commandParameter is Guid printId)
+            if (commandParameter is Guid printId && this.DataContext is SelectArtworkViewModel model)
             {
+                // reset collection to interrupt loading of images
+                model.Artworks = new System.Collections.ObjectModel.ObservableCollection<Controller.ResponseObjects.CardArtworkResponse>();
                 this.Close(printId);
             }
         }

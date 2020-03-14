@@ -45,7 +45,7 @@ namespace Tolarian.Copyshop.Controller
 
         public CardSearchResponse GetSearchResults(string query, int maxCountOfItems)
         {
-            CardSearchResponse response = null;
+            CardSearchResponse response = new CardSearchResponse();
             try
             {
                 (List<SfCard>, string) businessResponse = _requester.GetCardsBySearchQuery(query, maxCountOfItems);

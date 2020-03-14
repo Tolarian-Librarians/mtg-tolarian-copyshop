@@ -27,6 +27,25 @@
         <SolidColorBrush Opacity="0.7" Color="{DynamicResource MahApps.Colors.Black}" />
     </simpleChildWindow:ChildWindow.OverlayBrush>
 
+    <simpleChildWindow:ChildWindow.Resources>
+        <Style x:Key="ArtworkNameStyle" TargetType="{x:Type Grid}">
+            <Setter Property="Background" Value="LightSlateGray" />
+            <Setter Property="Margin" Value="4,0,4,10" />
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=Grid}, Path=IsMouseOver}" Value="True">
+                    <Setter Property="Background" Value="#1ABC9C" />
+                    <Setter Property="Margin" Value="-2,8,-2,2" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="ArtworkStyle" TargetType="{x:Type Image}">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=Grid}, Path=IsMouseOver}" Value="True">
+                    <Setter Property="Margin" Value="-8" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </simpleChildWindow:ChildWindow.Resources>
     <Grid>
         <ScrollViewer Grid.Row="0"
                       Grid.ColumnSpan="2"
@@ -42,7 +61,7 @@
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Grid Width="220" Height="330">
+                        <Grid Width="220" Height="330" Background="Transparent">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="*" />
                                 <RowDefinition Height="30" />
@@ -53,9 +72,9 @@
                                     Command="{Binding ElementName=_ChildView, Path=DataContext.AffirmativeCommand}"
                                     CommandParameter="{Binding PrintId}"
                                     Style="{StaticResource ImageButton}">
-                                <Image Source="{Binding Image}" />
+                                <Image Source="{Binding Image}" Style="{StaticResource ArtworkStyle}" />
                             </Button>
-                            <Grid Grid.Row="1" Margin="4,0,4,10" Background="#1abc9c">
+                            <Grid Grid.Row="1" Style="{StaticResource ArtworkNameStyle}">
                                 <TextBlock HorizontalAlignment="Center"
                                            VerticalAlignment="Center"
                                            FontSize="12"
