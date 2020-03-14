@@ -36,7 +36,7 @@ namespace Tolarian.Copyshop.Controller.Mappers
             {
                 return new DeckInfoCard
                 {
-                    Id = fullCard.Id,
+                    PrintId = fullCard.PrintId,
                     Copies = fullCard.CardCount,
                     cardFaces = new List<DeckInfoCardFace>
                     {
@@ -47,7 +47,7 @@ namespace Tolarian.Copyshop.Controller.Mappers
 
             IFullCard GetOtherFace(IFullCard firstFace)
             {
-                return sources.FirstOrDefault(card => card.Id == firstFace.Id && card.Name != firstFace.Name && card != firstFace);
+                return sources.FirstOrDefault(card => card.PrintId == firstFace.PrintId && card.Name != firstFace.Name && card != firstFace);
             }
         }
     }

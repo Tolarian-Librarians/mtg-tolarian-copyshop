@@ -5,6 +5,7 @@ using Moq;
 using Tolarian.Copyshop.Business.Interfaces;
 using Tolarian.Copyshop.Business.UseCaseInteractors;
 using Tolarian.Copyshop.Business.Models.SfCardInfo;
+using System;
 
 namespace Tests.InteractorTests
 {
@@ -28,6 +29,21 @@ namespace Tests.InteractorTests
         }
 
         [TestMethod]
+        public void GetCardByPrintId_Test()
+        {
+            SfCard dummy = TestUtils.GetDummyCard();
+            _gatewayMock.Setup(m => m.GetCardByPrintId(It.Is<Guid>(g => g == dummy.PrintId))).Returns(dummy);
+            CardInteractor unitUnderTest = GetInteractor();
+
+            SfCard result = unitUnderTest.GetCardByPrintId(dummy.PrintId);
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(dummy.PrintId, result.PrintId);
+            Assert.AreEqual(dummy.CardId, result.CardId);
+            Assert.AreEqual(dummy.Name, result.Name);
+        }
+
+        [TestMethod]
         public void GetCardsByNameList_Test()
         {
             //Arrange
@@ -35,13 +51,46 @@ namespace Tests.InteractorTests
 
             List<string> expectedResolvedCardNames = new List<string> { "Aether Spellbomb", "Aether Spellbomb", "Aether Spellbomb", "Ancient Tomb" };
             _gatewayMock.Setup(m => m.GetCardsByNameList(It.Is<List<string>>(l => l.SequenceEqual(expectedResolvedCardNames)))).Returns(new SfPaginatedCardList { Data = new SfCard[3]});
-            CardInteractor unitUderTest = new CardInteractor(_gatewayMock.Object);
+            CardInteractor unitUnderTest = GetInteractor();
 
             //Act
-            var result = unitUderTest.GetCardsByNameList(deckImport);
+            var result = unitUnderTest.GetCardsByNameList(deckImport);
 
             //Assert
             _gatewayMock.VerifyAll();
+        }
+
+        [TestMethod]
+        public void GetCardsBySearchQuery_Test()
+        {
+            var dummyList = TestUtils.GetDummyCardList();
+            _gatewayMock.Setup(m => m.GetCardsBySearchQuery(It.IsAny<string>())).Returns(dummyList);
+            int maxCountOfItems = 3;
+            CardInteractor unitUnderTest = GetInteractor();
+
+            var result = unitUnderTest.GetCardsBySearchQuery("aaaa", maxCountOfItems);
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(maxCountOfItems, result.Item1.Count);
+            Assert.AreEqual(dummyList.CardCount, result.Item2);
+        }
+
+        [TestMethod]
+        public void GetPrintsOfCard_Test()
+        {
+            var dummyList = TestUtils.GetDummyCardList();
+            _gatewayMock.Setup(m => m.GetPrintsOfCard(It.IsAny<Guid>())).Returns(dummyList);
+            CardInteractor unitUnderTest = GetInteractor();
+
+            var result = unitUnderTest.GetPrintsOfCard(Guid.Empty);
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(dummyList.CardCount, result.Count);
+        }
+
+        private CardInteractor GetInteractor()
+        {
+            return new CardInteractor(_gatewayMock.Object);
         }
     }
 }

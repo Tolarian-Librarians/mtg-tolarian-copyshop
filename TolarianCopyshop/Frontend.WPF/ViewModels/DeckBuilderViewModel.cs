@@ -190,7 +190,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
         {
             if (clickedCard is FullCard card)
             {
-                foreach (var deleteCard in this.DeckCards.Where(o => o.Id == card.Id).ToList())
+                foreach (var deleteCard in this.DeckCards.Where(o => o.CardId == card.CardId).ToList())
                 {
                     this.DeckCards.Remove(deleteCard);
                 }
@@ -207,7 +207,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
         {
             if (clickedCard is FullCard card)
             {
-                this.DeckCards.Where(o => o.Id == card.Id).Select(o => o.CardCount++).ToList(); // ToList is needed in order to evaluate the select immediately due to lazy evaluation
+                this.DeckCards.Where(o => o.CardId == card.CardId).Select(o => o.CardCount++).ToList(); // ToList is needed in order to evaluate the select immediately due to lazy evaluation
                 this.CalculateDeckCardCount();
             }
         }
@@ -216,7 +216,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
         {
             if (clickedCard is FullCard card)
             {
-                this.DeckCards.Where(o => o.Id == card.Id).Select(o => --o.CardCount).ToList(); // ToList is needed in order to evaluate the select immediately due to lazy evaluation
+                this.DeckCards.Where(o => o.CardId == card.CardId).Select(o => --o.CardCount).ToList(); // ToList is needed in order to evaluate the select immediately due to lazy evaluation
                 this.DeleteSelectedCard(this.DeckCards.FirstOrDefault(o => o.CardCount < 1));
                 this.CalculateDeckCardCount();
             }
@@ -240,7 +240,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
 
         private void AddCard(FullCard card)
         {
-            if (this.DeckCards.FirstOrDefault(o => o.Id == card.Id && o.Name == card.Name) is FullCard ExistingCard)
+            if (this.DeckCards.FirstOrDefault(o => o.CardId == card.CardId && o.Name == card.Name) is FullCard ExistingCard)
             {
                 ExistingCard.CardCount++;
                 this.CalculateDeckCardCount();
@@ -297,7 +297,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             {
                 Application.Current.Dispatcher.Invoke(new Action(() =>
                 {
-                    this.SelectedSearchItem = this.SearchResults.FirstOrDefault(o => o.Id == this.SelectedSearchItem?.Id) ?? this.SearchResults[0];
+                    this.SelectedSearchItem = this.SearchResults.FirstOrDefault(o => o.PrintId == this.SelectedSearchItem?.PrintId) ?? this.SearchResults[0];
                     this.SelectedSearchIndex = this.SearchResults.IndexOf(this.SelectedSearchItem);
                 }), DispatcherPriority.Normal);
             }
@@ -310,7 +310,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
                 return;
             }
 
-            var newCards = this._cardController.GetCardById(this.SelectedSearchItem.Id);
+            var newCards = this._cardController.GetCardByPrintId(this.SelectedSearchItem.PrintId);
             this.SendErrorMessage(this._cardController.ErrorMessage);
             this.AddCards(newCards.ConvertAll(card => new FullCard(card)));
 

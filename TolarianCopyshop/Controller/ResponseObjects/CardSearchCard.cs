@@ -9,7 +9,7 @@ namespace Tolarian.Copyshop.Controller.ResponseObjects
 
         public CardType CardType { get; set; }
 
-        public Guid Id { get; set; }
+        public Guid PrintId { get; set; }
 
         public Uri Image { get; set; }
     }

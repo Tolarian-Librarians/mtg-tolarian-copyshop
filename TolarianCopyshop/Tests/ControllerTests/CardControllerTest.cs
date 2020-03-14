@@ -30,7 +30,7 @@ namespace Tests.ControllerTests
         public void GetSearchResults_Test()
         {
             //Arrange
-            SfCard dummy = GetDummyCard();
+            SfCard dummy = TestUtils.GetDummyCard();
             _requesterMock.Setup(m => m.GetCardsBySearchQuery(It.IsAny<string>(), It.IsAny<int>())).Returns((new List<SfCard> { dummy }, 1));
             CardController unitUnterTest = GetController();
 
@@ -42,19 +42,19 @@ namespace Tests.ControllerTests
             Assert.AreEqual(1, response.ResultsCount);
             CardSearchCard result = response.Results[0];
             Assert.AreEqual(dummy.Name, result.Name);
-            Assert.AreEqual(dummy.Id, result.Id);
+            Assert.AreEqual(dummy.PrintId, result.PrintId);
         }
 
         [TestMethod]
-        public void GetCardById_StandardCard_Test()
+        public void GetCardByPrintId_StandardCard_Test()
         {
             //Arrange
-            SfCard expected = GetDummyCard();
-            _requesterMock.Setup(m => m.GetCardById(It.IsAny<Guid>())).Returns(expected);
+            SfCard expected = TestUtils.GetDummyCard();
+            _requesterMock.Setup(m => m.GetCardByPrintId(It.IsAny<Guid>())).Returns(expected);
             CardController unitUnterTest = GetController();
 
             //Act
-            List<IFullCard> response = unitUnterTest.GetCardById(Guid.Empty);
+            List<IFullCard> response = unitUnterTest.GetCardByPrintId(Guid.Empty);
 
             //Assert
             Assert.IsNotNull(response);
@@ -70,16 +70,16 @@ namespace Tests.ControllerTests
         }
 
         [TestMethod]
-        public void GetCardById_DoubleCard_Test()
+        public void GetCardByPrintId_DoubleCard_Test()
         {
             //Arrange
-            SfCard expected = GetDummyDoubleCard();
+            SfCard expected = TestUtils.GetDummyDoubleCard();
 
-            _requesterMock.Setup(m => m.GetCardById(It.IsAny<Guid>())).Returns(expected);
+            _requesterMock.Setup(m => m.GetCardByPrintId(It.IsAny<Guid>())).Returns(expected);
             CardController unitUnterTest = GetController();
 
             //Act
-            List<IFullCard> response = unitUnterTest.GetCardById(Guid.Empty);
+            List<IFullCard> response = unitUnterTest.GetCardByPrintId(Guid.Empty);
 
             //Assert
             Assert.IsNotNull(response);
@@ -90,16 +90,16 @@ namespace Tests.ControllerTests
         }
 
         [TestMethod]
-        public void GetCardById_DualFaceCard_Test()
+        public void GetCardByPrintId_DualFaceCard_Test()
         {
             //Arrange
-            SfCard expected = GetDummyDualFacedCard();
+            SfCard expected = TestUtils.GetDummyDualFacedCard();
 
-            _requesterMock.Setup(m => m.GetCardById(It.IsAny<Guid>())).Returns(expected);
+            _requesterMock.Setup(m => m.GetCardByPrintId(It.IsAny<Guid>())).Returns(expected);
             CardController unitUnterTest = GetController();
 
             //Act
-            List<IFullCard> response = unitUnterTest.GetCardById(Guid.Empty);
+            List<IFullCard> response = unitUnterTest.GetCardByPrintId(Guid.Empty);
 
             //Assert
             Assert.IsNotNull(response);
@@ -111,51 +111,6 @@ namespace Tests.ControllerTests
         private CardController GetController()
         {
             return new CardController(_requesterMock.Object);
-        }
-
-        private SfCard GetDummyDualFacedCard()
-        {
-            SfCard card = GetDummyDoubleCard();
-            card.ImageUris = null;
-
-            return card;
-        }
-
-        private SfCard GetDummyDoubleCard()
-        {
-            SfCard card = GetDummyCard();
-            card.Text = null;
-            card.CardFaces = new List<SfCardFace> { 
-                new SfCardFace 
-                {
-                    Name = "Face 1",
-                    Text = "Text 1",
-                    TypeLine = "Artifact Creature - Dummy",
-                    ImageUris = new Dictionary<CardImageTypes, Uri>() ,
-                },
-                new SfCardFace 
-                { 
-                    Name = "Face 2", 
-                    Text = "Text 2", 
-                    TypeLine = "Artifact Creature - Dummy",
-                    ImageUris = new Dictionary<CardImageTypes, Uri>(),
-                } 
-            };
-
-            return card;
-        }
-
-        private SfCard GetDummyCard()
-        {
-            return new SfCard
-            {
-                Name = "Dummy Mtg Card",
-                Id = Guid.Empty,
-                ImageUris = new Dictionary<CardImageTypes, Uri> { { CardImageTypes.Png, new Uri("https://img.scryfall.com/cards/png/front/e/6/e672d408-997c-4a19-810a-3da8411eecf2.png?1568004958") }, { CardImageTypes.Small, new Uri("https://img.scryfall.com/cards/small/front/e/6/e672d408-997c-4a19-810a-3da8411eecf2.jpg?1568004958") } },
-                Legalities = new Dictionary<MtgPlayModes, string> { { MtgPlayModes.Commander, "legal" }, { MtgPlayModes.Brawl, "legal" }, { MtgPlayModes.Duel, "legal" }, { MtgPlayModes.Future, "legal" }, { MtgPlayModes.Historic, "legal" }, { MtgPlayModes.Legacy, "legal" }, { MtgPlayModes.Modern, "legal" } },
-                Text = "Does dummy stuff.",
-                TypeLine = "Artifact Creature - Dummy"
-            };
         }
     }
 }

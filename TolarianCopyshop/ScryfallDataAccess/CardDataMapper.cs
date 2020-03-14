@@ -1,11 +1,8 @@
-﻿using Newtonsoft.Json;
-using Refit;
+﻿using Refit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web;
 using Tolarian.Copyshop.Business.Interfaces;
 using Tolarian.Copyshop.Business.Models.SfCardInfo;
@@ -21,9 +18,9 @@ namespace Tolarian.Copyshop.ScryfallDataAccess
             _service = RestService.For<IScryfallApi>("https://api.scryfall.com");
         }
 
-        public SfCard GetCardById(Guid id)
+        public SfCard GetCardByPrintId(Guid printId)
         {
-            ApiResponse<SfCard> response = _service.GetCardById(id).Result;
+            ApiResponse<SfCard> response = _service.GetCardByPrintId(printId).Result;
 
             switch (response.StatusCode)
             {
@@ -31,6 +28,24 @@ namespace Tolarian.Copyshop.ScryfallDataAccess
                     return response.Content;
                 case HttpStatusCode.NotFound:
                     return SfCard.GetEmpty();
+                default:
+                    HandleUnexpectedStatusCodeForResponse(response);
+                    break;
+            }
+
+            return null;
+        }
+
+        public SfPaginatedCardList GetPrintsOfCard(Guid oracleId)
+        {
+            ApiResponse<SfPaginatedCardList> response = _service.GetPrintsBySearchQuery(oracleId).Result;
+
+            switch (response.StatusCode)
+            {
+                case HttpStatusCode.OK:
+                    return response.Content;
+                case HttpStatusCode.NotFound:
+                    return SfPaginatedCardList.GetEmpty();
                 default:
                     HandleUnexpectedStatusCodeForResponse(response);
                     break;
@@ -59,7 +74,7 @@ namespace Tolarian.Copyshop.ScryfallDataAccess
             return null;
         }
 
-        public SfPaginatedCardList GetCardsByQuery(string query)
+        public SfPaginatedCardList GetCardsBySearchQuery(string query)
         {
             ApiResponse<SfPaginatedCardList> response = _service.GetCardsBySearchQuery(query).Result;
 

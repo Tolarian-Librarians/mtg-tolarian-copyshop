@@ -22,12 +22,12 @@ namespace Tolarian.Copyshop.Controller
         /// <summary>
         /// Gets the information for one Card by ID. This returns a List because the target card may be multifaced.
         /// </summary>
-        public List<IFullCard> GetCardById(Guid id)
+        public List<IFullCard> GetCardByPrintId(Guid printId)
         {
             List<IFullCard> response = null;
             try
             {
-                SfCard card = _requester.GetCardById(id);
+                SfCard card = _requester.GetCardByPrintId(printId);
 
                 response = CardMapper.MapToCardDto(card);
             }
@@ -50,6 +50,24 @@ namespace Tolarian.Copyshop.Controller
             {
                 (List<SfCard>, int) businessResponse = _requester.GetCardsBySearchQuery(query, maxCountOfItems);
                 response = CardMapper.MapToSearchResultDto(businessResponse.Item1, businessResponse.Item2);
+            }
+            catch (HttpException ex)
+            {
+                this.ErrorMessage = BuildErrorMessage(ex);
+            }
+            catch (AggregateException ex)
+            {
+                this.ErrorMessage = BuildErrorMessage(ex);
+            }
+
+            return response;
+        }
+        public List<CardArtworkResponse> GetArtworksOfCard(Guid cardId)
+        {
+            var response = new List<CardArtworkResponse>();
+            try
+            {
+                response = CardMapper.MapToArtworkDto(_requester.GetPrintsOfCard(cardId));
             }
             catch (HttpException ex)
             {
