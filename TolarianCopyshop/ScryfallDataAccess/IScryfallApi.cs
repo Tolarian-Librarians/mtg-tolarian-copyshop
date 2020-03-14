@@ -7,14 +7,14 @@ namespace Tolarian.Copyshop.ScryfallDataAccess
 {
     public interface IScryfallApi
     {
-        [Get("/cards/{id}")]
-        Task<ApiResponse<SfCard>> GetCardById(Guid id);
+        [Get("/cards/{printId}")]
+        Task<ApiResponse<SfCard>> GetCardByPrintId(Guid printId);
 
         [Get("/cards/search?q=\"{searchQuery}\"")]
         Task<ApiResponse<SfPaginatedCardList>> GetCardsBySearchQuery(string searchQuery);
-        
-        [Get("/cards/search?q=!\"{searchQuery}\"&unique=art")]
-        Task<ApiResponse<SfPaginatedCardList>> GetCardsBySearchQueryUniqueArt(string searchQuery);
+
+        [Get("/cards/search?q=oracleid:{oracleId}&unique=prints")]
+        Task<ApiResponse<SfPaginatedCardList>> GetPrintsBySearchQuery(Guid oracleId);
 
         [Post("/cards/collection")]
         Task<ApiResponse<SfPaginatedCardList>> GetCardsByCollection([Body] SfIdentifierContainer identifiers);

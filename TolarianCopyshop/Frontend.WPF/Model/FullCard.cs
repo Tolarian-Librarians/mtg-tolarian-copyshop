@@ -36,7 +36,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.Model
             {
                 this.CardType = card.CardType;
                 this.CardCount = card.CardCount;
-                this.Id = card.Id;
+                this.CardId = card.CardId;
                 this.Legalities1 = card.Legalities1;
                 this.Legalities2 = card.Legalities2;
                 this.Name = card.Name;
@@ -57,7 +57,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.Model
             set => this.SetProperty(ref this._cardType, value);
         }
 
-        public Guid Id
+        public Guid CardId
         {
             get => this._id;
             set => this.SetProperty(ref this._id, value);
@@ -105,6 +105,8 @@ namespace Tolarian.Copyshop.ScreenPresenter.Model
             set => this.SetProperty(ref this._text, value);
         }
         public string SetCode { get; set; }
+        public Guid PrintId { get; set; }
+        public Uri CroppedImage { get; set; }
 
         #endregion
 

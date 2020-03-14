@@ -16,9 +16,9 @@ namespace Tolarian.Copyshop.Business.UseCaseInteractors
             _gateway = gateway;
         }
 
-        public SfCard GetCardById(Guid id)
+        public SfCard GetCardByPrintId(Guid printId)
         {
-            SfCard result = _gateway.GetCardById(id);
+            SfCard result = _gateway.GetCardByPrintId(printId);
             return result;
         }
 
@@ -38,12 +38,12 @@ namespace Tolarian.Copyshop.Business.UseCaseInteractors
         public (List<SfCard>, int) GetCardsBySearchQuery(string searchQuery, int maxCountOfItems)
         {
             const int minimumQueryLength = 3;
-            if (searchQuery.Length < minimumQueryLength)
+            if (searchQuery.Length < minimumQueryLength || maxCountOfItems <= 0)
             {
                 return (new List<SfCard>(), 0);
             }
 
-            List<SfCard> result = _gateway.GetCardsByQuery(searchQuery).Data.ToList();
+            List<SfCard> result = _gateway.GetCardsBySearchQuery(searchQuery).Data.ToList();
             return (TruncateListToMaxSize(maxCountOfItems, result), result.Count);
         }
 
@@ -58,13 +58,18 @@ namespace Tolarian.Copyshop.Business.UseCaseInteractors
             return resultList;
         }
 
-        public static List<List<T>> ChunkListBySize<T>(List<T> source, int chunkSize)
+        private List<List<T>> ChunkListBySize<T>(List<T> source, int chunkSize)
         {
             return source
                 .Select((x, i) => new { Index = i, Value = x })
                 .GroupBy(x => x.Index / chunkSize)
                 .Select(x => x.Select(v => v.Value).ToList())
                 .ToList();
+        }
+
+        public List<SfCard> GetPrintsOfCard(Guid cardId)
+        {
+            return _gateway.GetPrintsOfCard(cardId).Data.ToList();
         }
     }
 }

@@ -10,8 +10,11 @@ namespace Tolarian.Copyshop.Business.Models.SfCardInfo
         [JsonProperty(PropertyName = "Name")]
         public string Name { get; set; }
 
+        [JsonProperty(PropertyName = "oracle_id")]
+        public Guid CardId { get; set; }
+
         [JsonProperty(PropertyName = "id")]
-        public Guid Id { get; set; }
+        public Guid PrintId { get; set; }
 
         [JsonProperty(PropertyName = "oracle_text")]
         public string Text { get; set; }
@@ -28,6 +31,12 @@ namespace Tolarian.Copyshop.Business.Models.SfCardInfo
         [JsonProperty(PropertyName = "type_line")]
         public string TypeLine { get; set; }
 
+        [JsonProperty(PropertyName = "set_name")]
+        public string SetName { get; set; }
+
+        [JsonProperty(PropertyName = "set")]
+        public string SetCode { get; set; }
+
         [JsonIgnore]
         public bool IsMultifaced { get => CardFaces != null; }
 
@@ -36,6 +45,6 @@ namespace Tolarian.Copyshop.Business.Models.SfCardInfo
 
         public override string ToString() => Name;
 
-        public static SfCard GetEmpty() => new SfCard { Id = Guid.Empty };
+        public static SfCard GetEmpty() => new SfCard { CardId = Guid.Empty };
     }
 }

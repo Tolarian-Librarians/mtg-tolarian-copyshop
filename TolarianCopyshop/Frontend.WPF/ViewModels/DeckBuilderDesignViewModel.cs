@@ -20,7 +20,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             {
                 new FullCard()
                 {
-                    Id = new Guid(),
+                    CardId = new Guid(),
                     SmallImage = new Uri("https://img.scryfall.com/cards/small/front/3/2/32982ed2-96e4-4cc5-8562-744b06bca239.jpg?1572491355"),
                     LargeImage = new Uri("https://img.scryfall.com/cards/large/front/a/f/af951b7c-21ba-4a40-aa19-20059b8ca63f.jpg?1567840489"),
                     Name = "Mountain",
@@ -28,7 +28,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
                 },
                 new FullCard()
                 {
-                    Id = new Guid(),
+                    CardId = new Guid(),
                     SmallImage = new Uri("https://img.scryfall.com/cards/small/front/e/4/e4f184c5-4f3c-4aea-afa1-f0903d3cc71a.jpg?1572491327"),
                     LargeImage = new Uri("https://img.scryfall.com/cards/small/front/e/4/e4f184c5-4f3c-4aea-afa1-f0903d3cc71a.jpg?1572491327"),
                     Name = "Swamp",
@@ -36,7 +36,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
                 },
                 new FullCard()
                 {
-                    Id = new Guid(),
+                    CardId = new Guid(),
                     SmallImage = new Uri("https://img.scryfall.com/cards/small/front/7/d/7ded4b2a-ba56-43da-8ea7-392b77fc2926.jpg?1572491259"),
                     LargeImage = new Uri("https://img.scryfall.com/cards/small/front/7/d/7ded4b2a-ba56-43da-8ea7-392b77fc2926.jpg?1572491259"),
                     Name = "Plains",
@@ -44,7 +44,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
                 },
                 new FullCard()
                 {
-                    Id = new Guid(),
+                    CardId = new Guid(),
                     SmallImage = new Uri("https://img.scryfall.com/cards/small/front/4/1/4134cd82-6e48-4fc0-bcb4-1e3af369ef82.jpg?1572491298"),
                     LargeImage = new Uri("https://img.scryfall.com/cards/small/front/4/1/4134cd82-6e48-4fc0-bcb4-1e3af369ef82.jpg?1572491298"),
                     Name = "Island",
@@ -52,7 +52,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
                 },
                 new FullCard()
                 {
-                    Id = new Guid(),
+                    CardId = new Guid(),
                     SmallImage = new Uri("https://img.scryfall.com/cards/small/front/f/8/f8f03bb2-313e-4688-945f-052eed678174.jpg?1572491394"),
                     LargeImage = new Uri("https://img.scryfall.com/cards/small/front/f/8/f8f03bb2-313e-4688-945f-052eed678174.jpg?1572491394"),
                     Name = "Forest",

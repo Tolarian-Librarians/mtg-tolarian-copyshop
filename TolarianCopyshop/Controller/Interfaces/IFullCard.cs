@@ -8,12 +8,14 @@ namespace Tolarian.Copyshop.Controller.Interfaces
     {
         CardType CardType { get; set; }
         int CardCount { get; set; }
-        Guid Id { get; set; }
+        Guid CardId { get; set; }
+        Guid PrintId { get; set; }
         Dictionary<string, string> Legalities1 { get; set; }
         Dictionary<string, string> Legalities2 { get; set; }
         string Name { get; set; }
         Uri LargeImage { get; set; }
         Uri SmallImage { get; set; }
+        Uri CroppedImage { get; set; }
         string Text { get; set; }
         string SetCode { get; set; }
 

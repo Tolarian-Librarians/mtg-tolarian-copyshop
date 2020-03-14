@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Tolarian.Copyshop.Business.Models.Enums;
 using Tolarian.Copyshop.Business.Models.SfCardInfo;
@@ -11,13 +10,27 @@ namespace Tolarian.Copyshop.Controller.Mappers
 {
     public abstract class CardMapper
     {
+        internal static List<CardArtworkResponse> MapToArtworkDto(List<SfCard> source)
+        {
+            List<CardArtworkResponse> result = source.Select(card => new CardArtworkResponse
+            {
+                SetCode = card.SetCode,
+                SetName = card.SetName,
+                Image = card.ImageUris[CardImageTypes.Border_Crop],
+                PrintId = card.PrintId,
+            }
+            ).ToList();
+
+            return result;
+        }
+
         public static CardSearchCard MapToSearchResultDto(SfCard source)
         {
             var result = new CardSearchCard
             {
                 Name = source.Name,
                 CardType = GetBaseCardTypeFromTypeLine(source.TypeLine),
-                Id = source.Id,
+                PrintId = source.PrintId,
                 Image = source.ImageUris?[CardImageTypes.Normal] ?? source.CardFaces?[0]?.ImageUris?[CardImageTypes.Normal],
             };
 
@@ -64,12 +77,14 @@ namespace Tolarian.Copyshop.Controller.Mappers
             List<FullCardResponse> result = source.CardFaces.Select(card => new FullCardResponse
             {
                 Name = card.Name,
-                Id = source.Id,
+                CardId = source.CardId,
+                PrintId = source.PrintId,
                 Text = card.Text,
                 CardType = GetBaseCardTypeFromTypeLine(card.TypeLine),
                 CardCount = 1,
                 LargeImage = card.ImageUris.ContainsKey(CardImageTypes.Large) ? card.ImageUris[CardImageTypes.Large] : null,
                 SmallImage = card.ImageUris.ContainsKey(CardImageTypes.Small) ? card.ImageUris[CardImageTypes.Small] : null,
+                CroppedImage = card.ImageUris.ContainsKey(CardImageTypes.Border_Crop) ? card.ImageUris[CardImageTypes.Border_Crop] : null,
                 Legalities1 = GetFirstHalfOfLegalities(source),
                 Legalities2 = GetSecondHalfOfLegalities(source)
             }).ToList();
@@ -82,9 +97,11 @@ namespace Tolarian.Copyshop.Controller.Mappers
             var result = new FullCardResponse
             {
                 Name = source.Name,
-                Id = source.Id,
+                CardId = source.CardId,
+                PrintId = source.PrintId,
                 LargeImage = source.ImageUris.ContainsKey(CardImageTypes.Large) ? source.ImageUris[CardImageTypes.Large] : null,
                 SmallImage = source.ImageUris.ContainsKey(CardImageTypes.Small) ? source.ImageUris[CardImageTypes.Small] : null,
+                CroppedImage = source.ImageUris.ContainsKey(CardImageTypes.Border_Crop) ? source.ImageUris[CardImageTypes.Border_Crop] : null,
                 Legalities1 = GetFirstHalfOfLegalities(source),
                 Legalities2 = GetSecondHalfOfLegalities(source),
                 CardCount = 1,

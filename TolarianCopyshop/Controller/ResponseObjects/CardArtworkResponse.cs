@@ -7,5 +7,6 @@ namespace Tolarian.Copyshop.Controller.ResponseObjects
         public string SetName { get; set; }
         public string SetCode { get; set; }
         public Uri Image { get; set; }
+        public Guid PrintId { get; set; }
     }
 }
