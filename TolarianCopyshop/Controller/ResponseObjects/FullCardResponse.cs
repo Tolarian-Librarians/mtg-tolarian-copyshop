@@ -18,7 +18,7 @@ namespace Tolarian.Copyshop.Controller.ResponseObjects
             {
                 this.CardType = card.CardType;
                 this.CardCount = card.CardCount;
-                this.Id = card.Id;
+                this.CardId = card.CardId;
                 this.Legalities1 = card.Legalities1;
                 this.Legalities2 = card.Legalities2;
                 this.Name = card.Name;
@@ -31,7 +31,7 @@ namespace Tolarian.Copyshop.Controller.ResponseObjects
 
         public string Name { get; set; }
 
-        public Guid Id { get; set; }
+        public Guid CardId { get; set; }
 
         public string Text { get; set; }
 
@@ -47,5 +47,6 @@ namespace Tolarian.Copyshop.Controller.ResponseObjects
 
         public Dictionary<string, string> Legalities2 { get; set; }
         public string SetCode { get; set; }
+        public Guid PrintId { get; set; }
     }
 }

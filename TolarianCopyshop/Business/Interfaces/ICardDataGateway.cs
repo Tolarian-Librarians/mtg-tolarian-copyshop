@@ -6,8 +6,9 @@ namespace Tolarian.Copyshop.Business.Interfaces
 {
     public interface ICardDataGateway
     {
-        SfPaginatedCardList GetCardsByQuery(string query);
-        SfCard GetCardById(Guid id);
+        SfPaginatedCardList GetCardsBySearchQuery(string query);
+        SfCard GetCardByPrintId(Guid printId);
         SfPaginatedCardList GetCardsByNameList(List<string> cardNames);
+        SfPaginatedCardList GetPrintsOfCard(Guid oracleId);
     }
 }

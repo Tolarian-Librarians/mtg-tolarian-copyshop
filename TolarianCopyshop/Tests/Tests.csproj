@@ -116,6 +116,7 @@
     <Compile Include="InteractorTests\DeckInfoInteractorTest.cs" />
     <Compile Include="ScryfallDataAccessTests\CardDataMapperTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestUtils.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
