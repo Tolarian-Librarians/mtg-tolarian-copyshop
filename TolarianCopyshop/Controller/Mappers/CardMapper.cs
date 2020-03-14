@@ -84,6 +84,7 @@ namespace Tolarian.Copyshop.Controller.Mappers
                 CardCount = 1,
                 LargeImage = card.ImageUris.ContainsKey(CardImageTypes.Large) ? card.ImageUris[CardImageTypes.Large] : null,
                 SmallImage = card.ImageUris.ContainsKey(CardImageTypes.Small) ? card.ImageUris[CardImageTypes.Small] : null,
+                CroppedImage = card.ImageUris.ContainsKey(CardImageTypes.Border_Crop) ? card.ImageUris[CardImageTypes.Border_Crop] : null,
                 Legalities1 = GetFirstHalfOfLegalities(source),
                 Legalities2 = GetSecondHalfOfLegalities(source)
             }).ToList();
@@ -100,6 +101,7 @@ namespace Tolarian.Copyshop.Controller.Mappers
                 PrintId = source.PrintId,
                 LargeImage = source.ImageUris.ContainsKey(CardImageTypes.Large) ? source.ImageUris[CardImageTypes.Large] : null,
                 SmallImage = source.ImageUris.ContainsKey(CardImageTypes.Small) ? source.ImageUris[CardImageTypes.Small] : null,
+                CroppedImage = source.ImageUris.ContainsKey(CardImageTypes.Border_Crop) ? source.ImageUris[CardImageTypes.Border_Crop] : null,
                 Legalities1 = GetFirstHalfOfLegalities(source),
                 Legalities2 = GetSecondHalfOfLegalities(source),
                 CardCount = 1,

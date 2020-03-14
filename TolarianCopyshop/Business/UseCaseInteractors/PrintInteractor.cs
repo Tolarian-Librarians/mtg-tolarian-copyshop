@@ -76,22 +76,12 @@ namespace Tolarian.Copyshop.Business.UseCaseInteractors
 
         private UIElement GetImageForSlotFromUri(Uri source, int xPos, int yPos)
         {
-            const int cropLeft = 5;
-            const int cropRight = 5;
-            const int cropTop = 5;
-            const int cropBottom = 8;
-
-            //Those need to be added to the images width and height to correct its size after clipping (which made it too small at first)
-            int offsetX = cropLeft + cropRight;
-            int offsetY = cropTop + cropBottom;
-
             BitmapImage bitmap = new BitmapImage(source);
 
             var img = new Image();
             img.Source = bitmap;
-            img.Width = _cardWidth + offsetX;
-            img.Height = _cardHeight + offsetY;
-            img.Clip = new RectangleGeometry(new Rect(cropLeft, cropTop, img.Width - (cropRight + cropLeft), img.Height - (cropBottom + cropTop)));
+            img.Width = _cardWidth;
+            img.Height = _cardHeight;
 
             img.RenderTransform = new TranslateTransform(_cardWidth * xPos, _cardHeight * yPos);
 

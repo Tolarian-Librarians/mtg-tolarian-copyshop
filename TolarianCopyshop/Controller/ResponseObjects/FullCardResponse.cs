@@ -30,23 +30,16 @@ namespace Tolarian.Copyshop.Controller.ResponseObjects
         }
 
         public string Name { get; set; }
-
         public Guid CardId { get; set; }
-
         public string Text { get; set; }
-
         public CardType CardType { get; set; }
-
         public int CardCount { get; set; }
-
         public Uri SmallImage { get; set; }
-
         public Uri LargeImage { get; set; }
-
         public Dictionary<string, string> Legalities1 { get; set; }
-
         public Dictionary<string, string> Legalities2 { get; set; }
         public string SetCode { get; set; }
         public Guid PrintId { get; set; }
+        public Uri CroppedImage { get; set; }
     }
 }

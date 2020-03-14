@@ -106,6 +106,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.Model
         }
         public string SetCode { get; set; }
         public Guid PrintId { get; set; }
+        public Uri CroppedImage { get; set; }
 
         #endregion
 
