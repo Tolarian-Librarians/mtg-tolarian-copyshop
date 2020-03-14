@@ -176,13 +176,14 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
 
         private async void ImportDeck(object commandParameter)
         {
-            if (commandParameter is string importType && this.HandleRequestSave())
+            if (commandParameter is string importType)
             {
                 bool overrideDeck = false;
                 if (DeckBuilderViewModel.GetInstance().DeckCards.Count > 0)
                 {
-                    switch (this.ShowQuestion("Import", "Do you want to override your Deck?", MessageDialogStyle.AffirmativeAndNegativeAndSingleAuxiliary, "Save Deck & Override", "Discard Deck & Override", "Add Cards"))
+                    switch (this.ShowQuestion("Import", "Do you want to override your Deck?", MessageDialogStyle.AffirmativeAndNegativeAndDoubleAuxiliary, "Save Deck & Override", "Discard Deck & Override", "Add Cards", "Cancel"))
                     {
+                        case MessageDialogResult.SecondAuxiliary:
                         case MessageDialogResult.Canceled:
                             return;
                         case MessageDialogResult.Negative:
@@ -213,7 +214,10 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
                     return;
                 }
 
-                this.ShowProgress("IMPORT", "Please wait while your deck is imported...", new Action(() => this.ImportDeckCards(importCards, overrideDeck)));
+                if (!string.IsNullOrWhiteSpace(importCards))
+                {
+                    this.ShowProgress("IMPORT", "Please wait while your deck is imported...", new Action(() => this.ImportDeckCards(importCards, overrideDeck)));
+                }
             }
         }
 
@@ -265,6 +269,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
         internal async void ShowMessage(string header, string message)
             => await this._dialogCoordinator.ShowMessageAsync(this, header, message).ConfigureAwait(false);
 
+        [STAThread]
         internal MessageDialogResult ShowQuestion(string header, string message, MessageDialogStyle style,
             string affirmativeButtonText = "YES", string negativeButtonText = "NO", string firstAuxiliaryButtonText = "CANCEL", string secondAuxiliaryButtonText = "")
             => CopyShopView.GetInstance().ShowModalMessageExternal(header, message, style,

@@ -2,15 +2,27 @@
                                xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                                xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                                xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                               xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
                                xmlns:local="clr-namespace:Tolarian.Copyshop.ScreenPresenter.Views"
                                xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                                xmlns:simpleChildWindow="clr-namespace:MahApps.Metro.SimpleChildWindow;assembly=MahApps.Metro.SimpleChildWindow"
-                               Title="MultiLineInput"
+                               Title="Import Cards"
                                Width="800"
                                Height="450"
+                               GlowBrush="{DynamicResource MahApps.Brushes.Accent}"
+                               ShowCloseButton="True"
                                mc:Ignorable="d">
+
+    <simpleChildWindow:ChildWindow.Icon>
+        <iconPacks:PackIconFontAwesome Width="22"
+                                       Height="22"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"
+                                       Kind="AngleDoubleRightSolid" />
+    </simpleChildWindow:ChildWindow.Icon>
+
     <simpleChildWindow:ChildWindow.OverlayBrush>
-        <SolidColorBrush Opacity="0.7" Color="{StaticResource BlackColor}" />
+        <SolidColorBrush Opacity="0.7" Color="{DynamicResource MahApps.Colors.Black}" />
     </simpleChildWindow:ChildWindow.OverlayBrush>
 
     <Grid>
