@@ -13,6 +13,8 @@ using Tolarian.Copyshop.Controller.Interfaces;
 using Tolarian.Copyshop.Controller.ResponseObjects;
 using Tolarian.Copyshop.ScreenPresenter.Base;
 using Tolarian.Copyshop.ScreenPresenter.Model;
+using Tolarian.Copyshop.ScreenPresenter.Views;
+using static MahApps.Metro.SimpleChildWindow.ChildWindowManager;
 
 namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
 {
@@ -42,17 +44,18 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
 
         #region Constructor
 
-        public DeckBuilderViewModel(CardController controller, DeckController deckController, DeckCardModel deckCardModel)
+        public DeckBuilderViewModel(CardController cardController, DeckController deckController, DeckCardModel deckCardModel)
         {
             _deckBuilder = this;
-            this._cardController = controller;
-            _deckController = deckController;
+            this._cardController = cardController;
+            this._deckController = deckController;
             this._deckCardModel = deckCardModel;
             this.IncreaseCardAmountCommand = new Command(this.IncreaseAmountSelectedCard);
             this.ReduceCardAmountCommand = new Command(this.ReduceAmountSelectedCard);
             this.DeleteCardCommand = new Command(this.DeleteSelectedCard);
             this.ApplySelectedSearchItemCommand = new Command(this.ApplySelectedSearchItem);
             this.ClearSearchCommand = new Command(this.ClearSearch);
+            this.SelectArtworkCommand = new Command(this.SelectArtwork);
 
             this._deckCardModel.DeckCards.CollectionChanged += this.DeckCards_CollectionChanged;
         }
@@ -164,6 +167,8 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
 
         public Command ClearSearchCommand { get; set; }
 
+        public Command SelectArtworkCommand { get; set; }
+
         #endregion
 
         #region Static Methods
@@ -174,6 +179,11 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
         #endregion
 
         #region Methods
+
+        private async void SelectArtwork(object _)
+        {
+            await CopyShopView.GetInstance().ShowChildWindowAsync<string>(new SelectArtworkChildView(this._cardController, this.SelectedCard.Id) { IsModal = false }).ConfigureAwait(false);
+        }
 
         public void InvokeDeckCards()
             => this.OnPropertyChanged(nameof(this.DeckCards));

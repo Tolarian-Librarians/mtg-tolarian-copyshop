@@ -13,6 +13,8 @@
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
                 <!--  Accent and AppTheme setting  -->
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Blue.xaml" />
+                <!--  Individual Styles  -->
+                <ResourceDictionary Source="/Resources.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
             <ninject:ServiceLocator x:Key="ServiceLocator" />

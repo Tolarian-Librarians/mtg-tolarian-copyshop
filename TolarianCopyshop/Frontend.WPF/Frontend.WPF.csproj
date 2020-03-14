@@ -106,12 +106,20 @@
     <Compile Include="ViewModels\DeckViewerDesignViewModel.cs" />
     <Compile Include="ViewModels\DeckViewerViewModel.cs" />
     <Compile Include="ViewModels\ImportCardViewModel.cs" />
+    <Compile Include="ViewModels\SelectArtworkChildViewModel.cs" />
     <Compile Include="Views\DeckViewerView.xaml.cs">
       <DependentUpon>DeckViewerView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SelectArtworkChildView.xaml.cs">
+      <DependentUpon>SelectArtworkChildView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ImportCardsChildView.xaml.cs">
       <DependentUpon>ImportCardsChildView.xaml</DependentUpon>
     </Compile>
+    <Page Include="Resources.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\DeckBuilderView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -142,6 +150,10 @@
     <Page Include="Views\DeckViewerView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SelectArtworkChildView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\ImportCardsChildView.xaml">
       <SubType>Designer</SubType>

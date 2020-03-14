@@ -12,6 +12,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Tolarian.Copyshop.Controller;
 using Tolarian.Copyshop.ScreenPresenter.Base;
 using Tolarian.Copyshop.ScreenPresenter.ViewModels;
 
@@ -20,12 +21,12 @@ namespace Tolarian.Copyshop.ScreenPresenter.Views
     /// <summary>
     /// Interaktionslogik für MultiLineInput.xaml
     /// </summary>
-    public partial class ImportCardsView : ChildWindow
+    public partial class SelectArtworkChildView : ChildWindow
     {
-        public ImportCardsView()
+        public SelectArtworkChildView(CardController cardController, )
         {
             this.InitializeComponent();
-            this.DataContext = new ImportCardsViewModel(new Command(this.HandleAffirmativeCommand), new Command(this.HandleNegativeCommand));
+            this.DataContext = new SelectArtworkChildViewModel(new Command(this.HandleAffirmativeCommand), new Command(this.HandleNegativeCommand));
         }
 
         private void HandleAffirmativeCommand(object _)
