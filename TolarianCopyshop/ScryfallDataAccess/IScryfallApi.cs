@@ -10,8 +10,11 @@ namespace Tolarian.Copyshop.ScryfallDataAccess
         [Get("/cards/{printId}")]
         Task<ApiResponse<SfCard>> GetCardByPrintId(Guid printId);
 
-        [Get("/cards/search?q=\"{searchQuery}\"")]
-        Task<ApiResponse<SfPaginatedCardList>> GetCardsBySearchQuery(string searchQuery);
+        [Get("/cards/autocomplete?q=\"{searchQuery}\"&include_extras={includeExtras}")]
+        Task<ApiResponse<SfCatalog>> GetCardsByAutoCompleteQuery(string searchQuery, bool includeExtras = false);
+
+        [Get("/cards/named?exact=\"{cardName}\"")]
+        Task<ApiResponse<SfPaginatedCardList>> GetCardByExactName(string cardName);
 
         [Get("/cards/search?q=oracleid:{oracleId}&unique=prints")]
         Task<ApiResponse<SfPaginatedCardList>> GetPrintsBySearchQuery(Guid oracleId);
