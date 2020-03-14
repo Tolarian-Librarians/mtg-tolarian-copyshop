@@ -48,7 +48,7 @@ namespace Tolarian.Copyshop.Controller
             CardSearchResponse response = null;
             try
             {
-                (List<SfCard>, int) businessResponse = _requester.GetCardsBySearchQuery(query, maxCountOfItems);
+                (List<SfCard>, string) businessResponse = _requester.GetCardsBySearchQuery(query, maxCountOfItems);
                 response = CardMapper.MapToSearchResultDto(businessResponse.Item1, businessResponse.Item2);
             }
             catch (HttpException ex)
@@ -68,6 +68,7 @@ namespace Tolarian.Copyshop.Controller
             try
             {
                 response = CardMapper.MapToArtworkDto(_requester.GetPrintsOfCard(cardId));
+                response = response.OrderBy(card => card.SetName).ToList();
             }
             catch (HttpException ex)
             {

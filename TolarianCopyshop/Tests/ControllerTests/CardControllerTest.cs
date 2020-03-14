@@ -31,7 +31,7 @@ namespace Tests.ControllerTests
         {
             //Arrange
             SfCard dummy = TestUtils.GetDummyCard();
-            _requesterMock.Setup(m => m.GetCardsBySearchQuery(It.IsAny<string>(), It.IsAny<int>())).Returns((new List<SfCard> { dummy }, 1));
+            _requesterMock.Setup(m => m.GetCardsBySearchQuery(It.IsAny<string>(), It.IsAny<int>())).Returns((new List<SfCard> { dummy }, "1"));
             CardController unitUnterTest = GetController();
 
             //Act
@@ -39,7 +39,7 @@ namespace Tests.ControllerTests
 
             //Assert
             Assert.IsNotNull(response);
-            Assert.AreEqual(1, response.ResultsCount);
+            Assert.AreEqual("1", response.ResultsCount);
             CardSearchCard result = response.Results[0];
             Assert.AreEqual(dummy.Name, result.Name);
             Assert.AreEqual(dummy.PrintId, result.PrintId);
@@ -106,6 +106,40 @@ namespace Tests.ControllerTests
             Assert.AreEqual(2, response.Count);
             Assert.AreEqual(expected.CardFaces[0].Name, response[0].Name);
             Assert.AreEqual(expected.CardFaces[1].Name, response[1].Name);
+        }
+
+        [TestMethod]
+        public void GetPrintsOfCard_LongSetName_Test()
+        {
+            SfCard dummy = TestUtils.GetDummyCard();
+            dummy.SetName = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+            dummy.SetCode = "SSS";
+            _requesterMock.Setup(m => m.GetPrintsOfCard(It.IsAny<Guid>())).Returns(new List<SfCard>{ dummy });
+            CardController unitUnterTest = GetController();
+
+            var result = unitUnterTest.GetArtworksOfCard(Guid.Empty);
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(1, result.Count);
+            Assert.AreEqual(30, result[0].SetName.Length);
+            Assert.IsTrue(result[0].SetName.EndsWith("..."));
+        }
+
+        [TestMethod]
+        public void GetPrintsOfCard_Test()
+        {
+            SfCard dummy = TestUtils.GetDummyCard();
+            dummy.SetName = "Kaladesh";
+            dummy.SetCode = "KDH";
+            _requesterMock.Setup(m => m.GetPrintsOfCard(It.IsAny<Guid>())).Returns(new List<SfCard> { dummy });
+            CardController unitUnterTest = GetController();
+
+            var result = unitUnterTest.GetArtworksOfCard(Guid.Empty);
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(1, result.Count);
+            Assert.AreEqual(result[0].SetName.Length, dummy.SetName.Length);
+            Assert.IsFalse(result[0].SetName.EndsWith("..."));
         }
 
         private CardController GetController()

@@ -20,18 +20,19 @@ namespace Tests.ScryfallDataAccessTests
         }
 
         [TestMethod]
-        public void GetCardsBySearchQuery_Test()
+        public void GetCardNamesByAutoCompleteQuery_Test()
         {
             //Arrange
+            string query = "Toothy, Imagina";
             string expectedCardName = "Toothy, Imaginary Friend";
             CardDataMapper mapper = GetMapper();
 
             //Act
-            SfPaginatedCardList result = mapper.GetCardsBySearchQuery(expectedCardName);
+            SfCatalog result = mapper.GetCardNamesByAutoCompleteQuery(expectedCardName);
 
             //Assert
-            Assert.IsTrue(result.CardCount == 1);
-            Assert.AreEqual(expectedCardName, result.Data[0].Name);
+            Assert.IsTrue(result.ObjectCount == 1);
+            Assert.AreEqual(expectedCardName, result.Data[0]);
         }
 
         [TestMethod]
