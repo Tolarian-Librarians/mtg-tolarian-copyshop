@@ -28,6 +28,7 @@
         </CollectionViewSource>
         <converter:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
         <converter:InvertedBoolToVisibilityConverter x:Key="InvertedBoolToVisibilityConverter" />
+        <converter:IntSubstractionConverter x:Key="IntSubstractionConverter" />
     </UserControl.Resources>
 
     <Grid>
@@ -168,7 +169,7 @@
                       SelectedItem="{Binding SelectedCard}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                        <Grid Width="{Binding ElementName=_DeckListView, Path=ActualWidth}">
+                        <Grid Width="{Binding ElementName=_DeckListView, Path=ActualWidth, Converter={StaticResource IntSubstractionConverter}, ConverterParameter=30}">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="38" />
                                 <ColumnDefinition Width="80" />
@@ -242,21 +243,24 @@
                     </DataTemplate>
                 </ListView.ItemTemplate>
                 <ListView.ItemContainerStyle>
-                    <Style TargetType="ListViewItem">
+                    <Style TargetType="{x:Type ListViewItem}">
                         <Setter Property="Margin" Value="2" />
+                        <Setter Property="Width" Value="{Binding ElementName=_DeckListView, Path=ActualWidth, Converter={StaticResource IntSubstractionConverter}, ConverterParameter=30}" />
                     </Style>
                 </ListView.ItemContainerStyle>
                 <ListView.GroupStyle>
                     <GroupStyle>
                         <GroupStyle.ContainerStyle>
                             <Style TargetType="{x:Type GroupItem}">
-                                <Setter Property="Margin" Value="0,0,0,5" />
+                                <Setter Property="Width" Value="{Binding ElementName=_DeckListView, Path=ActualWidth, Converter={StaticResource IntSubstractionConverter}, ConverterParameter=15}" />
+                                <Setter Property="Margin" Value="0,0,0,0" />
+                                <Setter Property="HorizontalAlignment" Value="Left" />
                                 <Setter Property="Template">
                                     <Setter.Value>
                                         <ControlTemplate TargetType="{x:Type GroupItem}">
                                             <Expander Background="{DynamicResource AccentColorBrush}" BorderThickness="0" IsExpanded="True">
                                                 <Expander.Header>
-                                                    <Grid Width="{Binding ElementName=_DeckListView, Path=ActualWidth}">
+                                                    <Grid Width="{Binding ElementName=_DeckListView, Path=ActualWidth, Converter={StaticResource IntSubstractionConverter}, ConverterParameter=30}">
                                                         <Grid.ColumnDefinitions>
                                                             <ColumnDefinition Width="*" />
                                                             <ColumnDefinition Width="40" />
