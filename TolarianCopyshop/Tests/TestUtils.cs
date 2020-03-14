@@ -46,8 +46,18 @@ namespace Tests
                 Name = "Dummy Mtg Card",
                 CardId = Guid.NewGuid(),
                 PrintId = Guid.NewGuid(),
-                ImageUris = new Dictionary<CardImageTypes, Uri> { { CardImageTypes.Normal, new Uri("https://img.scryfall.com/cards/png/front/e/6/e672d408-997c-4a19-810a-3da8411eecf2.png?1568004958") }, { CardImageTypes.Small, new Uri("https://img.scryfall.com/cards/small/front/e/6/e672d408-997c-4a19-810a-3da8411eecf2.jpg?1568004958") } },
-                Legalities = new Dictionary<MtgPlayModes, string> { { MtgPlayModes.Commander, "legal" }, { MtgPlayModes.Brawl, "legal" }, { MtgPlayModes.Duel, "legal" }, { MtgPlayModes.Future, "legal" }, { MtgPlayModes.Historic, "legal" }, { MtgPlayModes.Legacy, "legal" }, { MtgPlayModes.Modern, "legal" } },
+                ImageUris = new Dictionary<CardImageTypes, Uri> {
+                    { CardImageTypes.Normal, new Uri("https://img.scryfall.com/cards/png/front/e/6/e672d408-997c-4a19-810a-3da8411eecf2.png?1568004958") },
+                    { CardImageTypes.Small, new Uri("https://img.scryfall.com/cards/small/front/e/6/e672d408-997c-4a19-810a-3da8411eecf2.jpg?1568004958") },
+                    { CardImageTypes.Border_Crop, new Uri("https://img.scryfall.com/cards/border_crop/front/0/e/0e0d989d-7186-40dc-bdfe-cfbb77656bc8.jpg?1559959218") } },
+                Legalities = new Dictionary<MtgPlayModes, string> {
+                    { MtgPlayModes.Commander, "legal" },
+                    { MtgPlayModes.Brawl, "legal" },
+                    { MtgPlayModes.Duel, "legal" },
+                    { MtgPlayModes.Future, "legal" },
+                    { MtgPlayModes.Historic, "legal" },
+                    { MtgPlayModes.Legacy, "legal" },
+                    { MtgPlayModes.Modern, "legal" } },
                 Text = "Does dummy stuff.",
                 TypeLine = "Artifact Creature - Dummy"
             };
