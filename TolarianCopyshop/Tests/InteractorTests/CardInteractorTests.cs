@@ -6,6 +6,7 @@ using Tolarian.Copyshop.Business.Interfaces;
 using Tolarian.Copyshop.Business.UseCaseInteractors;
 using Tolarian.Copyshop.Business.Models.SfCardInfo;
 using System;
+using Tolarian.Copyshop.Business.DbRequestModels;
 
 namespace Tests.InteractorTests
 {
@@ -50,11 +51,11 @@ namespace Tests.InteractorTests
             List<string> deckImport = new List<string> { "3 Aether Spellbomb (MRD) 196", "1 Ancient Tomb (TMP)",  "0 Ashnod's Altar (5ED) 218", ""};
 
             List<string> expectedResolvedCardNames = new List<string> { "Aether Spellbomb", "Aether Spellbomb", "Aether Spellbomb", "Ancient Tomb" };
-            _gatewayMock.Setup(m => m.GetCardsByNameList(It.Is<List<string>>(l => l.SequenceEqual(expectedResolvedCardNames)))).Returns(new SfPaginatedCardList { Data = new SfCard[3]});
+            _gatewayMock.Setup(m => m.GetCardCollectionByIdentifiers(It.Is<List<GetCardCollectionRequest>>(l => l.Select(r => r.Name).SequenceEqual(expectedResolvedCardNames)))).Returns(new SfCardCollection { Data = new SfCard[3]});
             CardInteractor unitUnderTest = GetInteractor();
 
             //Act
-            var result = unitUnderTest.GetCardsByNameList(deckImport);
+            var result = unitUnderTest.GetCardsByImport(deckImport);
 
             //Assert
             _gatewayMock.VerifyAll();
@@ -63,10 +64,10 @@ namespace Tests.InteractorTests
         [TestMethod]
         public void GetCardsBySearchQuery_Test()
         {
-            var dummyList = TestUtils.GetDummyCardList();
+            var dummyList = TestUtils.GetDummyCardCollection();
             _gatewayMock.Setup(m => m.GetCardNamesByAutoCompleteQuery(It.IsAny<string>())).Returns(
-                new SfCatalog { ObjectCount = dummyList.CardCount, Data = new string[] { "dummyName", "dummyName", "dummyName", "dummyName", "dummyName", } });
-            _gatewayMock.Setup(m => m.GetCardsByNameList(It.IsAny<List<string>>())).Returns(dummyList);
+                new SfCatalog { ObjectCount = dummyList.Data.Length, Data = new string[] { "dummyName", "dummyName", "dummyName", "dummyName", "dummyName", } });
+            _gatewayMock.Setup(m => m.GetCardCollectionByIdentifiers(It.IsAny<List<GetCardCollectionRequest>>())).Returns(dummyList);
             int maxCountOfItems = 3;
             CardInteractor unitUnderTest = GetInteractor();
 
@@ -74,7 +75,7 @@ namespace Tests.InteractorTests
 
             Assert.IsNotNull(result);
             Assert.AreEqual(maxCountOfItems, result.Item1.Count);
-            Assert.AreEqual(dummyList.CardCount.ToString(), result.Item2);
+            Assert.AreEqual(dummyList.Data.Length.ToString(), result.Item2);
         }
 
         [TestMethod]

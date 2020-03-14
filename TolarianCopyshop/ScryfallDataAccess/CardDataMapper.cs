@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Web;
+using Tolarian.Copyshop.Business.DbRequestModels;
 using Tolarian.Copyshop.Business.Interfaces;
 using Tolarian.Copyshop.Business.Models.SfCardInfo;
 
@@ -54,23 +55,25 @@ namespace Tolarian.Copyshop.ScryfallDataAccess
             return null;
         }
 
-        public SfPaginatedCardList GetCardsByNameList(List<string> cardNames)
+        public SfCardCollection GetCardCollectionByIdentifiers(List<GetCardCollectionRequest> request)
         {
-            if (cardNames.Count == 0)
+            if (request.Count == 0)
             {
-                return SfPaginatedCardList.GetEmpty();
+                return SfCardCollection.GetEmpty();
             }
 
-            SfIdentifierContainer container = new SfIdentifierContainer { Identifiers = cardNames.Select(n => new SfIdentifier { Name = n}).ToList() };
+            SfIdentifierContainer container = new SfIdentifierContainer { Identifiers = request.Select(
+                r => new SfIdentifier { Name = r.Name, SetCode = r.SetCode}).ToList()
+            };
 
-            ApiResponse<SfPaginatedCardList> response = _service.GetCardsByCollection(container).Result;
+            ApiResponse<SfCardCollection> response = _service.GetCardsByCollection(container).Result;
 
             switch (response.StatusCode)
             {
                 case HttpStatusCode.OK:
                     return response.Content;
                 case HttpStatusCode.NotFound:
-                    return SfPaginatedCardList.GetEmpty();
+                    return SfCardCollection.GetEmpty();
                 default:
                     HandleUnexpectedStatusCodeForResponse(response);
                     break;

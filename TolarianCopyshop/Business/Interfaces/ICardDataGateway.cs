@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Tolarian.Copyshop.Business.DbRequestModels;
 using Tolarian.Copyshop.Business.Models.SfCardInfo;
 
 namespace Tolarian.Copyshop.Business.Interfaces
@@ -8,7 +9,7 @@ namespace Tolarian.Copyshop.Business.Interfaces
     {
         SfCatalog GetCardNamesByAutoCompleteQuery(string query);
         SfCard GetCardByPrintId(Guid printId);
-        SfPaginatedCardList GetCardsByNameList(List<string> cardNames);
+        SfCardCollection GetCardCollectionByIdentifiers(List<GetCardCollectionRequest> cardNames);
         SfPaginatedCardList GetPrintsOfCard(Guid oracleId);
     }
 }

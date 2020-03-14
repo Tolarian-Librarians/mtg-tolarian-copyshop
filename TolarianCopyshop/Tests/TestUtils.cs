@@ -69,13 +69,29 @@ namespace Tests
             {
                 CardCount = 5,
                 Data = new SfCard[]
-    {
+                {
                     new SfCard(),
                     new SfCard(),
                     new SfCard(),
                     new SfCard(),
                     new SfCard(),
-    }
+                }
+            };
+        }
+
+        public static SfCardCollection GetDummyCardCollection()
+        {
+            return new SfCardCollection
+            {
+                NotFound = Array.Empty<SfIdentifier>(),
+                Data = new SfCard[]
+                {
+                    new SfCard(),
+                    new SfCard(),
+                    new SfCard(),
+                    new SfCard(),
+                    new SfCard(),
+                }
             };
         }
     }

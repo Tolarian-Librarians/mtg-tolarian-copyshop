@@ -5,6 +5,7 @@ using Refit;
 using Tolarian.Copyshop.ScryfallDataAccess;
 using System.Linq;
 using Tolarian.Copyshop.Business.Models.SfCardInfo;
+using Tolarian.Copyshop.Business.DbRequestModels;
 
 namespace Tests.ScryfallDataAccessTests
 {
@@ -84,11 +85,15 @@ namespace Tests.ScryfallDataAccessTests
         public void GetCardsByNameList_Test()
         {
             //Arrange
-            List<string> names = new List<string> { "Sol Ring", "Dusk // Dawn"};
+            List<GetCardCollectionRequest> names = new List<GetCardCollectionRequest>
+            {
+                new GetCardCollectionRequest { Name = "Sol Ring" },
+                new GetCardCollectionRequest { Name = "Dusk // Dawn" }
+            };
             CardDataMapper mapper = GetMapper();
 
             //Act
-            SfPaginatedCardList result = mapper.GetCardsByNameList(names);
+            SfCardCollection result = mapper.GetCardCollectionByIdentifiers(names);
 
             //Assert
             Assert.IsTrue(result != null);

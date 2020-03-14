@@ -1,14 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Tolarian.Copyshop.Business.DbRequestModels;
 
 namespace Tolarian.Copyshop.Business.Utility
 {
     public static class DeckImportHelper
     {
-        public static List<string> ResolveCardNamesFromList(List<string> cardNames)
+        public static List<GetCardCollectionRequest> ResolveCardNamesFromImportString(List<string> importLines)
         {
-            List<string> result = new List<string>();
-            foreach (string entry in cardNames.Where(e => !string.IsNullOrWhiteSpace(e)))
+            List<GetCardCollectionRequest> result = new List<GetCardCollectionRequest>();
+            foreach (string entry in importLines.Where(e => !string.IsNullOrWhiteSpace(e)))
             {
                 result.AddRange(ResolveCardName(entry));
             }
@@ -16,22 +17,26 @@ namespace Tolarian.Copyshop.Business.Utility
             return result;
         }
 
-        private static List<string> ResolveCardName(string entry)
+        private static List<GetCardCollectionRequest> ResolveCardName(string entry)
         {
-            List<string> result = new List<string>();
+            List<GetCardCollectionRequest> result = new List<GetCardCollectionRequest>();
+            GetCardCollectionRequest actualCardRequest = new GetCardCollectionRequest();
             string[] splitted = entry.Split(' ');
 
             if (IsLastValueArenaCode(splitted))
                 splitted = DeleteLastValue(splitted);
 
             if (IsLastValueMtgSetCode(splitted))
+            {
+                actualCardRequest.SetCode = splitted[GetLastIndexOfArray(splitted)].TrimStart('(').TrimEnd(')');
                 splitted = DeleteLastValue(splitted);
+            }
 
             int amount = GetAmountOfCardInDeck(ref splitted);
-            string actualCardName = string.Join(" ", splitted);
+            actualCardRequest.Name = string.Join(" ", splitted);
 
             for (int i = 0; i < amount; i++)
-                result.Add(actualCardName);
+                result.Add(actualCardRequest);
 
             return result;
         }

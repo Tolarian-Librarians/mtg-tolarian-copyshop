@@ -218,7 +218,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
 
         private void ImportDeckCards(string cards, bool overrideDeck)
         {
-            List<IFullCard> importedCards = this._cardController.GetCardsByNameList(cards ?? "");
+            List<IFullCard> importedCards = this._cardController.GetCardsByImportString(cards ?? "");
             this.SendErrorMessage(this._cardController.ErrorMessage);
             if (importedCards.Count > 0)
             {

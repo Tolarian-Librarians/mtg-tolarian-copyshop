@@ -48,8 +48,8 @@ namespace Tolarian.Copyshop.Controller
             CardSearchResponse response = new CardSearchResponse();
             try
             {
-                (List<SfCard>, string) businessResponse = _requester.GetCardsBySearchQuery(query, maxCountOfItems);
-                response = CardMapper.MapToSearchResultDto(businessResponse.Item1, businessResponse.Item2);
+                (List<SfCard> Cards, string amountFound) businessResponse = _requester.GetCardsBySearchQuery(query, maxCountOfItems);
+                response = CardMapper.MapToSearchResultDto(businessResponse.Cards, businessResponse.amountFound);
             }
             catch (HttpException ex)
             {
@@ -82,7 +82,7 @@ namespace Tolarian.Copyshop.Controller
             return response;
         }
 
-        public List<IFullCard> GetCardsByNameList(string importString)
+        public List<IFullCard> GetCardsByImportString(string importString)
         {
             List<IFullCard> response = new List<IFullCard>();
 
@@ -92,7 +92,7 @@ namespace Tolarian.Copyshop.Controller
                                 new[] { "\r\n", "\r", "\n" },
                                 StringSplitOptions.None).ToList();
 
-                return CardMapper.MapToCardDto(_requester.GetCardsByNameList(lines));
+                return CardMapper.MapToCardDto(_requester.GetCardsByImport(lines).Cards);
             }
             catch (HttpException ex)
             {

@@ -6,9 +6,9 @@ namespace Tolarian.Copyshop.Business.Interfaces
 {
     public interface ICardDataRequester
     {
-        (List<SfCard>, string) GetCardsBySearchQuery(string searchQuery, int maxCountOfItems);
+        (List<SfCard> Cards, string AmountFound) GetCardsBySearchQuery(string searchQuery, int maxCountOfItems);
         SfCard GetCardByPrintId(Guid printId);
-        List<SfCard> GetCardsByNameList(List<string> cardNames);
+        (List<SfCard> Cards, string NotFound) GetCardsByImport(List<string> cardNames);
         List<SfCard> GetPrintsOfCard(Guid cardId);
     }
 }

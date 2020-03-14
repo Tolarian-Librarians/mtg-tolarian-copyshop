@@ -20,7 +20,7 @@ namespace Tolarian.Copyshop.ScryfallDataAccess
         Task<ApiResponse<SfPaginatedCardList>> GetPrintsBySearchQuery(Guid oracleId);
 
         [Post("/cards/collection")]
-        Task<ApiResponse<SfPaginatedCardList>> GetCardsByCollection([Body] SfIdentifierContainer identifiers);
+        Task<ApiResponse<SfCardCollection>> GetCardsByCollection([Body] SfIdentifierContainer identifiers);
 
     }
 }

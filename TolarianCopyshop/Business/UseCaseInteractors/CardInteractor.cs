@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Tolarian.Copyshop.Business.DbRequestModels;
 using Tolarian.Copyshop.Business.Interfaces;
 using Tolarian.Copyshop.Business.Models.SfCardInfo;
 using Tolarian.Copyshop.Business.Utility;
@@ -22,17 +23,21 @@ namespace Tolarian.Copyshop.Business.UseCaseInteractors
             return result;
         }
 
-        public List<SfCard> GetCardsByNameList(List<string> cardNames)
+        public (List<SfCard>, string) GetCardsByImport(List<string> importLines)
         {
             //Scryfall will return a maximum of 75 Cards per request
             int scryfallApiReturnCountMaximum = 75;
 
-            List<string> resolvedNames = DeckImportHelper.ResolveCardNamesFromList(cardNames);
+            List<GetCardCollectionRequest> resolvedRequests = DeckImportHelper.ResolveCardNamesFromImportString(importLines);
 
-            List<List<string>> requestLists = ChunkListBySize(resolvedNames, scryfallApiReturnCountMaximum);
+            List<List<GetCardCollectionRequest>> requestLists = ChunkListBySize(resolvedRequests, scryfallApiReturnCountMaximum);
 
-            List<SfCard> result = requestLists.SelectMany(r => _gateway.GetCardsByNameList(r).Data.ToList()).ToList();
-            return result;
+            var result = requestLists.Select(r => _gateway.GetCardCollectionByIdentifiers(r));
+
+            string notFound = string.Join(Environment.NewLine
+                , result.SelectMany(cc => cc.NotFound.Select(nf => string.Join(" ", nf.Name, nf.SetCode))).ToArray());
+
+            return (result.SelectMany(cc => cc.Data).ToList(), notFound);
         }
 
         public (List<SfCard>, string) GetCardsBySearchQuery(string searchQuery, int maxCountOfItems)
@@ -45,7 +50,9 @@ namespace Tolarian.Copyshop.Business.UseCaseInteractors
 
             List<string> cardNames = _gateway.GetCardNamesByAutoCompleteQuery(searchQuery).Data.ToList();
 
-            List<SfCard> result = _gateway.GetCardsByNameList(cardNames).Data.ToList();
+            List<SfCard> result = _gateway.GetCardCollectionByIdentifiers(
+                cardNames.Select(name => new GetCardCollectionRequest { Name = name}).ToList()
+                ).Data.ToList();
 
             return (TruncateListToMaxSize(maxCountOfItems, result), cardNames.Count >= 20 ? "20+" : cardNames.Count.ToString());
         }
