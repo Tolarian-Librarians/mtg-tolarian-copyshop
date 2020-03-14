@@ -74,16 +74,16 @@ namespace Tolarian.Copyshop.ScryfallDataAccess
             return null;
         }
 
-        public SfPaginatedCardList GetCardsBySearchQuery(string query)
+        public SfCatalog GetCardNamesByAutoCompleteQuery(string query)
         {
-            ApiResponse<SfPaginatedCardList> response = _service.GetCardsBySearchQuery(query).Result;
+            ApiResponse<SfCatalog> response = _service.GetCardsByAutoCompleteQuery(query).Result;
 
             switch (response.StatusCode)
             {
                 case HttpStatusCode.OK:
                     return response.Content;
                 case HttpStatusCode.NotFound:
-                    return SfPaginatedCardList.GetEmpty();
+                    return SfCatalog.GetEmpty();
                 default:
                     HandleUnexpectedStatusCodeForResponse(response);
                     break;

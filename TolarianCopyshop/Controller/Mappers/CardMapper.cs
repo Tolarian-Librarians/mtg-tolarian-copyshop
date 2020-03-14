@@ -15,13 +15,24 @@ namespace Tolarian.Copyshop.Controller.Mappers
             List<CardArtworkResponse> result = source.Select(card => new CardArtworkResponse
             {
                 SetCode = card.SetCode.ToUpper(),
-                SetName = card.SetName,
+                SetName = TruncateSetname(card.SetName),
                 Image = card.ImageUris[CardImageTypes.Border_Crop],
                 PrintId = card.PrintId,
             }
             ).ToList();
 
             return result;
+        }
+
+        private static string TruncateSetname(string setName)
+        {
+            const int maxLength = 27;
+            if(setName.Length <= maxLength)
+            {
+                return setName;
+            }
+
+            return string.Concat(setName.Substring(0, maxLength), "...");
         }
 
         public static CardSearchCard MapToSearchResultDto(SfCard source)
@@ -37,7 +48,7 @@ namespace Tolarian.Copyshop.Controller.Mappers
             return result;
         }
 
-        public static CardSearchResponse MapToSearchResultDto(List<SfCard> source, int resultsCount)
+        public static CardSearchResponse MapToSearchResultDto(List<SfCard> source, string resultsCount)
         {
             List<CardSearchCard> foundCards = source.Select(card => MapToSearchResultDto(card)).ToList();
 

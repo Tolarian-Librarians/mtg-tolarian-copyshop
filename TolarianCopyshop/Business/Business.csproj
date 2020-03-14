@@ -56,6 +56,7 @@
     <Compile Include="Models\DeckInfo\DeckInfoCard.cs" />
     <Compile Include="Models\DeckInfo\DeckInfoCardFace.cs" />
     <Compile Include="Models\SfCardInfo\SfCard.cs" />
+    <Compile Include="Models\SfCardInfo\SfCatalog.cs" />
     <Compile Include="UseCaseInteractors\CardInteractor.cs" />
     <Compile Include="UseCaseInteractors\DeckInfoInteractor.cs" />
     <Compile Include="Utility\DeckImportHelper.cs" />

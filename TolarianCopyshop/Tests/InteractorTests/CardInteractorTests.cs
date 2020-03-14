@@ -64,7 +64,9 @@ namespace Tests.InteractorTests
         public void GetCardsBySearchQuery_Test()
         {
             var dummyList = TestUtils.GetDummyCardList();
-            _gatewayMock.Setup(m => m.GetCardsBySearchQuery(It.IsAny<string>())).Returns(dummyList);
+            _gatewayMock.Setup(m => m.GetCardNamesByAutoCompleteQuery(It.IsAny<string>())).Returns(
+                new SfCatalog { ObjectCount = dummyList.CardCount, Data = new string[] { "dummyName", "dummyName", "dummyName", "dummyName", "dummyName", } });
+            _gatewayMock.Setup(m => m.GetCardsByNameList(It.IsAny<List<string>>())).Returns(dummyList);
             int maxCountOfItems = 3;
             CardInteractor unitUnderTest = GetInteractor();
 
@@ -72,7 +74,7 @@ namespace Tests.InteractorTests
 
             Assert.IsNotNull(result);
             Assert.AreEqual(maxCountOfItems, result.Item1.Count);
-            Assert.AreEqual(dummyList.CardCount, result.Item2);
+            Assert.AreEqual(dummyList.CardCount.ToString(), result.Item2);
         }
 
         [TestMethod]
