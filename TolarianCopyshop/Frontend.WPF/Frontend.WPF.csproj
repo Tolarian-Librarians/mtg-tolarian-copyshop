@@ -106,7 +106,7 @@
     <Compile Include="ViewModels\DeckViewerDesignViewModel.cs" />
     <Compile Include="ViewModels\DeckViewerViewModel.cs" />
     <Compile Include="ViewModels\ImportCardViewModel.cs" />
-    <Compile Include="ViewModels\SelectArtworkChildViewModel.cs" />
+    <Compile Include="ViewModels\SelectArtworkViewModel.cs" />
     <Compile Include="Views\DeckViewerView.xaml.cs">
       <DependentUpon>DeckViewerView.xaml</DependentUpon>
     </Compile>

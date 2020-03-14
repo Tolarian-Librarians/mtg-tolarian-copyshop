@@ -182,7 +182,11 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
 
         private async void SelectArtwork(object _)
         {
-            await CopyShopView.GetInstance().ShowChildWindowAsync<string>(new SelectArtworkChildView(this._cardController, this.SelectedCard.Id) { IsModal = false }).ConfigureAwait(false);
+            var view = CopyShopView.GetInstance();
+            double childWidth = view.ActualWidth - 200d;
+            double childHeight = view.ActualHeight- 150d;
+
+            await CopyShopView.GetInstance().ShowChildWindowAsync<string>(new SelectArtworkChildView(childWidth, childHeight, this._cardController, this.SelectedCard.CardId) { IsModal = false }).ConfigureAwait(false);
         }
 
         public void InvokeDeckCards()

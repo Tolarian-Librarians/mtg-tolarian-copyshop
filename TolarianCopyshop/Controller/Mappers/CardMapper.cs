@@ -14,7 +14,7 @@ namespace Tolarian.Copyshop.Controller.Mappers
         {
             List<CardArtworkResponse> result = source.Select(card => new CardArtworkResponse
             {
-                SetCode = card.SetCode,
+                SetCode = card.SetCode.ToUpper(),
                 SetName = card.SetName,
                 Image = card.ImageUris[CardImageTypes.Border_Crop],
                 PrintId = card.PrintId,

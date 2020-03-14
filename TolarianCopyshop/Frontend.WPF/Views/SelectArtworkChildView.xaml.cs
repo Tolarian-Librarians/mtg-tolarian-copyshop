@@ -19,27 +19,25 @@ using Tolarian.Copyshop.ScreenPresenter.ViewModels;
 namespace Tolarian.Copyshop.ScreenPresenter.Views
 {
     /// <summary>
-    /// Interaktionslogik für MultiLineInput.xaml
+    /// Interaktionslogik für SelectArtworkChildView.xaml
     /// </summary>
     public partial class SelectArtworkChildView : ChildWindow
     {
-        public SelectArtworkChildView(CardController cardController, )
+        public SelectArtworkChildView(double width, double heigth, CardController cardController, Guid cardId)
         {
             this.InitializeComponent();
-            this.DataContext = new SelectArtworkChildViewModel(new Command(this.HandleAffirmativeCommand), new Command(this.HandleNegativeCommand));
+            this.Width = width;
+            this.Height = heigth;
+
+            this.DataContext = new SelectArtworkViewModel(cardController, cardId, new Command(this.HandleAffirmativeCommand));
         }
 
-        private void HandleAffirmativeCommand(object _)
+        private void HandleAffirmativeCommand(object commandParameter)
         {
-            if (this.DataContext is ImportCardsViewModel viewModel)
+            if (commandParameter is Guid printId)
             {
-                this.Close(viewModel.ImportCard);
+                this.Close(printId);
             }
-        }
-
-        private void HandleNegativeCommand(object _)
-        {
-            this.Close();
         }
     }
 }
