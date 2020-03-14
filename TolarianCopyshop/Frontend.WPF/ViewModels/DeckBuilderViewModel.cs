@@ -188,19 +188,16 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
 
             var result = await CopyShopView.GetInstance().ShowChildWindowAsync<object>(new SelectArtworkChildView(childWidth, childHeight, this._cardController, this.SelectedCard.CardId) { IsModal = false }).ConfigureAwait(false);
 
-            if (result is Guid printId && printId != Guid.Empty)
+            if (result is Guid printId && printId != Guid.Empty && printId != this.SelectedCard.PrintId)
             {
                 int CardCount = this.SelectedCard.CardCount;
                 Application.Current.Dispatcher.Invoke(() => this.DeleteSelectedCard(this.SelectedCard));
 
                 var newCards = _cardController.GetCardByPrintId(printId).ConvertAll(card => new FullCard(card));
-
-                foreach (var card in newCards)
-                {
-                    card.CardCount = CardCount;
-                }
+                newCards.Select(o => o.CardCount = CardCount).ToList(); // ToList is needed in order to evaluate the select immediately due to lazy evaluation
 
                 Application.Current.Dispatcher.Invoke(() => this.AddCards(newCards));
+                this.SelectedCard = newCards[0];
             }
         }
 
