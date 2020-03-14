@@ -43,6 +43,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.Model
                 this.LargeImage = card.LargeImage;
                 this.SmallImage = card.SmallImage;
                 this.Text = card.Text;
+                this.SetCode = card.SetCode;
             }
         }
 
@@ -103,6 +104,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.Model
             get => this._text;
             set => this.SetProperty(ref this._text, value);
         }
+        public string SetCode { get; set; }
 
         #endregion
 
