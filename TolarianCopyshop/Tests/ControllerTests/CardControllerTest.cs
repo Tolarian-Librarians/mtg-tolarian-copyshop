@@ -121,7 +121,7 @@ namespace Tests.ControllerTests
 
             Assert.IsNotNull(result);
             Assert.AreEqual(1, result.Count);
-            Assert.AreEqual(30, result[0].SetName.Length);
+            Assert.AreEqual(23, result[0].SetName.Length);
             Assert.IsTrue(result[0].SetName.EndsWith("..."));
         }
 

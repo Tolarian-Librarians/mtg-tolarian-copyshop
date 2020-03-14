@@ -12,12 +12,20 @@ namespace Tolarian.Copyshop.Controller.Mappers
     {
         internal static List<CardArtworkResponse> MapToArtworkDto(List<SfCard> source)
         {
-            List<CardArtworkResponse> result = source.Select(card => new CardArtworkResponse
+            List<CardArtworkResponse> result = source.Select(card =>
             {
-                SetCode = card.SetCode.ToUpper(),
-                SetName = TruncateSetname(card.SetName),
-                Image = card.ImageUris[CardImageTypes.Border_Crop],
-                PrintId = card.PrintId,
+                var convertedCard = new CardArtworkResponse
+                {
+                    SetCode = card.SetCode.ToUpper(),
+                    SetName = TruncateSetname(card.SetName),
+                    PrintId = card.PrintId,
+                };
+                if (card.IsTransformable)
+                    convertedCard.Image = card.CardFaces[0].ImageUris[CardImageTypes.Border_Crop];
+                else
+                    convertedCard.Image = card.ImageUris[CardImageTypes.Border_Crop];
+
+                return convertedCard;
             }
             ).ToList();
 
