@@ -83,8 +83,7 @@ namespace Tolarian.Copyshop.Business.UseCaseInteractors
             img.Width = _cardWidth;
             img.Height = _cardHeight;
 
-            img.RenderTransform = new TranslateTransform(_cardWidth * xPos, _cardHeight * yPos);
-
+            img.RenderTransform = new TranslateTransform((_cardWidth * xPos) + (1 * xPos), (_cardHeight * yPos) + (1 * yPos));
             return img;
         }
     }

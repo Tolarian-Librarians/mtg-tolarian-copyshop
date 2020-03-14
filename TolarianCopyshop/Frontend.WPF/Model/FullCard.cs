@@ -20,6 +20,9 @@ namespace Tolarian.Copyshop.ScreenPresenter.Model
         private Uri _pngImage;
         private Uri _smallImage;
         private string _text;
+        private Uri _croppedImage;
+        private Guid _printId;
+        private string _setCode;
 
         #endregion
 
@@ -37,6 +40,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.Model
                 this.CardType = card.CardType;
                 this.CardCount = card.CardCount;
                 this.CardId = card.CardId;
+                this.PrintId = card.PrintId;
                 this.Legalities1 = card.Legalities1;
                 this.Legalities2 = card.Legalities2;
                 this.Name = card.Name;
@@ -44,6 +48,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.Model
                 this.SmallImage = card.SmallImage;
                 this.Text = card.Text;
                 this.SetCode = card.SetCode;
+                this.CroppedImage = card.CroppedImage;
             }
         }
 
@@ -104,9 +109,24 @@ namespace Tolarian.Copyshop.ScreenPresenter.Model
             get => this._text;
             set => this.SetProperty(ref this._text, value);
         }
-        public string SetCode { get; set; }
-        public Guid PrintId { get; set; }
-        public Uri CroppedImage { get; set; }
+
+        public string SetCode
+        {
+            get => this._setCode;
+            set => this.SetProperty(ref this._setCode, value);
+        }
+
+        public Guid PrintId
+        {
+            get => this._printId;
+            set => this.SetProperty(ref this._printId, value);
+        }
+
+        public Uri CroppedImage
+        {
+            get => this._croppedImage;
+            set => SetProperty(ref this._croppedImage, value);
+        }
 
         #endregion
 

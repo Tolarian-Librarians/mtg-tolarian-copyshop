@@ -139,7 +139,5 @@ namespace Tolarian.Copyshop.ScreenPresenter.Views
                 oModel.ApplySelectedSearchItemCommand.Execute(new object());
             }
         }
-
-
     }
 }

@@ -19,6 +19,7 @@ namespace Tolarian.Copyshop.Controller.ResponseObjects
                 this.CardType = card.CardType;
                 this.CardCount = card.CardCount;
                 this.CardId = card.CardId;
+                this.PrintId = card.PrintId;
                 this.Legalities1 = card.Legalities1;
                 this.Legalities2 = card.Legalities2;
                 this.Name = card.Name;
@@ -26,6 +27,7 @@ namespace Tolarian.Copyshop.Controller.ResponseObjects
                 this.SmallImage = card.SmallImage;
                 this.Text = card.Text;
                 this.SetCode = card.SetCode;
+                this.CroppedImage = card.CroppedImage;
             }
         }
 
