@@ -20,6 +20,7 @@ namespace Tolarian.Copyshop.Controller.Mappers
                     SetName = TruncateSetname(card.SetName),
                     PrintId = card.PrintId,
                     Image = card.IsTransformable ? card.CardFaces[0].ImageUris[CardImageTypes.Border_Crop] : card.ImageUris[CardImageTypes.Border_Crop],
+                    ReleaseDate = card.ReleaseDate,
                 };
             }).ToList();
 

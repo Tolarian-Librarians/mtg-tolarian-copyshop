@@ -70,7 +70,7 @@ namespace Tolarian.Copyshop.Controller
             try
             {
                 var artworks = CardMapper.MapToArtworkDto(_requester.GetPrintsOfCard(cardId));
-                artworks = artworks.OrderBy(card => card.SetName).ToList();
+                artworks = artworks.OrderByDescending(card => card.ReleaseDate).ToList();
                 response.Artworks = artworks;
             }
             catch (HttpException ex)
