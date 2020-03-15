@@ -18,6 +18,7 @@
                                        Height="22"
                                        HorizontalAlignment="Center"
                                        VerticalAlignment="Center"
+                                       Foreground="White"
                                        Kind="AngleDoubleRightSolid" />
     </simpleChildWindow:ChildWindow.Icon>
 
