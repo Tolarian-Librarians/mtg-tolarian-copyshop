@@ -169,6 +169,9 @@ namespace Tolarian.Copyshop.Controller.Mappers
             typesOfCard = typesOfCard.Select(str => str.ToLower().Trim()).ToList();
             typesOfCard.RemoveAll(str => string.IsNullOrWhiteSpace(str) || str == "-");
 
+            if (typesOfCard.Contains("token"))
+                return CardType.Token;
+
             if (typesOfCard.Contains("creature"))
                 return CardType.Creature;
 

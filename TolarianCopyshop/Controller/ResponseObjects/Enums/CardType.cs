@@ -9,6 +9,7 @@
         Planeswalker,
         Enchantment,
         Artifact,
-        Unknown
+        Unknown,
+        Token
     }
 }

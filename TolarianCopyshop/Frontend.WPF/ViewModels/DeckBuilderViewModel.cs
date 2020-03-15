@@ -266,7 +266,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
 
         private void AddCard(FullCard card)
         {
-            if (this.DeckCards.FirstOrDefault(o => o.CardId == card.CardId && o.Name == card.Name) is FullCard ExistingCard)
+            if (this.DeckCards.FirstOrDefault(o => o.CardId == card.CardId && o.Name == card.Name && o.LargeImage == card.LargeImage) is FullCard ExistingCard)
             {
                 ExistingCard.CardCount++;
                 this.CalculateDeckCardCount();
