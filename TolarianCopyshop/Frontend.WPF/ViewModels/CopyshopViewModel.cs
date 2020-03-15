@@ -124,7 +124,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             {
                 return true;
             }
-            switch (this._dialogs.ShowQuestion("Save", "Do you want to save your Deck?", MessageDialogStyle.AffirmativeAndNegativeAndSingleAuxiliary))
+            switch (this._dialogs.ShowQuestionOnUIThread("Save", "Do you want to save your Deck?", MessageDialogStyle.AffirmativeAndNegativeAndSingleAuxiliary))
             {
                 case MessageDialogResult.Canceled:
                 case MessageDialogResult.FirstAuxiliary:
@@ -177,7 +177,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
                 bool overrideDeck = false;
                 if (DeckBuilderViewModel.GetInstance().DeckCards.Count > 0)
                 {
-                    switch (this._dialogs.ShowQuestion("Import", "Do you want to override your Deck?", MessageDialogStyle.AffirmativeAndNegativeAndDoubleAuxiliary, "Save Deck & Override", "Discard Deck & Override", "Add Cards", "Cancel"))
+                    switch (this._dialogs.ShowQuestionOnUIThread("Import", "Do you want to override your Deck?", MessageDialogStyle.AffirmativeAndNegativeAndDoubleAuxiliary, "Save Deck & Override", "Discard Deck & Override", "Add Cards", "Cancel"))
                     {
                         case MessageDialogResult.SecondAuxiliary:
                         case MessageDialogResult.Canceled:
@@ -199,7 +199,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
                 string importCards = string.Empty;
                 if (importType.Equals("TEXT", StringComparison.OrdinalIgnoreCase))
                 {
-                    importCards = await CopyShopView.GetInstance().ShowChildWindowAsync<string>(new ImportCardsChildView() { IsModal = false }).ConfigureAwait(false);
+                    importCards = await this._dialogs.ShowChildWindow<string>(new ImportCardsChildView() { IsModal = false }).ConfigureAwait(false);
                 }
                 else if (importType.Equals("CLIPBOARD", StringComparison.OrdinalIgnoreCase))
                 {
@@ -212,7 +212,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
 
                 if (!string.IsNullOrWhiteSpace(importCards))
                 {
-                    this._dialogs.ShowProgress("IMPORT", "Please wait while your deck is imported...", new Action(() => this.ImportDeckCards(importCards, overrideDeck)));
+                    this._dialogs.ShowProgressOnUIThread("IMPORT", "Please wait while your deck is imported...", new Action(() => this.ImportDeckCards(importCards, overrideDeck)));
                 }
             }
         }
@@ -228,7 +228,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
 
             if (!string.IsNullOrWhiteSpace(response.NotFound))
             {
-                this._dialogs.ShowMessage("Not imported Cards", "The following cards count not be found:" + Environment.NewLine + response.NotFound);
+                this._dialogs.ShowMessageOnUIThread("Not imported Cards", "The following cards count not be found:" + Environment.NewLine + response.NotFound);
             }
         }
 

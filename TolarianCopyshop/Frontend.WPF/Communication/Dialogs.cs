@@ -1,6 +1,8 @@
 ﻿using MahApps.Metro.Controls.Dialogs;
+using MahApps.Metro.SimpleChildWindow;
 using System;
 using System.Threading.Tasks;
+using System.Windows;
 using Tolarian.Copyshop.ScreenPresenter.Views;
 using static MahApps.Metro.SimpleChildWindow.ChildWindowManager;
 
@@ -29,19 +31,33 @@ namespace Tolarian.Copyshop.ScreenPresenter.Communication
         {
             if (!string.IsNullOrEmpty(errorMessage))
             {
-                this.ShowMessage("Error", errorMessage);
+                this.ShowMessageOnUIThread("Error", errorMessage);
             }
+        }
+
+        #endregion
+
+        #region Child Window
+
+        internal async Task<T> ShowChildWindow<T>(ChildWindow childWindow)
+        {
+            return await Application.Current.Dispatcher.Invoke(() => CopyShopView.GetInstance().ShowChildWindowAsync<T>(childWindow).ConfigureAwait(false));
         }
 
         #endregion
 
         #region Base Dialogs
 
-        internal async void ShowMessage(string header, string message)
-            => await System.Windows.Application.Current.Dispatcher.Invoke(() =>  this._DialogWindow.ShowMessageAsync(header, message).ConfigureAwait(false));
+        internal async void ShowMessageOnUIThread(string header, string message)
+            => await Application.Current.Dispatcher.Invoke(() => this._DialogWindow.ShowMessageAsync(header, message).ConfigureAwait(false));
 
-        internal MessageDialogResult ShowQuestion(string header, string message, MessageDialogStyle style,
+        internal MessageDialogResult ShowQuestionOnUIThread(string header, string message, MessageDialogStyle style,
             string affirmativeButtonText = "YES", string negativeButtonText = "NO", string firstAuxiliaryButtonText = "CANCEL", string secondAuxiliaryButtonText = "")
+            => Application.Current.Dispatcher.Invoke(() => ShowQuestion(header, message, style,
+                affirmativeButtonText, negativeButtonText, firstAuxiliaryButtonText, secondAuxiliaryButtonText));
+
+        private MessageDialogResult ShowQuestion(string header, string message, MessageDialogStyle style,
+            string affirmativeButtonText, string negativeButtonText, string firstAuxiliaryButtonText, string secondAuxiliaryButtonText)
             => _DialogWindow.ShowModalMessageExternal(header, message, style,
                  new MetroDialogSettings()
                  {
@@ -53,10 +69,10 @@ namespace Tolarian.Copyshop.ScreenPresenter.Communication
                      DefaultButtonFocus = MessageDialogResult.Affirmative
                  });
 
-        internal void ShowProgress(string header, string message, Action FunctionWhileProgress) 
-            => System.Windows.Application.Current.Dispatcher.Invoke(() => this.ShowProgressOnWindowThread(header, message, FunctionWhileProgress));
+        internal void ShowProgressOnUIThread(string header, string message, Action FunctionWhileProgress)
+            => Application.Current.Dispatcher.Invoke(() => this.ShowProgress(header, message, FunctionWhileProgress));
 
-        private async void ShowProgressOnWindowThread(string header, string message, Action FunctionWhileProgress)
+        private async void ShowProgress(string header, string message, Action FunctionWhileProgress)
         {
             // Show...
             ProgressDialogController controller = await CopyShopView.GetInstance().ShowProgressAsync(header, message).ConfigureAwait(true);

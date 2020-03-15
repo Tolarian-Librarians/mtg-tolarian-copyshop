@@ -188,10 +188,12 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
         private async void SelectArtwork(object _)
         {
             var view = CopyShopView.GetInstance();
-            double childWidth = view.ActualWidth - 200d;
-            double childHeight = view.ActualHeight- 150d;
-
-            var result = await CopyShopView.GetInstance().ShowChildWindowAsync<object>(new SelectArtworkChildView(childWidth, childHeight, this._cardController, this.SelectedCard.CardId) { IsModal = false }).ConfigureAwait(false);
+            var result = await this._dialogs.ShowChildWindow<Guid>(new SelectArtworkChildView(this._cardController, this.SelectedCard.CardId)
+            {
+                IsModal = false,
+                Width = view.ActualWidth - 200d,
+                Height = view.ActualHeight - 150d,
+            }).ConfigureAwait(false);
 
             if (result is Guid printId && printId != Guid.Empty && printId != this.SelectedCard.PrintId)
             {
@@ -211,7 +213,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
 
         private void DeleteSelectedCard(object clickedCard)
         {
-            if (clickedCard is Model.FullCardModel card)
+            if (clickedCard is FullCardModel card)
             {
                 foreach (var deleteCard in this.DeckCards.Where(o => o.CardId == card.CardId).ToList())
                 {
@@ -228,7 +230,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
 
         private void IncreaseAmountSelectedCard(object clickedCard)
         {
-            if (clickedCard is Model.FullCardModel card)
+            if (clickedCard is FullCardModel card)
             {
                 this.DeckCards.Where(o => o.CardId == card.CardId).Select(o => o.CardCount++).ToList(); // ToList is needed in order to evaluate the select immediately due to lazy evaluation
                 this.CalculateDeckCardCount();
@@ -237,7 +239,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
 
         private void ReduceAmountSelectedCard(object clickedCard)
         {
-            if (clickedCard is Model.FullCardModel card)
+            if (clickedCard is FullCardModel card)
             {
                 this.DeckCards.Where(o => o.CardId == card.CardId).Select(o => --o.CardCount).ToList(); // ToList is needed in order to evaluate the select immediately due to lazy evaluation
                 this.DeleteSelectedCard(this.DeckCards.FirstOrDefault(o => o.CardCount < 1));
@@ -245,7 +247,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             }
         }
 
-        internal void AddCards(IEnumerable<Model.FullCardModel> cardList, bool asNewList = false)
+        internal void AddCards(IEnumerable<FullCardModel> cardList, bool asNewList = false)
         {
             if (asNewList)
             {
@@ -254,16 +256,16 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
 
             if (cardList != null)
             {
-                foreach (Model.FullCardModel card in cardList)
+                foreach (FullCardModel card in cardList)
                 {
                     this.AddCard(card);
                 }
             }
         }
 
-        private void AddCard(Model.FullCardModel card)
+        private void AddCard(FullCardModel card)
         {
-            if (this.DeckCards.FirstOrDefault(o => o.CardId == card.CardId && o.Name == card.Name && o.LargeImage == card.LargeImage) is Model.FullCardModel ExistingCard)
+            if (this.DeckCards.FirstOrDefault(o => o.CardId == card.CardId && o.Name == card.Name && o.LargeImage == card.LargeImage) is FullCardModel ExistingCard)
             {
                 ExistingCard.CardCount++;
                 this.CalculateDeckCardCount();
@@ -277,7 +279,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
         private void CreateNewDeckList()
         {
             this._deckCardModel.DeckCards.CollectionChanged -= this.DeckCards_CollectionChanged;
-            this.DeckCards = new ObservableCollection<Model.FullCardModel>();
+            this.DeckCards = new ObservableCollection<FullCardModel>();
             this._deckCardModel.DeckCards.CollectionChanged += this.DeckCards_CollectionChanged;
         }
 

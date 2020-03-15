@@ -13,11 +13,9 @@ namespace Tolarian.Copyshop.ScreenPresenter.Views
     /// </summary>
     public partial class SelectArtworkChildView : ChildWindow
     {
-        public SelectArtworkChildView(double width, double heigth, CardController cardController, Guid cardId)
+        public SelectArtworkChildView(CardController cardController, Guid cardId)
         {
             this.InitializeComponent();
-            this.Width = width;
-            this.Height = heigth;
 
             this.DataContext = new SelectArtworkViewModel(cardController, cardId, new Command(this.HandleAffirmativeCommand));
         }
