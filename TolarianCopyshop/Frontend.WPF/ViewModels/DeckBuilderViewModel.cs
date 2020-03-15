@@ -12,6 +12,7 @@ using Tolarian.Copyshop.Controller;
 using Tolarian.Copyshop.Controller.Interfaces;
 using Tolarian.Copyshop.Controller.ResponseObjects;
 using Tolarian.Copyshop.ScreenPresenter.Base;
+using Tolarian.Copyshop.ScreenPresenter.Communication;
 using Tolarian.Copyshop.ScreenPresenter.Model;
 using Tolarian.Copyshop.ScreenPresenter.Views;
 using static MahApps.Metro.SimpleChildWindow.ChildWindowManager;
@@ -26,9 +27,10 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
         private readonly CardController _cardController;
         private readonly DeckController _deckController;
         private readonly DeckCardModel _deckCardModel;
+        private readonly Dialogs _dialogs;
 
         private int _deckCardCount;
-        private Controller.ResponseObjects.FullCard _selectedCard;
+        private FullCardModel _selectedCard;
         private Visibility _searchResultVisibility = Visibility.Hidden;
         private string _searchText;
         private string _searchResultCount;
@@ -36,6 +38,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
         private ObservableCollection<SearchCard> _searchResults;
         private SearchCard _selectedSearchItem;
         private int _selectedSearchIndex;
+        
         private Task task;
         private CancellationTokenSource tokenSource;
         private CancellationToken token;
@@ -44,12 +47,14 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
 
         #region Constructor
 
-        public DeckBuilderViewModel(CardController cardController, DeckController deckController, DeckCardModel deckCardModel)
+        public DeckBuilderViewModel(CardController cardController, DeckController deckController, DeckCardModel deckCardModel, Dialogs dialogs)
         {
             _deckBuilder = this;
             this._cardController = cardController;
             this._deckController = deckController;
             this._deckCardModel = deckCardModel;
+            this._dialogs = dialogs;
+
             this.IncreaseCardAmountCommand = new Command(this.IncreaseAmountSelectedCard);
             this.ReduceCardAmountCommand = new Command(this.ReduceAmountSelectedCard);
             this.DeleteCardCommand = new Command(this.DeleteSelectedCard);
@@ -64,7 +69,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
 
         #region Properties
 
-        public ObservableCollection<Model.FullCardModel> DeckCards
+        public ObservableCollection<FullCardModel> DeckCards
         {
             get => this._deckCardModel.DeckCards;
             set
@@ -85,7 +90,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             set => this.SetProperty(ref this._deckCardCount, value);
         }
 
-        public Model.FullCardModel SelectedCard
+        public FullCardModel SelectedCard
         {
             get => this._selectedCard;
             set => this.SetProperty(ref this._selectedCard, value);
@@ -204,14 +209,6 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
         public void InvokeDeckCards()
             => this.OnPropertyChanged(nameof(this.DeckCards));
 
-        private void SendErrorMessage(string errorMessage)
-        {
-            if (!string.IsNullOrEmpty(errorMessage))
-            {
-                CopyShopViewModel.GetInstance().ShowMessage("Error", errorMessage);
-            }
-        }
-
         private void DeleteSelectedCard(object clickedCard)
         {
             if (clickedCard is Model.FullCardModel card)
@@ -315,7 +312,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
                 return;
             }
 
-            this.SendErrorMessage(this._cardController.GetErrorMessage());
+            this._dialogs.SendErrorMessage(this._cardController.GetErrorMessage());
             this.SearchResultCount = result.ResultsCount;
             this.SearchResults = new ObservableCollection<SearchCard>(result.Results);
             this.SearchResultVisibility = Visibility.Visible;
@@ -337,7 +334,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             }
 
             var response = this._cardController.GetCardByPrintId(this.SelectedSearchItem.PrintId);
-            this.SendErrorMessage(this._cardController.GetErrorMessage());
+            this._dialogs.SendErrorMessage(this._cardController.GetErrorMessage());
             this.AddCards(response.Cards.ConvertAll(FullCardModel.Create));
 
             this.SearchText = string.Empty;

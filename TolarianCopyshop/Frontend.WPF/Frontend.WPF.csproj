@@ -98,6 +98,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="CollectionExtension.cs" />
+    <Compile Include="Communication\Dialogs.cs" />
     <Compile Include="Converter\BoolToVisibilityConverter.cs" />
     <Compile Include="Converter\IntSubstractionConverter.cs" />
     <Compile Include="Converter\InvertedBoolToVisibilityConverter.cs" />
