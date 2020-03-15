@@ -10,24 +10,18 @@ namespace Tolarian.Copyshop.Controller.Mappers
 {
     public abstract class CardMapper
     {
-        internal static List<CardArtworkResponse> MapToArtworkDto(List<SfCard> source)
+        internal static List<ArtworkCard> MapToArtworkDto(List<SfCard> source)
         {
-            List<CardArtworkResponse> result = source.Select(card =>
+            List<ArtworkCard> result = source.Select(card =>
             {
-                var convertedCard = new CardArtworkResponse
+                return new ArtworkCard
                 {
                     SetCode = card.SetCode.ToUpper(),
                     SetName = TruncateSetname(card.SetName),
                     PrintId = card.PrintId,
+                    Image = card.IsTransformable ? card.CardFaces[0].ImageUris[CardImageTypes.Border_Crop] : card.ImageUris[CardImageTypes.Border_Crop],
                 };
-                if (card.IsTransformable)
-                    convertedCard.Image = card.CardFaces[0].ImageUris[CardImageTypes.Border_Crop];
-                else
-                    convertedCard.Image = card.ImageUris[CardImageTypes.Border_Crop];
-
-                return convertedCard;
-            }
-            ).ToList();
+            }).ToList();
 
             return result;
         }
@@ -43,14 +37,14 @@ namespace Tolarian.Copyshop.Controller.Mappers
             return string.Concat(setName.Substring(0, maxLength), "...");
         }
 
-        public static CardSearchCard MapToSearchResultDto(SfCard source)
+        public static SearchCard MapToSearchResultDto(SfCard source)
         {
-            var result = new CardSearchCard
+            var result = new SearchCard
             {
                 Name = source.Name,
                 CardType = GetBaseCardTypeFromTypeLine(source.TypeLine),
                 PrintId = source.PrintId,
-                Image = source.ImageUris?[CardImageTypes.Normal] ?? source.CardFaces?[0]?.ImageUris?[CardImageTypes.Normal],
+                Image = source.IsTransformable ? source.CardFaces[0].ImageUris[CardImageTypes.Border_Crop] : source.ImageUris[CardImageTypes.Border_Crop],
             };
 
             return result;
@@ -58,7 +52,7 @@ namespace Tolarian.Copyshop.Controller.Mappers
 
         public static CardSearchResponse MapToSearchResultDto(List<SfCard> source, string resultsCount)
         {
-            List<CardSearchCard> foundCards = source.Select(card => MapToSearchResultDto(card)).ToList();
+            List<SearchCard> foundCards = source.Select(card => MapToSearchResultDto(card)).ToList();
 
             return new CardSearchResponse
             {
@@ -69,15 +63,13 @@ namespace Tolarian.Copyshop.Controller.Mappers
 
         public static List<IFullCard> MapToCardDto(List<SfCard> sources)
         {
-            var result =
-                sources.SelectMany(card => MapToCardDto(card)).ToList();
-
+            var result = sources.SelectMany(card => MapToCardDto(card)).ToList();
             return result;
         }
 
         public static List<IFullCard> MapToCardDto(SfCard source)
         {
-            var result = new List<FullCardResponse>();
+            var result = new List<FullCard>();
 
             if(source.IsTransformable)
             {
@@ -91,9 +83,9 @@ namespace Tolarian.Copyshop.Controller.Mappers
             return result.Cast<IFullCard>().ToList();
         }
 
-        private static List<FullCardResponse> MapDoubleSidedCardToDto(SfCard source)
+        private static List<FullCard> MapDoubleSidedCardToDto(SfCard source)
         {
-            List<FullCardResponse> result = source.CardFaces.Select(card => new FullCardResponse
+            List<FullCard> result = source.CardFaces.Select(card => new FullCard
             {
                 Name = card.Name,
                 CardId = source.CardId,
@@ -111,9 +103,9 @@ namespace Tolarian.Copyshop.Controller.Mappers
             return result;
         }
 
-        private static FullCardResponse MapSingleFacedCardToDto(SfCard source)
+        private static FullCard MapSingleFacedCardToDto(SfCard source)
         {
-            var result = new FullCardResponse
+            var result = new FullCard
             {
                 Name = source.Name,
                 CardId = source.CardId,

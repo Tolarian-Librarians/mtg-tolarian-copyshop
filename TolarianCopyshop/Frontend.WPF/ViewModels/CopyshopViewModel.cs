@@ -108,7 +108,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
                 };
                 if (openFileDialog.ShowDialog() == true)
                 {
-                    DeckBuilderViewModel.GetInstance().AddCards(this._deckController.LoadDeckFromFile(openFileDialog.FileName).Cast<FullCard>(), true);
+                    DeckBuilderViewModel.GetInstance().AddCards(this._deckController.LoadDeckFromFile(openFileDialog.FileName).Cast<FullCardModel>(), true);
                     this.SaveFile = openFileDialog.FileName;
                 }
             }
@@ -218,11 +218,16 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
 
         private void ImportDeckCards(string cards, bool overrideDeck)
         {
-            List<IFullCard> importedCards = this._cardController.GetCardsByImportString(cards ?? "");
-            this.SendErrorMessage(this._cardController.ErrorMessage);
-            if (importedCards.Count > 0)
+            var response = this._cardController.GetCardsByImportString(cards ?? "");
+            this.SendErrorMessage(this._cardController.GetErrorMessage());
+            if (response.Cards.Count > 0)
             {
-                DeckBuilderViewModel.GetInstance().AddCards(importedCards.ConvertAll(card => new FullCard(card)), overrideDeck);
+                DeckBuilderViewModel.GetInstance().AddCards(response.Cards.ConvertAll(FullCardModel.Create), overrideDeck);
+            }
+
+            if (!string.IsNullOrWhiteSpace(response.NotFound))
+            {
+                this.ShowMessage("Not imported Cards", "The following cards count not be found:" + Environment.NewLine + response.NotFound);
             }
         }
 

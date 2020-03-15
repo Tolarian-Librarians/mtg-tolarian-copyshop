@@ -23,7 +23,7 @@ namespace Tolarian.Copyshop.Business.UseCaseInteractors
             return result;
         }
 
-        public (List<SfCard>, string) GetCardsByImport(List<string> importLines)
+        public (List<SfCard> Cards, string NotFound) GetCardsByImport(List<string> importLines)
         {
             //Scryfall will return a maximum of 75 Cards per request
             int scryfallApiReturnCountMaximum = 75;

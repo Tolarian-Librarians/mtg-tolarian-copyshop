@@ -24,12 +24,12 @@ namespace Tests.ScryfallDataAccessTests
         public void GetCardNamesByAutoCompleteQuery_Test()
         {
             //Arrange
-            string query = "Toothy, Imagina";
-            string expectedCardName = "Toothy, Imaginary Friend";
+            const string query = "Toothy, Imagina";
+            const string expectedCardName = "Toothy, Imaginary Friend";
             CardDataMapper mapper = GetMapper();
 
             //Act
-            SfCatalog result = mapper.GetCardNamesByAutoCompleteQuery(expectedCardName);
+            SfCatalog result = mapper.GetCardNamesByAutoCompleteQuery(query);
 
             //Assert
             Assert.IsTrue(result.ObjectCount == 1);

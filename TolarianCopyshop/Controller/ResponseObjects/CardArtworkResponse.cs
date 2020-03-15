@@ -1,12 +1,9 @@
-﻿using System;
+﻿using System.Collections.Generic;
 
 namespace Tolarian.Copyshop.Controller.ResponseObjects
 {
     public class CardArtworkResponse
     {
-        public string SetName { get; set; }
-        public string SetCode { get; set; }
-        public Uri Image { get; set; }
-        public Guid PrintId { get; set; }
+        public List<ArtworkCard> Artworks { get; set; } = new List<ArtworkCard>();
     }
 }
