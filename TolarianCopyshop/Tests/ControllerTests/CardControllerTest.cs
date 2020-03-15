@@ -40,7 +40,7 @@ namespace Tests.ControllerTests
             //Assert
             Assert.IsNotNull(response);
             Assert.AreEqual("1", response.ResultsCount);
-            CardSearchCard result = response.Results[0];
+            SearchCard result = response.Results[0];
             Assert.AreEqual(dummy.Name, result.Name);
             Assert.AreEqual(dummy.PrintId, result.PrintId);
         }
@@ -54,19 +54,20 @@ namespace Tests.ControllerTests
             CardController unitUnterTest = GetController();
 
             //Act
-            List<IFullCard> response = unitUnterTest.GetCardByPrintId(Guid.Empty);
+            FullCardResponse response = unitUnterTest.GetCardByPrintId(Guid.Empty);
 
             //Assert
             Assert.IsNotNull(response);
-            Assert.AreEqual(1, response.Count);
-            Assert.AreEqual(expected.Name, response[0].Name);
+            Assert.IsNotNull(response.Cards);
+            Assert.AreEqual(1, response.Cards.Count);
+            Assert.AreEqual(expected.Name, response.Cards[0].Name);
 
             //Check that the legalities were separated correctly
             List<MtgPlayModes> expectedFirstHalf = new List<MtgPlayModes>{ MtgPlayModes.Commander, MtgPlayModes.Brawl, MtgPlayModes.Duel, MtgPlayModes.Future};
             List<MtgPlayModes> expectedSecondHalf = new List<MtgPlayModes>{ MtgPlayModes.Historic, MtgPlayModes.Legacy, MtgPlayModes.Modern};
 
-            Assert.IsTrue(expectedFirstHalf.All(legality => response[0].Legalities1.ContainsKey(legality.ToString())));
-            Assert.IsTrue(expectedSecondHalf.All(legality => response[0].Legalities2.ContainsKey(legality.ToString())));
+            Assert.IsTrue(expectedFirstHalf.All(legality => response.Cards[0].Legalities1.ContainsKey(legality.ToString())));
+            Assert.IsTrue(expectedSecondHalf.All(legality => response.Cards[0].Legalities2.ContainsKey(legality.ToString())));
         }
 
         [TestMethod]
@@ -79,13 +80,14 @@ namespace Tests.ControllerTests
             CardController unitUnterTest = GetController();
 
             //Act
-            List<IFullCard> response = unitUnterTest.GetCardByPrintId(Guid.Empty);
+            FullCardResponse response = unitUnterTest.GetCardByPrintId(Guid.Empty);
 
             //Assert
             Assert.IsNotNull(response);
-            Assert.AreEqual(1, response.Count);
-            Assert.AreEqual(expected.Name, response[0].Name);
-            Assert.AreEqual("Text 1 // Text 2", response[0].Text);
+            Assert.IsNotNull(response.Cards);
+            Assert.AreEqual(1, response.Cards.Count);
+            Assert.AreEqual(expected.Name, response.Cards[0].Name);
+            Assert.AreEqual("Text 1 // Text 2", response.Cards[0].Text);
 
         }
 
@@ -99,13 +101,14 @@ namespace Tests.ControllerTests
             CardController unitUnterTest = GetController();
 
             //Act
-            List<IFullCard> response = unitUnterTest.GetCardByPrintId(Guid.Empty);
+            FullCardResponse response = unitUnterTest.GetCardByPrintId(Guid.Empty);
 
             //Assert
             Assert.IsNotNull(response);
-            Assert.AreEqual(2, response.Count);
-            Assert.AreEqual(expected.CardFaces[0].Name, response[0].Name);
-            Assert.AreEqual(expected.CardFaces[1].Name, response[1].Name);
+            Assert.IsNotNull(response.Cards);
+            Assert.AreEqual(2, response.Cards.Count);
+            Assert.AreEqual(expected.CardFaces[0].Name, response.Cards[0].Name);
+            Assert.AreEqual(expected.CardFaces[1].Name, response.Cards[1].Name);
         }
 
         [TestMethod]
@@ -120,9 +123,9 @@ namespace Tests.ControllerTests
             var result = unitUnterTest.GetArtworksOfCard(Guid.Empty);
 
             Assert.IsNotNull(result);
-            Assert.AreEqual(1, result.Count);
-            Assert.AreEqual(23, result[0].SetName.Length);
-            Assert.IsTrue(result[0].SetName.EndsWith("..."));
+            Assert.AreEqual(1, result.Artworks.Count);
+            Assert.AreEqual(23, result.Artworks[0].SetName.Length);
+            Assert.IsTrue(result.Artworks[0].SetName.EndsWith("..."));
         }
 
         [TestMethod]
@@ -137,9 +140,9 @@ namespace Tests.ControllerTests
             var result = unitUnterTest.GetArtworksOfCard(Guid.Empty);
 
             Assert.IsNotNull(result);
-            Assert.AreEqual(1, result.Count);
-            Assert.AreEqual(result[0].SetName.Length, dummy.SetName.Length);
-            Assert.IsFalse(result[0].SetName.EndsWith("..."));
+            Assert.AreEqual(1, result.Artworks.Count);
+            Assert.AreEqual(result.Artworks[0].SetName.Length, dummy.SetName.Length);
+            Assert.IsFalse(result.Artworks[0].SetName.EndsWith("..."));
         }
 
         private CardController GetController()

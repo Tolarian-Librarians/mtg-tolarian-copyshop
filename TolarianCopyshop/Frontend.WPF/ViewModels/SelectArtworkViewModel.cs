@@ -14,7 +14,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
     {
         #region Fields
 
-        private ObservableCollection<CardArtworkResponse> _artworks;
+        private ObservableCollection<ArtworkCard> _artworks;
         private readonly CardController _cardController;
 
         #endregion
@@ -26,7 +26,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             this._cardController = cardController;
             this.AffirmativeCommand = affirmativeCommand;
 
-            Artworks = new ObservableCollection<CardArtworkResponse>(_cardController.GetArtworksOfCard(cardId));
+            Artworks = new ObservableCollection<ArtworkCard>(_cardController.GetArtworksOfCard(cardId).Artworks);
         }
 
         #endregion
@@ -35,7 +35,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
 
         public Command AffirmativeCommand { get; }
 
-		public ObservableCollection<CardArtworkResponse> Artworks
+		public ObservableCollection<ArtworkCard> Artworks
 		{
 			get => this._artworks;
 			set => SetProperty(ref _artworks, value);

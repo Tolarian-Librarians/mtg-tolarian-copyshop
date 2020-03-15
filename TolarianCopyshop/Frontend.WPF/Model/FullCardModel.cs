@@ -7,7 +7,7 @@ using Tolarian.Copyshop.ScreenPresenter.Base;
 
 namespace Tolarian.Copyshop.ScreenPresenter.Model
 {
-    public class FullCard : BindableBase, IFullCard
+    public class FullCardModel : BindableBase, IFullCard
     {
         #region Fields
 
@@ -26,30 +26,30 @@ namespace Tolarian.Copyshop.ScreenPresenter.Model
 
         #endregion
 
-        #region ctor
+        #region Create
 
-        public FullCard()
+        public static FullCardModel Create(IFullCard card)
         {
-
-        }
-
-        public FullCard(IFullCard card)
-        {
-            if (card != null)
+            if (card is null)
             {
-                this.CardType = card.CardType;
-                this.CardCount = card.CardCount;
-                this.CardId = card.CardId;
-                this.PrintId = card.PrintId;
-                this.Legalities1 = card.Legalities1;
-                this.Legalities2 = card.Legalities2;
-                this.Name = card.Name;
-                this.LargeImage = card.LargeImage;
-                this.SmallImage = card.SmallImage;
-                this.Text = card.Text;
-                this.SetCode = card.SetCode;
-                this.CroppedImage = card.CroppedImage;
+                return new FullCardModel();
             }
+
+            return new FullCardModel
+            {
+                CardType = card.CardType,
+                CardCount = card.CardCount,
+                CardId = card.CardId,
+                PrintId = card.PrintId,
+                Legalities1 = card.Legalities1,
+                Legalities2 = card.Legalities2,
+                Name = card.Name,
+                LargeImage = card.LargeImage,
+                SmallImage = card.SmallImage,
+                Text = card.Text,
+                SetCode = card.SetCode,
+                CroppedImage = card.CroppedImage,
+            };
         }
 
         #endregion
@@ -125,18 +125,18 @@ namespace Tolarian.Copyshop.ScreenPresenter.Model
         public Uri CroppedImage
         {
             get => this._croppedImage;
-            set => SetProperty(ref this._croppedImage, value);
+            set => this.SetProperty(ref this._croppedImage, value);
         }
 
         #endregion
 
         #region Convert
 
-        public static implicit operator FullCardResponse(FullCard card)
-            => new FullCardResponse(card);
+        public static implicit operator FullCard(FullCardModel card)
+            => FullCard.Create(card);
 
-        public static implicit operator FullCard(FullCardResponse card)
-            => new FullCard(card);
+        public static implicit operator FullCardModel(FullCard card)
+            => FullCardModel.Create(card);
 
         #endregion
     }

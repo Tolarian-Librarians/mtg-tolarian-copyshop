@@ -22,22 +22,22 @@ namespace Tolarian.Copyshop.Controller
         /// <summary>
         /// Gets the information for one Card by ID. This returns a List because the target card may be multifaced.
         /// </summary>
-        public List<IFullCard> GetCardByPrintId(Guid printId)
+        public FullCardResponse GetCardByPrintId(Guid printId)
         {
-            List<IFullCard> response = null;
+            FullCardResponse response = new FullCardResponse();
+
             try
             {
                 SfCard card = _requester.GetCardByPrintId(printId);
-
-                response = CardMapper.MapToCardDto(card);
+                response.Cards = CardMapper.MapToCardDto(card);
             }
             catch (HttpException ex)
             {
-                this.ErrorMessage = BuildErrorMessage(ex);
+                SetErrorMessage(ex);
             }
             catch (AggregateException ex)
             {
-                this.ErrorMessage = BuildErrorMessage(ex);
+                SetErrorMessage(ex);
             }
 
             return response;
@@ -46,6 +46,7 @@ namespace Tolarian.Copyshop.Controller
         public CardSearchResponse GetSearchResults(string query, int maxCountOfItems)
         {
             CardSearchResponse response = new CardSearchResponse();
+
             try
             {
                 (List<SfCard> Cards, string amountFound) businessResponse = _requester.GetCardsBySearchQuery(query, maxCountOfItems);
@@ -53,38 +54,40 @@ namespace Tolarian.Copyshop.Controller
             }
             catch (HttpException ex)
             {
-                this.ErrorMessage = BuildErrorMessage(ex);
+                SetErrorMessage(ex);
             }
             catch (AggregateException ex)
             {
-                this.ErrorMessage = BuildErrorMessage(ex);
+                SetErrorMessage(ex);
             }
 
             return response;
         }
-        public List<CardArtworkResponse> GetArtworksOfCard(Guid cardId)
+        public CardArtworkResponse GetArtworksOfCard(Guid cardId)
         {
-            var response = new List<CardArtworkResponse>();
+            CardArtworkResponse response = new CardArtworkResponse();
+                
             try
             {
-                response = CardMapper.MapToArtworkDto(_requester.GetPrintsOfCard(cardId));
-                response = response.OrderBy(card => card.SetName).ToList();
+                var artworks = CardMapper.MapToArtworkDto(_requester.GetPrintsOfCard(cardId));
+                artworks = artworks.OrderBy(card => card.SetName).ToList();
+                response.Artworks = artworks;
             }
             catch (HttpException ex)
             {
-                this.ErrorMessage = BuildErrorMessage(ex);
+                SetErrorMessage(ex);
             }
             catch (AggregateException ex)
             {
-                this.ErrorMessage = BuildErrorMessage(ex);
+                SetErrorMessage(ex);
             }
 
             return response;
         }
 
-        public List<IFullCard> GetCardsByImportString(string importString)
+        public FullCardResponse GetCardsByImportString(string importString)
         {
-            List<IFullCard> response = new List<IFullCard>();
+            FullCardResponse response = new FullCardResponse();
 
             try
             {
@@ -92,15 +95,17 @@ namespace Tolarian.Copyshop.Controller
                                 new[] { "\r\n", "\r", "\n" },
                                 StringSplitOptions.None).ToList();
 
-                return CardMapper.MapToCardDto(_requester.GetCardsByImport(lines).Cards);
+                (List<SfCard> Cards, string NotFound) = _requester.GetCardsByImport(lines);
+                response.Cards = CardMapper.MapToCardDto(Cards);
+                response.NotFound = NotFound;
             }
             catch (HttpException ex)
             {
-                this.ErrorMessage = BuildErrorMessage(ex);
+                SetErrorMessage(ex);
             }
             catch (AggregateException ex)
             {
-                this.ErrorMessage = BuildErrorMessage(ex);
+                SetErrorMessage(ex);
             }
 
             return response;

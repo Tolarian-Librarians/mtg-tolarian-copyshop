@@ -13,6 +13,6 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             this.DeckCards = _deckBuilderDesignViewModel.DeckCards;
         }
 
-        public ObservableCollection<FullCard> DeckCards { get; set; }
+        public ObservableCollection<FullCardModel> DeckCards { get; set; }
     }
 }

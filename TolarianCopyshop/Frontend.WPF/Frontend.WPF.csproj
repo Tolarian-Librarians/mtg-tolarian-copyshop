@@ -102,7 +102,7 @@
     <Compile Include="Converter\IntSubstractionConverter.cs" />
     <Compile Include="Converter\InvertedBoolToVisibilityConverter.cs" />
     <Compile Include="Model\DeckCardModel.cs" />
-    <Compile Include="Model\FullCard.cs" />
+    <Compile Include="Model\FullCardModel.cs" />
     <Compile Include="ViewModels\DeckViewerDesignViewModel.cs" />
     <Compile Include="ViewModels\DeckViewerViewModel.cs" />
     <Compile Include="ViewModels\ImportCardViewModel.cs" />

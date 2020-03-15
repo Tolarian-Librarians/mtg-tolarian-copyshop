@@ -55,7 +55,7 @@ namespace Tests.InteractorTests
             CardInteractor unitUnderTest = GetInteractor();
 
             //Act
-            var result = unitUnderTest.GetCardsByImport(deckImport);
+            (List<SfCard> cards, string notFound) = unitUnderTest.GetCardsByImport(deckImport);
 
             //Assert
             _gatewayMock.VerifyAll();

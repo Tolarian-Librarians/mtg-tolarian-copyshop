@@ -3,7 +3,7 @@ using Tolarian.Copyshop.Controller.ResponseObjects.Enums;
 
 namespace Tolarian.Copyshop.Controller.ResponseObjects
 {
-    public class CardSearchCard
+    public class SearchCard
     {
         public string Name { get; set; }
 

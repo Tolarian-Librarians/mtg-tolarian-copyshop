@@ -6,18 +6,14 @@ namespace Tolarian.Copyshop.Controller
     {
         private string _errorMessage;
 
-        public string ErrorMessage
+        public string GetErrorMessage()
         {
-            get
-            {
-                string returnValue = _errorMessage;
-                _errorMessage = string.Empty;
-                return returnValue;
-            }
-            set => _errorMessage = value;
+            string returnValue = _errorMessage;
+            _errorMessage = string.Empty;
+            return returnValue;
         }
 
-        protected string BuildErrorMessage(Exception ex)
-             => ex.Message + Environment.NewLine + (ex.InnerException != null ? ex.InnerException.Message : "");
+        protected void SetErrorMessage(Exception ex)
+             => _errorMessage = ex.Message + Environment.NewLine + (ex.InnerException != null ? ex.InnerException.Message : "");
     }
 }

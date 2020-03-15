@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Tolarian.Copyshop.Controller;
-using Tolarian.Copyshop.Controller.ResponseObjects;
 using Tolarian.Copyshop.ScreenPresenter.Base;
 using Tolarian.Copyshop.ScreenPresenter.Model;
 
@@ -27,7 +26,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
         public static DeckViewerViewModel GetInstance()
             => _deckViewer;
 
-        public ObservableCollection<FullCard> DeckCards
+        public ObservableCollection<FullCardModel> DeckCards
         {
             get => this._deckCardModel.DeckCards;
             set
