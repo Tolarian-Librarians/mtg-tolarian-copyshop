@@ -20,6 +20,7 @@
                                        Height="22"
                                        HorizontalAlignment="Center"
                                        VerticalAlignment="Center"
+                                       Foreground="White"
                                        Kind="PaletteSolid" />
     </simpleChildWindow:ChildWindow.Icon>
 
@@ -53,7 +54,7 @@
                       MinHeight="600"
                       Margin="15"
                       VerticalScrollBarVisibility="Auto">
-            <ItemsControl ItemsSource="{Binding Artworks}">
+            <ItemsControl Margin="0,15,0,15" ItemsSource="{Binding Artworks}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <WrapPanel />
