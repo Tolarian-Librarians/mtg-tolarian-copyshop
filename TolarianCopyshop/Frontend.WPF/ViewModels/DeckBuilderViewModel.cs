@@ -188,7 +188,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
         private async void SelectArtwork(object _)
         {
             var view = CopyShopView.GetInstance();
-            var result = await this._dialogs.ShowChildWindow<Guid>(new SelectArtworkChildView(this._cardController, this.SelectedCard.CardId)
+            var result = await this._dialogs.ShowChildWindowOnUIThread<Guid>(new SelectArtworkChildView(this._cardController, this.SelectedCard.CardId)
             {
                 IsModal = false,
                 Width = view.ActualWidth - 200d,

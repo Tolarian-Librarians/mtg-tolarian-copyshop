@@ -39,10 +39,8 @@ namespace Tolarian.Copyshop.ScreenPresenter.Communication
 
         #region Child Window
 
-        internal async Task<T> ShowChildWindow<T>(ChildWindow childWindow)
-        {
-            return await Application.Current.Dispatcher.Invoke(() => CopyShopView.GetInstance().ShowChildWindowAsync<T>(childWindow).ConfigureAwait(false));
-        }
+        internal async Task<T> ShowChildWindowOnUIThread<T>(ChildWindow childWindow) 
+            => await Application.Current.Dispatcher.Invoke(() => CopyShopView.GetInstance().ShowChildWindowAsync<T>(childWindow).ConfigureAwait(false));
 
         #endregion
 
@@ -53,7 +51,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.Communication
 
         internal MessageDialogResult ShowQuestionOnUIThread(string header, string message, MessageDialogStyle style,
             string affirmativeButtonText = "YES", string negativeButtonText = "NO", string firstAuxiliaryButtonText = "CANCEL", string secondAuxiliaryButtonText = "")
-            => Application.Current.Dispatcher.Invoke(() => ShowQuestion(header, message, style,
+            => Application.Current.Dispatcher.Invoke(() => this.ShowQuestion(header, message, style,
                 affirmativeButtonText, negativeButtonText, firstAuxiliaryButtonText, secondAuxiliaryButtonText));
 
         private MessageDialogResult ShowQuestion(string header, string message, MessageDialogStyle style,
