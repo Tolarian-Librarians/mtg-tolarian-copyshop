@@ -24,21 +24,51 @@ namespace Tolarian.Copyshop.Business.UseCaseInteractors
 
         public (List<SfCard> Cards, string NotFound) GetCardsForImport(List<string> importLines)
         {
-            List<GetCardCollectionRequest> resolvedRequests = DeckImportHelper.ResolveCardRequestsFromImportString(importLines);
+            Dictionary<GetCardCollectionRequest, int> requestsToCopiesMap
+                = CardRequestResolver.ResolveCardRequestsFromImportString(importLines);
 
-            TranslateSetCodesToScryfall(resolvedRequests);
+            var requests = requestsToCopiesMap.Keys.ToList();
 
-            SfCardCollection firstTryResponse = _cardGateway.GetCardCollectionByIdentifiers(resolvedRequests);
+            TranslateSetCodesToScryfall(requests);
 
+            SfCardCollection firstTryResponse = _cardGateway.GetCardCollectionByIdentifiers(requests);
             SfCard[] foundOnFirstTry = firstTryResponse.Data;
             SfIdentifier[] missedIdentifiers = firstTryResponse.NotFound;
-            SfCardCollection secondTryResponse = _cardGateway.GetCardCollectionByIdentifiers(missedIdentifiers.Select(i => new GetCardCollectionRequest { Name = i.Name, SetCode = null}).ToList());
 
-            string notFound = FormatNotFoundListFrom(secondTryResponse );
+            SfCardCollection secondTryResponse = _cardGateway.GetCardCollectionByIdentifiers(missedIdentifiers.Select(i => new GetCardCollectionRequest { Name = i.Name, SetCode = null }).ToList());
 
             List<SfCard> importedCards = foundOnFirstTry.Concat(secondTryResponse.Data).ToList();
+            List<SfCard> importedDeck = AddCardsInCorrectAmount(requestsToCopiesMap, requests, importedCards);
 
-            return (importedCards, notFound);
+            return (importedDeck, FormatNotFoundListIn(secondTryResponse));
+        }
+        List<SfCard> AddCardsInCorrectAmount(Dictionary<GetCardCollectionRequest, int> requestsToCopiesMap, List<GetCardCollectionRequest> requests, List<SfCard> importedCards)
+        {
+            List<SfCard> result = new List<SfCard>();
+
+            foreach (var card in importedCards)
+            {
+                GetCardCollectionRequest formerRequest = FindOriginalRequestInList(card, requests);
+
+                int amountOfCopies = requestsToCopiesMap[formerRequest];
+                result.AddRange(Enumerable.Repeat(card, amountOfCopies));
+            }
+
+            return result;
+        }
+
+        private static GetCardCollectionRequest FindOriginalRequestInList(SfCard card, List<GetCardCollectionRequest> requests)
+        {
+            var formerRequest = requests.FirstOrDefault(r => string.Equals(r.Name, card.Name, StringComparison.InvariantCultureIgnoreCase));
+
+            if (formerRequest == null)
+            {
+                //This will find the original request if the card at hand is a dual faced card which name is the sum of the two face's names separated by // e.g. [Dusk // Dawn]
+                formerRequest = requests.FirstOrDefault(r => r.Name == card.Name.Split(new string[] { " // " }, StringSplitOptions.RemoveEmptyEntries)[0] || r.Name
+                == card.Name.Split(new string[] { " // " }, StringSplitOptions.RemoveEmptyEntries)[1]); ;
+            }
+
+            return formerRequest;
         }
 
         private void TranslateSetCodesToScryfall(List<GetCardCollectionRequest> requests)
@@ -48,6 +78,9 @@ namespace Tolarian.Copyshop.Business.UseCaseInteractors
 
         private string TranslateSetCode(string setCode)
         {
+            if (setCode == null)
+                return null;
+
             if(arenaSetCodesToScryfallCodesMap.ContainsKey(setCode.ToLower()))
             {
                 return arenaSetCodesToScryfallCodesMap[setCode] ?? setCode;
@@ -63,7 +96,7 @@ namespace Tolarian.Copyshop.Business.UseCaseInteractors
             }
         }
 
-        private string FormatNotFoundListFrom(SfCardCollection source)
+        private string FormatNotFoundListIn(SfCardCollection source)
         {
             var notFound = source.NotFound.Select(nf => string.Join(" ", nf.Name, nf.SetCode)).Distinct();
 
