@@ -24,27 +24,21 @@ namespace Tolarian.Copyshop.Business.UseCaseInteractors
 
         public (List<SfCard> Cards, string NotFound) GetCardsForImport(List<string> importLines)
         {
-            //Scryfall will return a maximum of 75 Cards per request
-            int scryfallApiReturnCountMaximum = 75;
-
             List<GetCardCollectionRequest> resolvedRequests = DeckImportHelper.ResolveCardRequestsFromImportString(importLines);
 
             TranslateSetCodesToScryfall(resolvedRequests);
 
-            List<List<GetCardCollectionRequest>> requestLists = ChunkListBySize(resolvedRequests, scryfallApiReturnCountMaximum);
+            SfCardCollection firstTryResponse = _cardGateway.GetCardCollectionByIdentifiers(resolvedRequests);
 
-            IEnumerable<SfCardCollection> dbResponse = requestLists.Select(r => _cardGateway.GetCardCollectionByIdentifiers(r));
+            SfCard[] foundOnFirstTry = firstTryResponse.Data;
+            SfIdentifier[] missedIdentifiers = firstTryResponse.NotFound;
+            SfCardCollection secondTryResponse = _cardGateway.GetCardCollectionByIdentifiers(missedIdentifiers.Select(i => new GetCardCollectionRequest { Name = i.Name, SetCode = null}).ToList());
 
-            var missedIdentifiers = dbResponse.SelectMany(r => r.NotFound);
-            var retry = _cardGateway.GetCardCollectionByIdentifiers(missedIdentifiers.Select(i => new GetCardCollectionRequest { Name = i.Name, SetCode = null}).ToList());
+            string notFound = FormatNotFoundListFrom(secondTryResponse );
 
-            string notFound = FormatNotFoundListFrom(new List<SfCardCollection> { retry });
+            List<SfCard> importedCards = foundOnFirstTry.Concat(secondTryResponse.Data).ToList();
 
-            dbResponse.Append(retry);
-
-            List<SfCard> response = new List<SfCard>(retry.Data);
-
-            return (dbResponse.SelectMany(cc => cc.Data).ToList(), notFound);
+            return (importedCards, notFound);
         }
 
         private void TranslateSetCodesToScryfall(List<GetCardCollectionRequest> requests)
@@ -69,18 +63,9 @@ namespace Tolarian.Copyshop.Business.UseCaseInteractors
             }
         }
 
-        private List<List<T>> ChunkListBySize<T>(List<T> source, int chunkSize)
+        private string FormatNotFoundListFrom(SfCardCollection source)
         {
-            return source
-                .Select((x, i) => new { Index = i, Value = x })
-                .GroupBy(x => x.Index / chunkSize)
-                .Select(x => x.Select(v => v.Value).ToList())
-                .ToList();
-        }
-
-        private string FormatNotFoundListFrom(IEnumerable<SfCardCollection> source)
-        {
-            var notFound = source.SelectMany(cc => cc.NotFound.Select(nf => string.Join(" ", nf.Name, nf.SetCode))).Distinct().ToArray();
+            var notFound = source.NotFound.Select(nf => string.Join(" ", nf.Name, nf.SetCode)).Distinct();
 
             return string.Join(Environment.NewLine, notFound);
         }
