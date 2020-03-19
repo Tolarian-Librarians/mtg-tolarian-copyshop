@@ -54,6 +54,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DbRequestModels\GetCardCollectionRequest.cs" />
+    <Compile Include="Interfaces\ISetDataGateway.cs" />
+    <Compile Include="Models\SfSetInfo\SfPaginatedSetList.cs" />
+    <Compile Include="Models\SfSetInfo\SfSet.cs" />
+    <Compile Include="UseCaseInteractors\DeckImportInteractor.cs" />
+    <Compile Include="Interfaces\IDeckImportInteractor.cs" />
     <Compile Include="Models\DeckInfo\DeckInfoCard.cs" />
     <Compile Include="Models\DeckInfo\DeckInfoCardFace.cs" />
     <Compile Include="Models\SfCardInfo\SfCard.cs" />

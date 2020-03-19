@@ -6,7 +6,7 @@ namespace Tolarian.Copyshop.Business.Utility
 {
     public static class DeckImportHelper
     {
-        public static List<GetCardCollectionRequest> ResolveCardNamesFromImportString(List<string> importLines)
+        public static List<GetCardCollectionRequest> ResolveCardRequestsFromImportString(List<string> importLines)
         {
             List<GetCardCollectionRequest> result = new List<GetCardCollectionRequest>();
             foreach (string entry in importLines.Where(e => !string.IsNullOrWhiteSpace(e)))

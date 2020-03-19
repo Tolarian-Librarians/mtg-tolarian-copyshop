@@ -6,7 +6,6 @@ using Moq;
 using Tolarian.Copyshop.Controller;
 using Tolarian.Copyshop.Controller.ResponseObjects;
 using Tolarian.Copyshop.Business.Models.Enums;
-using Tolarian.Copyshop.Controller.Interfaces;
 using Tolarian.Copyshop.Business.Interfaces;
 using Tolarian.Copyshop.Business.Models.SfCardInfo;
 
@@ -18,12 +17,14 @@ namespace Tests.ControllerTests
     {
         MockRepository _repo;
         Mock<ICardDataRequester> _requesterMock;
+        Mock<IDeckImportInteractor> _importerMock;
 
         [TestInitialize]
         public void Initialize()
         {
             _repo = new MockRepository(MockBehavior.Strict);
             _requesterMock = _repo.Create<ICardDataRequester>();
+            _importerMock = _repo.Create<IDeckImportInteractor>();
         }
 
         [TestMethod]
@@ -147,7 +148,7 @@ namespace Tests.ControllerTests
 
         private CardController GetController()
         {
-            return new CardController(_requesterMock.Object);
+            return new CardController(_requesterMock.Object, _importerMock.Object);
         }
     }
 }

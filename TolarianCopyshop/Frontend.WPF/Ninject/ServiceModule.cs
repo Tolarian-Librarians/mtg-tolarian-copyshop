@@ -15,7 +15,9 @@ namespace Tolarian.Copyshop.ScreenPresenter.Ninject
             this.Bind<ICardDataRequester>().To<CardInteractor>().InSingletonScope();
             this.Bind<IPrintRequester>().To<PrintInteractor>().InSingletonScope();
             this.Bind<ICardDataGateway>().To<CardDataMapper>().InSingletonScope();
+            this.Bind<ISetDataGateway>().To<SetDataMapper>().InSingletonScope();
             this.Bind<IDeckInfoInteractor>().To<DeckInfoInteractor>().InSingletonScope();
+            this.Bind<IDeckImportInteractor>().To<DeckImportInteractor>().InSingletonScope();
 
             // View
             this.Bind<IDialogCoordinator>().To<DialogCoordinator>().InSingletonScope();

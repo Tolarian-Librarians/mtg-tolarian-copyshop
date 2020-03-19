@@ -315,7 +315,7 @@
             </Grid.ColumnDefinitions>
 
             <Grid Grid.Row="0" Grid.ColumnSpan="3" FocusVisualStyle="{x:Null}">
-                <Image x:Name="_SelectedImage" FocusVisualStyle="{x:Null}" Source="{Binding SelectedCard.LargeImage}" />
+                <Image x:Name="_SelectedImage" FocusVisualStyle="{x:Null}" Source="{Binding SelectedCard.CroppedImage}" />
                 <Button Command="{Binding SelectArtworkCommand}" FocusVisualStyle="{x:Null}" Style="{StaticResource ImageButton}">
                     <Grid Width="{Binding ElementName=_SelectedImage, Path=ActualWidth}" Style="{StaticResource ChangeArtwork}">
 

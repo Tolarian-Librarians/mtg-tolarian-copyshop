@@ -3,20 +3,19 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Web;
 using Tolarian.Copyshop.Business.DbRequestModels;
 using Tolarian.Copyshop.Business.Interfaces;
 using Tolarian.Copyshop.Business.Models.SfCardInfo;
 
 namespace Tolarian.Copyshop.ScryfallDataAccess
 {
-    public class CardDataMapper : ICardDataGateway
+    public class CardDataMapper : DataMapperBase, ICardDataGateway
     {
         IScryfallApi _service;
 
         public CardDataMapper()
         {
-            _service = RestService.For<IScryfallApi>("https://api.scryfall.com");
+            _service = RestService.For<IScryfallApi>(Constants.SCRYFALL_BASE_URI);
         }
 
         public SfCard GetCardByPrintId(Guid printId)
@@ -98,11 +97,6 @@ namespace Tolarian.Copyshop.ScryfallDataAccess
             }
 
             return null;
-        }
-
-        public void HandleUnexpectedStatusCodeForResponse<T>(ApiResponse<T> response)
-        {
-            throw new HttpException($"Unexpected Status Code of Http Request. Status {response.StatusCode}, Error: {response.Error}");
         }
     }
 }
