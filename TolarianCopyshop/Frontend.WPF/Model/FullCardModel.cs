@@ -10,7 +10,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.Model
     {
         #region Fields
 
-        private Guid _id;
+        private Guid _cardId;
         private int _cardCount = 1;
         private Dictionary<string, string> _legalities1;
         private Dictionary<string, string> _legalities2;
@@ -47,8 +47,8 @@ namespace Tolarian.Copyshop.ScreenPresenter.Model
 
         public Guid CardId
         {
-            get => this._id;
-            set => this.SetProperty(ref this._id, value);
+            get => this._cardId;
+            set => this.SetProperty(ref this._cardId, value);
         }
 
         public Guid PrintId

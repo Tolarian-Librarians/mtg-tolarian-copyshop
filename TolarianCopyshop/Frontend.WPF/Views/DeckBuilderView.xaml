@@ -196,7 +196,7 @@
                                        VerticalAlignment="Center"
                                        FontSize="20"
                                        FontWeight="Bold"
-                                       Text="{Binding CardFaces[0].CardCount}" />
+                                       Text="{Binding CardCount}" />
                             <Button Grid.Row="3"
                                     Grid.Column="0"
                                     Width="30"
