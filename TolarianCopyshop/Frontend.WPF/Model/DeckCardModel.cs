@@ -1,5 +1,4 @@
 ﻿using System.Collections.ObjectModel;
-using Tolarian.Copyshop.Controller.ResponseObjects;
 using Tolarian.Copyshop.ScreenPresenter.Base;
 
 namespace Tolarian.Copyshop.ScreenPresenter.Model

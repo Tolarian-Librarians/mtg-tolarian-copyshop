@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -12,9 +11,9 @@ using Tolarian.Copyshop.Controller;
 using Tolarian.Copyshop.Controller.Interfaces;
 using Tolarian.Copyshop.Controller.ResponseObjects;
 using Tolarian.Copyshop.ScreenPresenter.Base;
+using Tolarian.Copyshop.ScreenPresenter.Communication;
 using Tolarian.Copyshop.ScreenPresenter.Model;
 using Tolarian.Copyshop.ScreenPresenter.Views;
-using static MahApps.Metro.SimpleChildWindow.ChildWindowManager;
 
 namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
 {
@@ -26,9 +25,10 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
         private readonly CardController _cardController;
         private readonly DeckController _deckController;
         private readonly DeckCardModel _deckCardModel;
+        private readonly Dialogs _dialogs;
 
         private int _deckCardCount;
-        private Controller.ResponseObjects.FullCard _selectedCard;
+        private FullCardModel _selectedCard;
         private Visibility _searchResultVisibility = Visibility.Hidden;
         private string _searchText;
         private string _searchResultCount;
@@ -36,6 +36,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
         private ObservableCollection<SearchCard> _searchResults;
         private SearchCard _selectedSearchItem;
         private int _selectedSearchIndex;
+
         private Task task;
         private CancellationTokenSource tokenSource;
         private CancellationToken token;
@@ -44,12 +45,14 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
 
         #region Constructor
 
-        public DeckBuilderViewModel(CardController cardController, DeckController deckController, DeckCardModel deckCardModel)
+        public DeckBuilderViewModel(CardController cardController, DeckController deckController, DeckCardModel deckCardModel, Dialogs dialogs)
         {
             _deckBuilder = this;
             this._cardController = cardController;
             this._deckController = deckController;
             this._deckCardModel = deckCardModel;
+            this._dialogs = dialogs;
+
             this.IncreaseCardAmountCommand = new Command(this.IncreaseAmountSelectedCard);
             this.ReduceCardAmountCommand = new Command(this.ReduceAmountSelectedCard);
             this.DeleteCardCommand = new Command(this.DeleteSelectedCard);
@@ -64,7 +67,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
 
         #region Properties
 
-        public ObservableCollection<Model.FullCardModel> DeckCards
+        public ObservableCollection<FullCardModel> DeckCards
         {
             get => this._deckCardModel.DeckCards;
             set
@@ -85,7 +88,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             set => this.SetProperty(ref this._deckCardCount, value);
         }
 
-        public Model.FullCardModel SelectedCard
+        public FullCardModel SelectedCard
         {
             get => this._selectedCard;
             set => this.SetProperty(ref this._selectedCard, value);
@@ -183,10 +186,12 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
         private async void SelectArtwork(object _)
         {
             var view = CopyShopView.GetInstance();
-            double childWidth = view.ActualWidth - 200d;
-            double childHeight = view.ActualHeight- 150d;
-
-            var result = await CopyShopView.GetInstance().ShowChildWindowAsync<object>(new SelectArtworkChildView(childWidth, childHeight, this._cardController, this.SelectedCard.CardId) { IsModal = false }).ConfigureAwait(false);
+            var result = await this._dialogs.ShowChildWindowOnUIThread<Guid>(new SelectArtworkChildView(this._cardController, this.SelectedCard.CardId)
+            {
+                IsModal = false,
+                Width = view.ActualWidth - 200d,
+                Height = view.ActualHeight - 150d,
+            }).ConfigureAwait(false);
 
             if (result is Guid printId && printId != Guid.Empty && printId != this.SelectedCard.PrintId)
             {
@@ -204,17 +209,9 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
         public void InvokeDeckCards()
             => this.OnPropertyChanged(nameof(this.DeckCards));
 
-        private void SendErrorMessage(string errorMessage)
-        {
-            if (!string.IsNullOrEmpty(errorMessage))
-            {
-                CopyShopViewModel.GetInstance().ShowMessage("Error", errorMessage);
-            }
-        }
-
         private void DeleteSelectedCard(object clickedCard)
         {
-            if (clickedCard is Model.FullCardModel card)
+            if (clickedCard is FullCardModel card)
             {
                 foreach (var deleteCard in this.DeckCards.Where(o => o.CardId == card.CardId).ToList())
                 {
@@ -231,7 +228,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
 
         private void IncreaseAmountSelectedCard(object clickedCard)
         {
-            if (clickedCard is Model.FullCardModel card)
+            if (clickedCard is FullCardModel card)
             {
                 this.DeckCards.Where(o => o.CardId == card.CardId).Select(o => o.CardCount++).ToList(); // ToList is needed in order to evaluate the select immediately due to lazy evaluation
                 this.CalculateDeckCardCount();
@@ -240,7 +237,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
 
         private void ReduceAmountSelectedCard(object clickedCard)
         {
-            if (clickedCard is Model.FullCardModel card)
+            if (clickedCard is FullCardModel card)
             {
                 this.DeckCards.Where(o => o.CardId == card.CardId).Select(o => --o.CardCount).ToList(); // ToList is needed in order to evaluate the select immediately due to lazy evaluation
                 this.DeleteSelectedCard(this.DeckCards.FirstOrDefault(o => o.CardCount < 1));
@@ -248,7 +245,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             }
         }
 
-        internal void AddCards(IEnumerable<Model.FullCardModel> cardList, bool asNewList = false)
+        internal void AddCards(IEnumerable<FullCardModel> cardList, bool asNewList = false)
         {
             if (asNewList)
             {
@@ -257,16 +254,16 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
 
             if (cardList != null)
             {
-                foreach (Model.FullCardModel card in cardList)
+                foreach (FullCardModel card in cardList)
                 {
                     this.AddCard(card);
                 }
             }
         }
 
-        private void AddCard(Model.FullCardModel card)
+        private void AddCard(FullCardModel card)
         {
-            if (this.DeckCards.FirstOrDefault(o => o.CardId == card.CardId && o.Name == card.Name && o.LargeImage == card.LargeImage) is Model.FullCardModel ExistingCard)
+            if (this.DeckCards.FirstOrDefault(o => o.CardId == card.CardId && o.Name == card.Name && o.LargeImage == card.LargeImage) is FullCardModel ExistingCard)
             {
                 ExistingCard.CardCount++;
                 this.CalculateDeckCardCount();
@@ -280,7 +277,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
         private void CreateNewDeckList()
         {
             this._deckCardModel.DeckCards.CollectionChanged -= this.DeckCards_CollectionChanged;
-            this.DeckCards = new ObservableCollection<Model.FullCardModel>();
+            this.DeckCards = new ObservableCollection<FullCardModel>();
             this._deckCardModel.DeckCards.CollectionChanged += this.DeckCards_CollectionChanged;
         }
 
@@ -315,7 +312,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
                 return;
             }
 
-            this.SendErrorMessage(this._cardController.GetErrorMessage());
+            this._dialogs.SendErrorMessage(this._cardController.GetErrorMessage());
             this.SearchResultCount = result.ResultsCount;
             this.SearchResults = new ObservableCollection<SearchCard>(result.Results);
             this.SearchResultVisibility = Visibility.Visible;
@@ -337,7 +334,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             }
 
             var response = this._cardController.GetCardByPrintId(this.SelectedSearchItem.PrintId);
-            this.SendErrorMessage(this._cardController.GetErrorMessage());
+            this._dialogs.SendErrorMessage(this._cardController.GetErrorMessage());
             this.AddCards(response.Cards.ConvertAll(FullCardModel.Create));
 
             this.SearchText = string.Empty;

@@ -2,6 +2,7 @@
 using Ninject.Modules;
 using Tolarian.Copyshop.Business.Interfaces;
 using Tolarian.Copyshop.Business.UseCaseInteractors;
+using Tolarian.Copyshop.ScreenPresenter.Communication;
 using Tolarian.Copyshop.ScreenPresenter.Model;
 using Tolarian.Copyshop.ScryfallDataAccess;
 
@@ -20,6 +21,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.Ninject
             // View
             this.Bind<IDialogCoordinator>().To<DialogCoordinator>().InSingletonScope();
             this.Bind<DeckCardModel>().To<DeckCardModel>().InSingletonScope();
+            this.Bind<Dialogs>().To<Dialogs>().InSingletonScope();
         }
     }
 }
