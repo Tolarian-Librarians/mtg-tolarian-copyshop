@@ -87,7 +87,30 @@ namespace Tolarian.Copyshop.Controller.Mappers
                 Legalities1 = GetFirstHalfOfLegalities(source),
                 Legalities2 = GetSecondHalfOfLegalities(source),
                 CardCount = 1,
-                CardFaces = source.CardFaces.Select(cf => new CardFace
+                CardFaces = MapCardFacesOf(source)
+            };
+
+            return result;
+        }
+
+        private static ICollection<CardFace> MapCardFacesOf(SfCard source)
+        {
+            var result = new List<CardFace>();
+            if (source.IsTransformable)
+            {
+                result = source.CardFaces.Select(cf => new CardFace
+                {
+                    LargeImage = cf.ImageUris.ContainsKey(CardImageTypes.Large) ? cf.ImageUris[CardImageTypes.Large] : null,
+                    SmallImage = cf.ImageUris.ContainsKey(CardImageTypes.Small) ? cf.ImageUris[CardImageTypes.Small] : null,
+                    CroppedImage = cf.ImageUris.ContainsKey(CardImageTypes.Border_Crop) ? cf.ImageUris[CardImageTypes.Border_Crop] : null,
+                    Name = cf.Name,
+                    Text = cf.Text,
+                    CardType = GetBaseCardTypeFromTypeLine(cf.TypeLine),
+                }).ToList();
+            }
+            else
+            {
+                result.Add(new CardFace 
                 {
                     LargeImage = source.ImageUris.ContainsKey(CardImageTypes.Large) ? source.ImageUris[CardImageTypes.Large] : null,
                     SmallImage = source.ImageUris.ContainsKey(CardImageTypes.Small) ? source.ImageUris[CardImageTypes.Small] : null,
@@ -95,8 +118,8 @@ namespace Tolarian.Copyshop.Controller.Mappers
                     Name = source.Name,
                     Text = GetTextOfCard(source),
                     CardType = GetBaseCardTypeFromTypeLine(source.TypeLine),
-                }).ToList()
-            };
+                });
+            }
 
             return result;
         }
