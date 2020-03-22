@@ -224,7 +224,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
 
             if (!string.IsNullOrWhiteSpace(response.NotFound))
             {
-                this._dialogs.ShowMessageOnUIThread("Not imported Cards", "The following cards count not be found:" + Environment.NewLine + response.NotFound);
+                this._dialogs.ShowMessageOnUIThread("Missing Cards", "The following cards could not be found:" + Environment.NewLine + response.NotFound);
             }
         }
 

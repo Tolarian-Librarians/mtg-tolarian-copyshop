@@ -45,23 +45,6 @@ namespace Tests.InteractorTests
         }
 
         [TestMethod]
-        public void GetCardsByNameList_Test()
-        {
-            //Arrange
-            List<string> deckImport = new List<string> { "3 Aether Spellbomb (MRD) 196", "1 Ancient Tomb (TMP)",  "0 Ashnod's Altar (5ED) 218", ""};
-
-            List<string> expectedResolvedCardNames = new List<string> { "Aether Spellbomb", "Aether Spellbomb", "Aether Spellbomb", "Ancient Tomb" };
-            _gatewayMock.Setup(m => m.GetCardCollectionByIdentifiers(It.Is<List<GetCardCollectionRequest>>(l => l.Select(r => r.Name).SequenceEqual(expectedResolvedCardNames)))).Returns(new SfCardCollection { Data = new SfCard[3]});
-            CardInteractor unitUnderTest = GetInteractor();
-
-            //Act
-            (List<SfCard> cards, string notFound) = unitUnderTest.GetCardsByImport(deckImport);
-
-            //Assert
-            _gatewayMock.VerifyAll();
-        }
-
-        [TestMethod]
         public void GetCardsBySearchQuery_Test()
         {
             var dummyList = TestUtils.GetDummyCardCollection();

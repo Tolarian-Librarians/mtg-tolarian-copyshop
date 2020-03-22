@@ -3,20 +3,20 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Web;
 using Tolarian.Copyshop.Business.DbRequestModels;
 using Tolarian.Copyshop.Business.Interfaces;
 using Tolarian.Copyshop.Business.Models.SfCardInfo;
 
 namespace Tolarian.Copyshop.ScryfallDataAccess
 {
-    public class CardDataMapper : ICardDataGateway
+    public class CardDataMapper : DataMapperBase, ICardDataGateway
     {
         IScryfallApi _service;
-
+        //Scryfall will return a maximum of 75 Cards per request
+        private const int _scryfallApiReturnCountMaximum = 75;
         public CardDataMapper()
         {
-            _service = RestService.For<IScryfallApi>("https://api.scryfall.com");
+            _service = RestService.For<IScryfallApi>(Constants.SCRYFALL_BASE_URI);
         }
 
         public SfCard GetCardByPrintId(Guid printId)
@@ -62,10 +62,21 @@ namespace Tolarian.Copyshop.ScryfallDataAccess
                 return SfCardCollection.GetEmpty();
             }
 
-            SfIdentifierContainer container = new SfIdentifierContainer { Identifiers = request.Select(
-                r => new SfIdentifier { Name = r.Name, SetCode = r.SetCode}).ToList()
-            };
+            List<List<GetCardCollectionRequest>> chunkedRequests = ChunkListBySize(request, _scryfallApiReturnCountMaximum);
 
+            var container = chunkedRequests.Select(cr => new SfIdentifierContainer
+            {
+                Identifiers = cr.Select(r => new SfIdentifier { Name = r.Name, SetCode = r.SetCode }).ToList()
+            });
+
+            var response = container.Select(c => IssueGetCardCollectionRequest(c));
+            SfCardCollection result = MergeCardCollections(response);
+
+            return result;
+        }
+
+        private SfCardCollection IssueGetCardCollectionRequest(SfIdentifierContainer container)
+        {
             ApiResponse<SfCardCollection> response = _service.GetCardsByCollection(container).Result;
 
             switch (response.StatusCode)
@@ -80,6 +91,23 @@ namespace Tolarian.Copyshop.ScryfallDataAccess
             }
 
             return null;
+        }
+
+        private static SfCardCollection MergeCardCollections(IEnumerable<SfCardCollection> response)
+        {
+            SfCardCollection result = new SfCardCollection();
+            result.Data = response.SelectMany(r => r.Data).ToArray();
+            result.NotFound = response.SelectMany(r => r.NotFound).ToArray();
+            return result;
+        }
+
+        private List<List<T>> ChunkListBySize<T>(List<T> source, int chunkSize)
+        {
+            return source
+                .Select((x, i) => new { Index = i, Value = x })
+                .GroupBy(x => x.Index / chunkSize)
+                .Select(x => x.Select(v => v.Value).ToList())
+                .ToList();
         }
 
         public SfCatalog GetCardNamesByAutoCompleteQuery(string query)
@@ -98,11 +126,6 @@ namespace Tolarian.Copyshop.ScryfallDataAccess
             }
 
             return null;
-        }
-
-        public void HandleUnexpectedStatusCodeForResponse<T>(ApiResponse<T> response)
-        {
-            throw new HttpException($"Unexpected Status Code of Http Request. Status {response.StatusCode}, Error: {response.Error}");
         }
     }
 }

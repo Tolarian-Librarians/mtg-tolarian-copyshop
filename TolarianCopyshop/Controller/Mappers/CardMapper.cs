@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Tolarian.Copyshop.Business.Models.Enums;
 using Tolarian.Copyshop.Business.Models.SfCardInfo;
@@ -8,8 +9,17 @@ using Tolarian.Copyshop.Controller.ResponseObjects.Enums;
 
 namespace Tolarian.Copyshop.Controller.Mappers
 {
-    public abstract class CardMapper
+    internal abstract class CardMapper
     {
+        internal static List<string> PrepareImportStringForBusiness(string source)
+        {
+            List<string> result = source.Split(
+                new[] { "\r\n", "\r", "\n" },
+                StringSplitOptions.None).ToList();
+
+            return result;
+        }
+
         internal static List<ArtworkCard> MapToArtworkDto(List<SfCard> source)
         {
             List<ArtworkCard> result = source.Select(card =>
@@ -38,7 +48,7 @@ namespace Tolarian.Copyshop.Controller.Mappers
             return string.Concat(setName.Substring(0, maxLength), "...");
         }
 
-        public static SearchCard MapToSearchResultDto(SfCard source)
+        internal static SearchCard MapToSearchResultDto(SfCard source)
         {
             var result = new SearchCard
             {
@@ -51,7 +61,7 @@ namespace Tolarian.Copyshop.Controller.Mappers
             return result;
         }
 
-        public static CardSearchResponse MapToSearchResultDto(List<SfCard> source, string resultsCount)
+        internal static CardSearchResponse MapToSearchResultDto(List<SfCard> source, string resultsCount)
         {
             List<SearchCard> foundCards = source.Select(card => MapToSearchResultDto(card)).ToList();
 
@@ -62,13 +72,13 @@ namespace Tolarian.Copyshop.Controller.Mappers
             };
         }
 
-        public static List<IFullCard> MapToCardDto(List<SfCard> sources)
+        internal static List<IFullCard> MapToCardDto(List<SfCard> sources)
         {
             var result = sources.SelectMany(card => MapToCardDto(card)).ToList();
             return result;
         }
 
-        public static List<IFullCard> MapToCardDto(SfCard source)
+        internal static List<IFullCard> MapToCardDto(SfCard source)
         {
             var result = new List<FullCard>();
 

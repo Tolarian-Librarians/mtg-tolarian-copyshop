@@ -111,7 +111,9 @@
   <ItemGroup>
     <Compile Include="ControllerTests\CardControllerTest.cs" />
     <Compile Include="ControllerTests\DeckControllerTest.cs" />
+    <Compile Include="EntitiesTests\ImportStringParserTests.cs" />
     <Compile Include="InteractorTests\CardInteractorTests.cs" />
+    <Compile Include="InteractorTests\DeckImportInteractorTests.cs" />
     <Compile Include="InteractorTests\PrintInteractorTests.cs" />
     <Compile Include="InteractorTests\DeckInfoInteractorTest.cs" />
     <Compile Include="ScryfallDataAccessTests\CardDataMapperTest.cs" />

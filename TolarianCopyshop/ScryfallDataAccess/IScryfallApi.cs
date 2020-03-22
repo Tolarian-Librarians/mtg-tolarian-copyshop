@@ -2,6 +2,7 @@
 using System;
 using System.Threading.Tasks;
 using Tolarian.Copyshop.Business.Models.SfCardInfo;
+using Tolarian.Copyshop.Business.Models.SfSetInfo;
 
 namespace Tolarian.Copyshop.ScryfallDataAccess
 {
@@ -22,5 +23,7 @@ namespace Tolarian.Copyshop.ScryfallDataAccess
         [Post("/cards/collection")]
         Task<ApiResponse<SfCardCollection>> GetCardsByCollection([Body] SfIdentifierContainer identifiers);
 
+        [Get("/sets")]
+        Task<ApiResponse<SfPaginatedSetList>> GetAllSets();
     }
 }

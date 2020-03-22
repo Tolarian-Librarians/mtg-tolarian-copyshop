@@ -8,7 +8,6 @@ namespace Tolarian.Copyshop.Business.Interfaces
     {
         (List<SfCard> Cards, string AmountFound) GetCardsBySearchQuery(string searchQuery, int maxCountOfItems);
         SfCard GetCardByPrintId(Guid printId);
-        (List<SfCard> Cards, string NotFound) GetCardsByImport(List<string> cardNames);
         List<SfCard> GetPrintsOfCard(Guid cardId);
     }
 }

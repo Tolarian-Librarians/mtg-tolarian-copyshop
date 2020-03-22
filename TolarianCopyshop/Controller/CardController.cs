@@ -4,7 +4,6 @@ using System.Linq;
 using System.Web;
 using Tolarian.Copyshop.Business.Interfaces;
 using Tolarian.Copyshop.Business.Models.SfCardInfo;
-using Tolarian.Copyshop.Controller.Interfaces;
 using Tolarian.Copyshop.Controller.ResponseObjects;
 using Tolarian.Copyshop.Controller.Mappers;
 
@@ -13,10 +12,12 @@ namespace Tolarian.Copyshop.Controller
     public class CardController : TolarianControllerBase
     {
         private readonly ICardDataRequester _requester;
+        private readonly IDeckImportInteractor _importInteractor;
 
-        public CardController(ICardDataRequester requester)
+        public CardController(ICardDataRequester requester, IDeckImportInteractor importInteractor)
         {
             _requester = requester;
+            _importInteractor = importInteractor;
         }
 
         /// <summary>
@@ -63,6 +64,7 @@ namespace Tolarian.Copyshop.Controller
 
             return response;
         }
+
         public CardArtworkResponse GetArtworksOfCard(Guid cardId)
         {
             CardArtworkResponse response = new CardArtworkResponse();
@@ -91,11 +93,8 @@ namespace Tolarian.Copyshop.Controller
 
             try
             {
-                List<string> lines = importString.Split(
-                                new[] { "\r\n", "\r", "\n" },
-                                StringSplitOptions.None).ToList();
-
-                (List<SfCard> Cards, string NotFound) = _requester.GetCardsByImport(lines);
+                List<string> lines = CardMapper.PrepareImportStringForBusiness(importString);
+                (List<SfCard> Cards, string NotFound) = _importInteractor.GetCardsForImport(lines);
                 response.Cards = CardMapper.MapToCardDto(Cards);
                 response.NotFound = NotFound;
             }

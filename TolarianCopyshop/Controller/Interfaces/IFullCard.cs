@@ -17,7 +17,6 @@ namespace Tolarian.Copyshop.Controller.Interfaces
         Uri SmallImage { get; set; }
         Uri CroppedImage { get; set; }
         string Text { get; set; }
-        string SetCode { get; set; }
-
+        string SetCode { get; set; } 
     }
 }

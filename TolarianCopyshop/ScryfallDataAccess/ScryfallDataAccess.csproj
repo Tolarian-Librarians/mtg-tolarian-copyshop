@@ -10,7 +10,7 @@
     <RootNamespace>Tolarian.Copyshop.ScryfallDataAccess</RootNamespace>
     <AssemblyName>ScryfallDataAccess</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-	<LangVersion>8.0</LangVersion>
+    <LangVersion>8.0</LangVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
     <NuGetPackageImportStamp>
@@ -53,8 +53,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CardDataMapper.cs" />
+    <Compile Include="Constants.cs" />
+    <Compile Include="DataMapperBase.cs" />
     <Compile Include="IScryfallApi.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SetDataMapper.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Business\Business.csproj">
