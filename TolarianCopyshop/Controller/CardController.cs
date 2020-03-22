@@ -30,7 +30,7 @@ namespace Tolarian.Copyshop.Controller
             try
             {
                 SfCard card = _requester.GetCardByPrintId(printId);
-                response.Cards = CardMapper.MapToCardDto(card);
+                response.Card = CardMapper.MapToCardDto(card);
             }
             catch (HttpException ex)
             {
@@ -87,9 +87,9 @@ namespace Tolarian.Copyshop.Controller
             return response;
         }
 
-        public FullCardResponse GetCardsByImportString(string importString)
+        public CardImportResponse GetCardsByImportString(string importString)
         {
-            FullCardResponse response = new FullCardResponse();
+            CardImportResponse response = new CardImportResponse();
 
             try
             {

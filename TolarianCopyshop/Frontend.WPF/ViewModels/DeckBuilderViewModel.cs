@@ -199,11 +199,11 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
                 int CardCount = this.SelectedCard.CardCount;
                 Application.Current.Dispatcher.Invoke(() => this.DeleteSelectedCard(this.SelectedCard));
 
-                var newCards = this._cardController.GetCardByPrintId(printId).Cards.ConvertAll(FullCardModel.Create);
-                newCards.Select(o => o.CardCount = CardCount).ToList(); // ToList is needed in order to evaluate the select immediately due to lazy evaluation
+                FullCardModel newCard = FullCardModel.Create(this._cardController.GetCardByPrintId(printId).Card);
+                newCard.CardCount = CardCount;
 
-                Application.Current.Dispatcher.Invoke(() => this.AddCards(newCards));
-                this.SelectedCard = newCards[0];
+                Application.Current.Dispatcher.Invoke(() => this.AddCard(newCard));
+                this.SelectedCard = newCard;
             }
         }
 
@@ -264,7 +264,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
 
         private void AddCard(FullCardModel card)
         {
-            if (this.DeckCards.FirstOrDefault(o => o.CardId == card.CardId && o.Name == card.Name && o.LargeImage == card.LargeImage) is FullCardModel ExistingCard)
+            if (this.DeckCards.FirstOrDefault(o => o.CardId == card.CardId) is FullCardModel ExistingCard)
             {
                 ExistingCard.CardCount++;
                 this.CalculateDeckCardCount();
@@ -343,9 +343,9 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
                 return;
             }
 
-            var response = this._cardController.GetCardByPrintId(this.SelectedSearchItem.PrintId);
+            FullCardResponse response = this._cardController.GetCardByPrintId(this.SelectedSearchItem.PrintId);
             this._dialogs.SendErrorMessage(this._cardController.GetErrorMessage());
-            this.AddCards(response.Cards.ConvertAll(FullCardModel.Create));
+            this.AddCard(FullCardModel.Create(response.Card));
 
             this.SearchText = string.Empty;
             this.ResetSearchedItems();
