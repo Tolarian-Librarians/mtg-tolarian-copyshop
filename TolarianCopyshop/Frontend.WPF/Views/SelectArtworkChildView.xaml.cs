@@ -1,10 +1,10 @@
 ﻿using MahApps.Metro.SimpleChildWindow;
 using System;
+using System.Collections.ObjectModel;
 using Tolarian.Copyshop.Controller;
+using Tolarian.Copyshop.Controller.ResponseObjects;
 using Tolarian.Copyshop.ScreenPresenter.Base;
 using Tolarian.Copyshop.ScreenPresenter.ViewModels;
-using System.Collections.ObjectModel;
-using Tolarian.Copyshop.Controller.ResponseObjects;
 
 namespace Tolarian.Copyshop.ScreenPresenter.Views
 {

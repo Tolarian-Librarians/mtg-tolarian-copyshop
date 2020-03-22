@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Tolarian.Copyshop.ScreenPresenter.Base;
+﻿using Tolarian.Copyshop.ScreenPresenter.Base;
 
 namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
 {
-    public class ImportCardsViewModel : BindableBase
+	public class ImportCardsViewModel : BindableBase
     {
 		private string importCard;
 
