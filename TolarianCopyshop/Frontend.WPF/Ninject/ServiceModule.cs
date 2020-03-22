@@ -1,5 +1,6 @@
 ﻿using MahApps.Metro.Controls.Dialogs;
 using Ninject.Modules;
+using Tolarian.Copyshop.Business.Entities;
 using Tolarian.Copyshop.Business.Interfaces;
 using Tolarian.Copyshop.Business.UseCaseInteractors;
 using Tolarian.Copyshop.ScreenPresenter.Model;
@@ -18,6 +19,8 @@ namespace Tolarian.Copyshop.ScreenPresenter.Ninject
             this.Bind<ISetDataGateway>().To<SetDataMapper>().InSingletonScope();
             this.Bind<IDeckInfoInteractor>().To<DeckInfoInteractor>().InSingletonScope();
             this.Bind<IDeckImportInteractor>().To<DeckImportInteractor>().InSingletonScope();
+            this.Bind<ISetCodeTranslator>().To<SetCodeTranslator>().InSingletonScope();
+            this.Bind<IImportStringParser>().To<ImportStringParser>().InSingletonScope();
 
             // View
             this.Bind<IDialogCoordinator>().To<DialogCoordinator>().InSingletonScope();

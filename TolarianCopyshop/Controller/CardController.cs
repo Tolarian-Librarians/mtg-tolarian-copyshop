@@ -64,6 +64,7 @@ namespace Tolarian.Copyshop.Controller
 
             return response;
         }
+
         public CardArtworkResponse GetArtworksOfCard(Guid cardId)
         {
             CardArtworkResponse response = new CardArtworkResponse();
@@ -92,10 +93,7 @@ namespace Tolarian.Copyshop.Controller
 
             try
             {
-                List<string> lines = importString.Split(
-                                new[] { "\r\n", "\r", "\n" },
-                                StringSplitOptions.None).ToList();
-
+                List<string> lines = CardMapper.PrepareImportStringForBusiness(importString);
                 (List<SfCard> Cards, string NotFound) = _importInteractor.GetCardsForImport(lines);
                 response.Cards = CardMapper.MapToCardDto(Cards);
                 response.NotFound = NotFound;

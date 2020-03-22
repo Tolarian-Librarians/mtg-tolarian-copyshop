@@ -54,6 +54,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DbRequestModels\GetCardCollectionRequest.cs" />
+    <Compile Include="EntitiesModels\PreImportCard.cs" />
+    <Compile Include="Interfaces\IImportStringParser.cs" />
+    <Compile Include="Interfaces\ISetCodeTranslator.cs" />
     <Compile Include="Interfaces\ISetDataGateway.cs" />
     <Compile Include="Models\SfSetInfo\SfPaginatedSetList.cs" />
     <Compile Include="Models\SfSetInfo\SfSet.cs" />
@@ -66,7 +69,8 @@
     <Compile Include="Models\SfCardInfo\SfCatalog.cs" />
     <Compile Include="UseCaseInteractors\CardInteractor.cs" />
     <Compile Include="UseCaseInteractors\DeckInfoInteractor.cs" />
-    <Compile Include="Utility\CardRequestResolver.cs" />
+    <Compile Include="Entities\SetCodeTranslator.cs" />
+    <Compile Include="Entities\ImportStringParser.cs" />
     <Compile Include="Interfaces\ICardDataGateway.cs" />
     <Compile Include="Interfaces\ICardDataRequester.cs" />
     <Compile Include="Interfaces\IDeckInfoInteractor.cs" />

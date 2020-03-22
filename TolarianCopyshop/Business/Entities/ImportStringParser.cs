@@ -1,14 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Tolarian.Copyshop.Business.DbRequestModels;
+using Tolarian.Copyshop.Business.EntitiesModels;
+using Tolarian.Copyshop.Business.Interfaces;
 
-namespace Tolarian.Copyshop.Business.Utility
+namespace Tolarian.Copyshop.Business.Entities
 {
-    public static class CardRequestResolver
+    public class ImportStringParser : IImportStringParser
     {
-        public static Dictionary<GetCardCollectionRequest, int> ResolveCardRequestsFromImportString(List<string> importLines)
+        public Dictionary<PreImportCard, int> ResolvePreImportCardsFromImportString(List<string> importLines)
         {
-            var result = new Dictionary<GetCardCollectionRequest, int>();
+            var result = new Dictionary<PreImportCard, int>();
             foreach (string line in importLines.Where(e => !string.IsNullOrWhiteSpace(e)))
             {
                 var resolved = ResolveCardName(line);
@@ -18,9 +19,9 @@ namespace Tolarian.Copyshop.Business.Utility
             return result;
         }
 
-        private static KeyValuePair<GetCardCollectionRequest, int> ResolveCardName(string line)
+        private KeyValuePair<PreImportCard, int> ResolveCardName(string line)
         {
-            GetCardCollectionRequest actualCardRequest = new GetCardCollectionRequest();
+            PreImportCard actualCardRequest = new PreImportCard();
             string[] splitted = line.Split(' ');
 
             if (IsLastValueArenaCode(splitted))
@@ -33,12 +34,12 @@ namespace Tolarian.Copyshop.Business.Utility
             }
 
             int amount = GetAmountOfCardInDeck(ref splitted);
-            actualCardRequest.Name = string.Join(" ", splitted);
+            actualCardRequest.CardName = string.Join(" ", splitted);
 
-            return new KeyValuePair<GetCardCollectionRequest, int>(actualCardRequest, amount);
+            return new KeyValuePair<PreImportCard, int>(actualCardRequest, amount);
         }
 
-        private static int GetAmountOfCardInDeck(ref string[] splitted)
+        private int GetAmountOfCardInDeck(ref string[] splitted)
         {
             int amount;
             if (int.TryParse(splitted[0], out amount))
@@ -48,22 +49,22 @@ namespace Tolarian.Copyshop.Business.Utility
             return amount;
         }
 
-        private static void DeleteLastValueOf(ref string[] splitted)
+        private void DeleteLastValueOf(ref string[] splitted)
         {
             splitted = splitted.Take(splitted.Length - 1).ToArray();
         }
 
-        private static bool IsLastValueArenaCode(string[] splitted)
+        private bool IsLastValueArenaCode(string[] splitted)
         {
             return int.TryParse(LastItemOf(splitted), out _);
         }
 
-        private static bool IsLastValueMtgSetCode(string[] splitted)
+        private bool IsLastValueMtgSetCode(string[] splitted)
         {
             return LastItemOf(splitted).StartsWith("(") && LastItemOf(splitted).EndsWith(")");
         }
 
-        private static string LastItemOf(string[] array)
+        private string LastItemOf(string[] array)
         {
             return array[array.Length - 1];
         }

@@ -2,98 +2,84 @@
 using System.Collections.Generic;
 using System.Linq;
 using Tolarian.Copyshop.Business.DbRequestModels;
+using Tolarian.Copyshop.Business.EntitiesModels;
 using Tolarian.Copyshop.Business.Interfaces;
 using Tolarian.Copyshop.Business.Models.SfCardInfo;
-using Tolarian.Copyshop.Business.Models.SfSetInfo;
-using Tolarian.Copyshop.Business.Utility;
 
 namespace Tolarian.Copyshop.Business.UseCaseInteractors
 {
     public class DeckImportInteractor : IDeckImportInteractor
     {
         private readonly ICardDataGateway _cardGateway;
-        private readonly ISetDataGateway _setGateway;
+        private readonly ISetCodeTranslator _setCodeTranslator;
+        private readonly IImportStringParser _importStringParser;
 
-        private Dictionary<string, string> arenaSetCodesToScryfallCodesMap = new Dictionary<string, string>();
-
-        public DeckImportInteractor(ICardDataGateway cardGateway, ISetDataGateway setGateway)
+        public DeckImportInteractor(ICardDataGateway cardGateway, ISetCodeTranslator setCodeTranslator, IImportStringParser importStringParser)
         {
             _cardGateway = cardGateway;
-            _setGateway = setGateway;
+            _setCodeTranslator = setCodeTranslator;
+            _importStringParser = importStringParser;
         }
 
         public (List<SfCard> Cards, string NotFound) GetCardsForImport(List<string> importLines)
         {
-            Dictionary<GetCardCollectionRequest, int> requestsToCopiesMap
-                = CardRequestResolver.ResolveCardRequestsFromImportString(importLines);
+            Dictionary<PreImportCard, int> cardsToCopiesMap
+                = _importStringParser.ResolvePreImportCardsFromImportString(importLines);
 
-            var requests = requestsToCopiesMap.Keys.ToList();
+            var requests = cardsToCopiesMap.Keys.Select(key => new GetCardCollectionRequest { Name = key.CardName, SetCode = key.SetCode }).ToList();
 
             TranslateSetCodesToScryfall(requests);
 
             SfCardCollection firstTryResponse = _cardGateway.GetCardCollectionByIdentifiers(requests);
             SfCard[] foundOnFirstTry = firstTryResponse.Data;
             SfIdentifier[] missedIdentifiers = firstTryResponse.NotFound;
+            SfCardCollection secondTryResponse = SfCardCollection.GetEmpty();
 
-            SfCardCollection secondTryResponse = _cardGateway.GetCardCollectionByIdentifiers(missedIdentifiers.Select(i => new GetCardCollectionRequest { Name = i.Name, SetCode = null }).ToList());
+            if (missedIdentifiers.Any())
+                secondTryResponse = _cardGateway.GetCardCollectionByIdentifiers(missedIdentifiers.Select(i => new GetCardCollectionRequest { Name = i.Name, SetCode = null }).ToList());
 
             List<SfCard> importedCards = foundOnFirstTry.Concat(secondTryResponse.Data).ToList();
-            List<SfCard> importedDeck = AddCardsInCorrectAmount(requestsToCopiesMap, requests, importedCards);
+            List<SfCard> importedDeck = AddCardsInCorrectAmount(cardsToCopiesMap, importedCards);
 
             return (importedDeck, FormatNotFoundListIn(secondTryResponse));
         }
-        List<SfCard> AddCardsInCorrectAmount(Dictionary<GetCardCollectionRequest, int> requestsToCopiesMap, List<GetCardCollectionRequest> requests, List<SfCard> importedCards)
+
+        private void TranslateSetCodesToScryfall(List<GetCardCollectionRequest> requests)
+        {
+            requests.ForEach(request => request.SetCode = _setCodeTranslator.TranslateArenaCodeToScryfallCode(request.SetCode));
+        }
+
+        List<SfCard> AddCardsInCorrectAmount(Dictionary<PreImportCard, int> cardsToCopiesMap, List<SfCard> importedCards)
         {
             List<SfCard> result = new List<SfCard>();
 
             foreach (var card in importedCards)
             {
-                GetCardCollectionRequest formerRequest = FindOriginalRequestInList(card, requests);
+                PreImportCard preImportCard = FindPreImportCard(card, cardsToCopiesMap.Keys.ToList());
 
-                int amountOfCopies = requestsToCopiesMap[formerRequest];
+                int amountOfCopies = cardsToCopiesMap[preImportCard];
                 result.AddRange(Enumerable.Repeat(card, amountOfCopies));
             }
 
             return result;
         }
 
-        private static GetCardCollectionRequest FindOriginalRequestInList(SfCard card, List<GetCardCollectionRequest> requests)
+        private PreImportCard FindPreImportCard(SfCard card, List<PreImportCard> preImportCards)
         {
-            var formerRequest = requests.FirstOrDefault(r => string.Equals(r.Name, card.Name, StringComparison.InvariantCultureIgnoreCase));
+            const string cardNamesSeparator = " // ";
 
-            if (formerRequest == null)
+            string nameToFind = card.Name;
+            PreImportCard result = preImportCards.FirstOrDefault(pre => string.Equals(pre.CardName, nameToFind, StringComparison.InvariantCultureIgnoreCase));
+
+            if (result == null && card.Name.Contains(cardNamesSeparator))
             {
-                //This will find the original request if the card at hand is a dual faced card which name is the sum of the two face's names separated by // e.g. [Dusk // Dawn]
-                formerRequest = requests.FirstOrDefault(r => r.Name == card.Name.Split(new string[] { " // " }, StringSplitOptions.RemoveEmptyEntries)[0] || r.Name
-                == card.Name.Split(new string[] { " // " }, StringSplitOptions.RemoveEmptyEntries)[1]); ;
+                string[] nameSplitted = card.Name.Split(new string[] { cardNamesSeparator }, StringSplitOptions.RemoveEmptyEntries);
+
+                //This will find the original request if the card at hand is a multi faced card whichs name is the sum of the two face's names separated by // e.g. [Dusk // Dawn]
+                result = preImportCards.FirstOrDefault(pre => pre.CardName == nameSplitted[0] || pre.CardName == nameSplitted[1]); ;
             }
 
-            return formerRequest;
-        }
-
-        private void TranslateSetCodesToScryfall(List<GetCardCollectionRequest> requests)
-        {
-            requests.ForEach(request => request.SetCode = TranslateSetCode(request.SetCode));
-        }
-
-        private string TranslateSetCode(string setCode)
-        {
-            if (setCode == null)
-                return null;
-
-            if(arenaSetCodesToScryfallCodesMap.ContainsKey(setCode.ToLower()))
-            {
-                return arenaSetCodesToScryfallCodesMap[setCode] ?? setCode;
-            }
-            else
-            {
-                SfSet correspondingSfSet = _setGateway.GetAllSets().Data.FirstOrDefault(set => string.Equals(set.MagicArenaSetCode, setCode, StringComparison.InvariantCultureIgnoreCase));
-
-                string scryfallSetCode = correspondingSfSet != null ? correspondingSfSet.ScryfallSetCode : null;
-                arenaSetCodesToScryfallCodesMap[setCode] = scryfallSetCode;
-
-                return scryfallSetCode ?? setCode;
-            }
+            return result ?? throw new InvalidOperationException($"Could not find the preImportCard for a card named {card.Name}!");
         }
 
         private string FormatNotFoundListIn(SfCardCollection source)
