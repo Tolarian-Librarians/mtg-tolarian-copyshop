@@ -87,7 +87,7 @@ namespace Tolarian.Copyshop.Controller.Mappers
                 Legalities1 = GetFirstHalfOfLegalities(source),
                 Legalities2 = GetSecondHalfOfLegalities(source),
                 CardCount = 1,
-                CardFaces = source.CardFaces.Select(cf => new CardFace 
+                CardFaces = source.CardFaces.Select(cf => new CardFace
                 {
                     LargeImage = source.ImageUris.ContainsKey(CardImageTypes.Large) ? source.ImageUris[CardImageTypes.Large] : null,
                     SmallImage = source.ImageUris.ContainsKey(CardImageTypes.Small) ? source.ImageUris[CardImageTypes.Small] : null,
