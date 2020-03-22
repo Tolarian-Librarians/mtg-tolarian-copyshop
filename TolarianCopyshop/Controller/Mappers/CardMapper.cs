@@ -74,62 +74,52 @@ namespace Tolarian.Copyshop.Controller.Mappers
 
         internal static List<IFullCard> MapToCardDto(List<SfCard> sources)
         {
-            var result = sources.SelectMany(card => MapToCardDto(card)).ToList();
+            var result = sources.Select(card => MapToCardDto(card)).ToList();
             return result;
         }
 
-        internal static List<IFullCard> MapToCardDto(SfCard source)
-        {
-            var result = new List<FullCard>();
-
-            if(source.IsTransformable)
-            {
-                result.AddRange(MapDoubleSidedCardToDto(source));
-            }
-            else
-            {
-                result.Add(MapSingleFacedCardToDto(source));
-            }
-
-            return result.Cast<IFullCard>().ToList();
-        }
-
-        private static List<FullCard> MapDoubleSidedCardToDto(SfCard source)
-        {
-            List<FullCard> result = source.CardFaces.Select(card => new FullCard
-            {
-                Name = card.Name,
-                CardId = source.CardId,
-                PrintId = source.PrintId,
-                Text = card.Text,
-                CardType = GetBaseCardTypeFromTypeLine(card.TypeLine),
-                CardCount = 1,
-                LargeImage = card.ImageUris.ContainsKey(CardImageTypes.Large) ? card.ImageUris[CardImageTypes.Large] : null,
-                SmallImage = card.ImageUris.ContainsKey(CardImageTypes.Small) ? card.ImageUris[CardImageTypes.Small] : null,
-                CroppedImage = card.ImageUris.ContainsKey(CardImageTypes.Border_Crop) ? card.ImageUris[CardImageTypes.Border_Crop] : null,
-                Legalities1 = GetFirstHalfOfLegalities(source),
-                Legalities2 = GetSecondHalfOfLegalities(source)
-            }).ToList();
-
-            return result;
-        }
-
-        private static FullCard MapSingleFacedCardToDto(SfCard source)
+        internal static IFullCard MapToCardDto(SfCard source)
         {
             var result = new FullCard
             {
-                Name = source.Name,
                 CardId = source.CardId,
                 PrintId = source.PrintId,
-                LargeImage = source.ImageUris.ContainsKey(CardImageTypes.Large) ? source.ImageUris[CardImageTypes.Large] : null,
-                SmallImage = source.ImageUris.ContainsKey(CardImageTypes.Small) ? source.ImageUris[CardImageTypes.Small] : null,
-                CroppedImage = source.ImageUris.ContainsKey(CardImageTypes.Border_Crop) ? source.ImageUris[CardImageTypes.Border_Crop] : null,
                 Legalities1 = GetFirstHalfOfLegalities(source),
                 Legalities2 = GetSecondHalfOfLegalities(source),
                 CardCount = 1,
-                Text = GetTextOfCard(source),
-                CardType = GetBaseCardTypeFromTypeLine(source.TypeLine)
+                CardFaces = MapCardFacesOf(source)
             };
+
+            return result;
+        }
+
+        private static ICollection<CardFace> MapCardFacesOf(SfCard source)
+        {
+            var result = new List<CardFace>();
+            if (source.IsTransformable)
+            {
+                result = source.CardFaces.Select(cf => new CardFace
+                {
+                    LargeImage = cf.ImageUris.ContainsKey(CardImageTypes.Large) ? cf.ImageUris[CardImageTypes.Large] : null,
+                    SmallImage = cf.ImageUris.ContainsKey(CardImageTypes.Small) ? cf.ImageUris[CardImageTypes.Small] : null,
+                    CroppedImage = cf.ImageUris.ContainsKey(CardImageTypes.Border_Crop) ? cf.ImageUris[CardImageTypes.Border_Crop] : null,
+                    Name = cf.Name,
+                    Text = cf.Text,
+                    CardType = GetBaseCardTypeFromTypeLine(cf.TypeLine),
+                }).ToList();
+            }
+            else
+            {
+                result.Add(new CardFace 
+                {
+                    LargeImage = source.ImageUris.ContainsKey(CardImageTypes.Large) ? source.ImageUris[CardImageTypes.Large] : null,
+                    SmallImage = source.ImageUris.ContainsKey(CardImageTypes.Small) ? source.ImageUris[CardImageTypes.Small] : null,
+                    CroppedImage = source.ImageUris.ContainsKey(CardImageTypes.Border_Crop) ? source.ImageUris[CardImageTypes.Border_Crop] : null,
+                    Name = source.Name,
+                    Text = GetTextOfCard(source),
+                    CardType = GetBaseCardTypeFromTypeLine(source.TypeLine),
+                });
+            }
 
             return result;
         }
