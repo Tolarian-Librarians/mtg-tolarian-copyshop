@@ -1,19 +1,16 @@
 ﻿using MahApps.Metro.Controls.Dialogs;
-using MahApps.Metro.SimpleChildWindow;
 using Microsoft.Win32;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using Tolarian.Copyshop.Controller;
 using Tolarian.Copyshop.Controller.Interfaces;
 using Tolarian.Copyshop.ScreenPresenter.Base;
+using Tolarian.Copyshop.ScreenPresenter.Communication;
 using Tolarian.Copyshop.ScreenPresenter.Model;
 using Tolarian.Copyshop.ScreenPresenter.Views;
-using static MahApps.Metro.SimpleChildWindow.ChildWindowManager;
 
 namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
 {
@@ -25,19 +22,19 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
         private readonly CardController _cardController;
         private readonly DeckController _deckController;
         private readonly PrintController _printController;
-        private readonly IDialogCoordinator _dialogCoordinator;
+        private readonly Dialogs _dialogs;
 
         #endregion
 
         #region Constructor
 
-        public CopyShopViewModel(CardController cardController, PrintController printController, DeckController deckController, DialogCoordinator dialogCoordinator)
+        public CopyShopViewModel(CardController cardController, PrintController printController, DeckController deckController, Dialogs dialogs)
         {
             _copyshop = this;
             this._cardController = cardController;
             this._printController = printController;
             _deckController = deckController;
-            this._dialogCoordinator = dialogCoordinator;
+            this._dialogs = dialogs;
 
             // Commands
             this.NewCommand = new Command(this.NewDeck);
@@ -123,7 +120,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             {
                 return true;
             }
-            switch (this.ShowQuestion("Save", "Do you want to save your Deck?", MessageDialogStyle.AffirmativeAndNegativeAndSingleAuxiliary))
+            switch (this._dialogs.ShowQuestionOnUIThread("Save", "Do you want to save your Deck?", MessageDialogStyle.AffirmativeAndNegativeAndSingleAuxiliary))
             {
                 case MessageDialogResult.Canceled:
                 case MessageDialogResult.FirstAuxiliary:
@@ -176,7 +173,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
                 bool overrideDeck = false;
                 if (DeckBuilderViewModel.GetInstance().DeckCards.Count > 0)
                 {
-                    switch (this.ShowQuestion("Import", "Do you want to override your Deck?", MessageDialogStyle.AffirmativeAndNegativeAndDoubleAuxiliary, "Save Deck & Override", "Discard Deck & Override", "Add Cards", "Cancel"))
+                    switch (this._dialogs.ShowQuestionOnUIThread("Import", "Do you want to override your Deck?", MessageDialogStyle.AffirmativeAndNegativeAndDoubleAuxiliary, "Save Deck & Override", "Discard Deck & Override", "Add Cards", "Cancel"))
                     {
                         case MessageDialogResult.SecondAuxiliary:
                         case MessageDialogResult.Canceled:
@@ -198,7 +195,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
                 string importCards = string.Empty;
                 if (importType.Equals("TEXT", StringComparison.OrdinalIgnoreCase))
                 {
-                    importCards = await CopyShopView.GetInstance().ShowChildWindowAsync<string>(new ImportCardsChildView() { IsModal = false }).ConfigureAwait(false);
+                    importCards = await this._dialogs.ShowChildWindowOnUIThread<string>(new ImportCardsChildView() { IsModal = false }).ConfigureAwait(false);
                 }
                 else if (importType.Equals("CLIPBOARD", StringComparison.OrdinalIgnoreCase))
                 {
@@ -211,7 +208,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
 
                 if (!string.IsNullOrWhiteSpace(importCards))
                 {
-                    this.ShowProgress("IMPORT", "Please wait while your deck is imported...", new Action(() => this.ImportDeckCards(importCards, overrideDeck)));
+                    this._dialogs.ShowProgressOnUIThread("IMPORT", "Please wait while your deck is imported...", new Action(() => this.ImportDeckCards(importCards, overrideDeck)));
                 }
             }
         }
@@ -219,7 +216,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
         private void ImportDeckCards(string cards, bool overrideDeck)
         {
             var response = this._cardController.GetCardsByImportString(cards ?? "");
-            this.SendErrorMessage(this._cardController.GetErrorMessage());
+            this._dialogs.SendErrorMessage(this._cardController.GetErrorMessage());
             if (response.Cards.Count > 0)
             {
                 DeckBuilderViewModel.GetInstance().AddCards(response.Cards.ConvertAll(FullCardModel.Create), overrideDeck);
@@ -227,7 +224,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
 
             if (!string.IsNullOrWhiteSpace(response.NotFound))
             {
-                this.ShowMessage("Missing Cards", "The following cards could not be found:" + Environment.NewLine + response.NotFound);
+                this._dialogs.ShowMessageOnUIThread("Missing Cards", "The following cards could not be found:" + Environment.NewLine + response.NotFound);
             }
         }
 
@@ -241,7 +238,8 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
 
             if (printDlg.ShowDialog() == true)
             {
-                _printController.PrintDeck(printDlg, DeckBuilderViewModel.GetInstance().DeckCards.Cast<IFullCard>().ToList());
+                this._printController.PrintDeck(printDlg, DeckBuilderViewModel.GetInstance().DeckCards.Cast<IFullCard>().ToList());
+                Notifications.SendNotification("Print", "Your deck has been send to your selected Printer. Enjoy!", System.Windows.Forms.ToolTipIcon.Info);
             }
         }
 
@@ -249,51 +247,8 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
         {
             if (commandParameter is string link && Uri.TryCreate(link, UriKind.Absolute, out Uri hyperlink))
             {
-                Process.Start(new ProcessStartInfo(hyperlink.AbsoluteUri));
+                _ = Process.Start(new ProcessStartInfo(hyperlink.AbsoluteUri));
             }
-        }
-
-        // Methods
-        private void SendErrorMessage(string errorMessage)
-        {
-            if (!string.IsNullOrEmpty(errorMessage))
-            {
-                this.ShowMessage("Error", errorMessage);
-            }
-        }
-
-        #endregion
-
-        #region Dialogs
-
-        internal async void ShowMessage(string header, string message)
-            => await this._dialogCoordinator.ShowMessageAsync(this, header, message).ConfigureAwait(false);
-
-        [STAThread]
-        internal MessageDialogResult ShowQuestion(string header, string message, MessageDialogStyle style,
-            string affirmativeButtonText = "YES", string negativeButtonText = "NO", string firstAuxiliaryButtonText = "CANCEL", string secondAuxiliaryButtonText = "")
-            => CopyShopView.GetInstance().ShowModalMessageExternal(header, message, style,
-                 new MetroDialogSettings()
-                 {
-                     AffirmativeButtonText = affirmativeButtonText,
-                     NegativeButtonText = negativeButtonText,
-                     FirstAuxiliaryButtonText = firstAuxiliaryButtonText,
-                     SecondAuxiliaryButtonText = secondAuxiliaryButtonText,
-                     DialogResultOnCancel = MessageDialogResult.Canceled,
-                     DefaultButtonFocus = MessageDialogResult.Affirmative
-                 });
-
-        internal async void ShowProgress(string header, string message, Action FunctionWhileProgress)
-        {
-            // Show...
-            ProgressDialogController controller = await this._dialogCoordinator.ShowProgressAsync(this, header, message).ConfigureAwait(true);
-            controller.SetIndeterminate();
-
-            // Do your work...
-            await Task.Run(FunctionWhileProgress).ConfigureAwait(true);
-
-            // Close...
-            await controller.CloseAsync().ConfigureAwait(true);
         }
 
         #endregion

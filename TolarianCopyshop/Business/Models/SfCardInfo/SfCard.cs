@@ -37,6 +37,9 @@ namespace Tolarian.Copyshop.Business.Models.SfCardInfo
         [JsonProperty(PropertyName = "set")]
         public string SetCode { get; set; }
 
+        [JsonProperty(PropertyName = "released_at")]
+        public DateTime ReleaseDate { get; set; }
+
         [JsonIgnore]
         public bool IsMultifaced { get => CardFaces != null; }
 

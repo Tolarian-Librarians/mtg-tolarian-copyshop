@@ -17,7 +17,7 @@ namespace Tolarian.Copyshop.ScryfallDataAccess
         [Get("/cards/named?exact=\"{cardName}\"")]
         Task<ApiResponse<SfPaginatedCardList>> GetCardByExactName(string cardName);
 
-        [Get("/cards/search?q=oracleid:{oracleId}&unique=prints")]
+        [Get("/cards/search?q=oracleid:{oracleId}&unique=prints&include_extras=true")]
         Task<ApiResponse<SfPaginatedCardList>> GetPrintsBySearchQuery(Guid oracleId);
 
         [Post("/cards/collection")]

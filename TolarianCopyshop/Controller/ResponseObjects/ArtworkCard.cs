@@ -11,5 +11,7 @@ namespace Tolarian.Copyshop.Controller.ResponseObjects
         public Uri Image { get; set; }
 
         public Guid PrintId { get; set; }
+
+        public DateTime ReleaseDate { get; set; }
     }
 }

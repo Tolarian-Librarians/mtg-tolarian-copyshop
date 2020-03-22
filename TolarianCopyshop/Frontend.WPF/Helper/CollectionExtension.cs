@@ -4,7 +4,7 @@ using System.Linq;
 using Tolarian.Copyshop.Controller.Interfaces;
 using Tolarian.Copyshop.ScreenPresenter.Model;
 
-namespace Tolarian.Copyshop.ScreenPresenter
+namespace Tolarian.Copyshop.ScreenPresenter.Helper
 {
     internal static class CollectionExtension
     {
