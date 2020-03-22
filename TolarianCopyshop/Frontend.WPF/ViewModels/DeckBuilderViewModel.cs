@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -283,7 +284,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
 
         private async void OnSearchTextChangedAsync()
         {
-            Console.WriteLine($"OnSearchTextChangedAsync: {this._searchText} at {DateTime.Now}");
+            Console.WriteLine($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff")}]: OnSearchTextChangedAsync: {this._searchText}");
             // Run async to not lock the UI
             if (task != null && this.task.Status != TaskStatus.RanToCompletion)
             {
@@ -298,6 +299,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
 
         private void OnSearchTextChanged()
         {
+            Console.WriteLine($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff")}]: OnSearchTextChanged(): Start");
             this.HasSearchText = this.SearchText.Length > 0;
 
             if (this.SearchText.Length < 3)
@@ -306,24 +308,32 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
                 return;
             }
 
+            Console.WriteLine($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff")}]: OnSearchTextChanged(): Request");
             var result = this._cardController.GetSearchResults(this.SearchText, 12);
+            Console.WriteLine($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff")}]: OnSearchTextChanged(): Result");
             if (this.token.IsCancellationRequested)
             {
+                Console.WriteLine($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff")}]: OnSearchTextChanged(): Task Cancel");
                 return;
             }
 
+            Console.WriteLine($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff")}]: OnSearchTextChanged(): UI Begin");
             this._dialogs.SendErrorMessage(this._cardController.GetErrorMessage());
             this.SearchResultCount = result.ResultsCount;
             this.SearchResults = new ObservableCollection<SearchCard>(result.Results);
             this.SearchResultVisibility = Visibility.Visible;
+            Console.WriteLine($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff")}]: OnSearchTextChanged(): UI End");
             if (this.SearchResults.Count > 0)
             {
                 Application.Current.Dispatcher.Invoke(new Action(() =>
                 {
+                    Console.WriteLine($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff")}]: OnSearchTextChanged(): Invoke Begin");
                     this.SelectedSearchItem = this.SearchResults.FirstOrDefault(o => o.PrintId == this.SelectedSearchItem?.PrintId) ?? this.SearchResults[0];
                     this.SelectedSearchIndex = this.SearchResults.IndexOf(this.SelectedSearchItem);
+                    Console.WriteLine($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff")}]: OnSearchTextChanged(): Invoke End");
                 }), DispatcherPriority.Normal);
             }
+            Console.WriteLine($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff")}]: OnSearchTextChanged(): End");
         }
 
         private void ApplySelectedSearchItem(object _)
