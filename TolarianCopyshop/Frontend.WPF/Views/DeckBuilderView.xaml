@@ -334,7 +334,9 @@
                             Style="{StaticResource ImageButton}">
                         <Grid Width="{Binding ElementName=_SelectedImage, Path=ActualWidth}" Style="{StaticResource ChangeArtwork}">
 
-                            <iconPacks:PackIconFontAwesome HorizontalAlignment="Center"
+                            <iconPacks:PackIconFontAwesome Width="172"
+                                                           Height="172"
+                                                           HorizontalAlignment="Center"
                                                            VerticalAlignment="Center"
                                                            Panel.ZIndex="10"
                                                            Foreground="White"
