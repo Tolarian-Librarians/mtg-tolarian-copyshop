@@ -238,7 +238,8 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
 
             if (printDlg.ShowDialog() == true)
             {
-                _printController.PrintDeck(printDlg, DeckBuilderViewModel.GetInstance().DeckCards.Cast<IFullCard>().ToList());
+                this._printController.PrintDeck(printDlg, DeckBuilderViewModel.GetInstance().DeckCards.Cast<IFullCard>().ToList());
+                Notifications.SendNotification("Print", "Your deck has been send to your selected Printer. Enjoy!", System.Windows.Forms.ToolTipIcon.Info);
             }
         }
 
@@ -246,7 +247,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
         {
             if (commandParameter is string link && Uri.TryCreate(link, UriKind.Absolute, out Uri hyperlink))
             {
-                Process.Start(new ProcessStartInfo(hyperlink.AbsoluteUri));
+                _ = Process.Start(new ProcessStartInfo(hyperlink.AbsoluteUri));
             }
         }
 
