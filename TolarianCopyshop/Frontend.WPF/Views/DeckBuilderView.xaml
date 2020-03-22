@@ -305,20 +305,44 @@
             </Grid.ColumnDefinitions>
 
             <Grid Grid.Row="0" Grid.ColumnSpan="3" FocusVisualStyle="{x:Null}">
-                <Image x:Name="_SelectedImage" FocusVisualStyle="{x:Null}" Source="{Binding SelectedCard.CroppedImage}" />
-                <Button Command="{Binding SelectArtworkCommand}" FocusVisualStyle="{x:Null}" Style="{StaticResource ImageButton}">
-                    <Grid Width="{Binding ElementName=_SelectedImage, Path=ActualWidth}" Style="{StaticResource ChangeArtwork}">
+                <Image x:Name="_SelectedImage" FocusVisualStyle="{x:Null}" Source="{Binding SelectedCard.LargeImage}" />
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="55*" />
+                        <RowDefinition Height="45*" />
+                    </Grid.RowDefinitions>
+                    <Button Grid.Row="0"
+                            Command="{Binding SelectArtworkCommand}"
+                            FocusVisualStyle="{x:Null}"
+                            Style="{StaticResource ImageButton}">
+                        <Grid Width="{Binding ElementName=_SelectedImage, Path=ActualWidth}" Style="{StaticResource ChangeArtwork}">
 
-                        <iconPacks:PackIconFontAwesome Width="172"
-                                                       Height="172"
-                                                       HorizontalAlignment="Center"
-                                                       VerticalAlignment="Center"
-                                                       Panel.ZIndex="10"
-                                                       Foreground="White"
-                                                       Kind="PaintBrushSolid" />
+                            <iconPacks:PackIconFontAwesome Width="172"
+                                                           Height="172"
+                                                           Margin="0,40,0,0"
+                                                           HorizontalAlignment="Center"
+                                                           VerticalAlignment="Center"
+                                                           Panel.ZIndex="10"
+                                                           Foreground="White"
+                                                           Kind="PaintBrushSolid" />
 
-                    </Grid>
-                </Button>
+                        </Grid>
+                    </Button>
+                    <Button Grid.Row="1"
+                            Command="{Binding SelectArtworkCommand}"
+                            FocusVisualStyle="{x:Null}"
+                            Style="{StaticResource ImageButton}">
+                        <Grid Width="{Binding ElementName=_SelectedImage, Path=ActualWidth}" Style="{StaticResource ChangeArtwork}">
+
+                            <iconPacks:PackIconFontAwesome HorizontalAlignment="Center"
+                                                           VerticalAlignment="Center"
+                                                           Panel.ZIndex="10"
+                                                           Foreground="White"
+                                                           Kind="SyncAltSolid" />
+
+                        </Grid>
+                    </Button>
+                </Grid>
             </Grid>
 
             <Grid Grid.Row="1" Grid.Column="0" Margin="0,15,0,0">
