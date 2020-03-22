@@ -28,11 +28,11 @@ namespace Tests.ControllerTests
             _deckInfoMock.Setup(m => m.GetTotalCardCountOfDeck(It.IsAny<List<DeckInfoCard>>())).Returns(null);
             List<IFullCard> dummyDeck = new List<IFullCard>
             {
-                new FullCard { CardCount = 3, PrintId = new Guid("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"), Name = "Emrakul"},
-                new FullCard { CardCount = 1, PrintId = new Guid("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"), Name = "Dusk"},
-                new FullCard { CardCount = 1, PrintId = new Guid("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"), Name = "Dawn"},
-                new FullCard { CardCount = 2, PrintId = new Guid("cccccccccccccccccccccccccccccccc"), Name = "face1"},
-                new FullCard { CardCount = 2, PrintId = new Guid("cccccccccccccccccccccccccccccccc"), Name = "face2"},
+                new FullCard { CardCount = 3, PrintId = new Guid("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"), CardFaces = new List<CardFace> { new CardFace { Name = "Emrakul" } } },
+                new FullCard { CardCount = 1, PrintId = new Guid("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"), CardFaces = new List<CardFace> { new CardFace { Name = "Dusk" } } },
+                new FullCard { CardCount = 1, PrintId = new Guid("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"), CardFaces = new List<CardFace> { new CardFace { Name = "Dawn" } } },
+                new FullCard { CardCount = 2, PrintId = new Guid("cccccccccccccccccccccccccccccccc"), CardFaces = new List<CardFace> { new CardFace { Name = "face1" } } },
+                new FullCard { CardCount = 2, PrintId = new Guid("cccccccccccccccccccccccccccccccc"), CardFaces = new List<CardFace> { new CardFace { Name = "face2" } } },
             };
             DeckController unitUnderTest = GetController();
 

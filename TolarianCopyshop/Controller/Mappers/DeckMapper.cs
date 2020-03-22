@@ -10,24 +10,9 @@ namespace Tolarian.Copyshop.Controller.Mappers
         public static List<DeckInfoCard> MapDeckDtoToBusiness(List<IFullCard> sources)
         {
             var result = new List<DeckInfoCard>();
-            var alreadyMapped = new List<IFullCard>();
-
             foreach (IFullCard fullCard in sources)
             {
-                if (alreadyMapped.Contains(fullCard))
-                    continue;
-
                 DeckInfoCard mappedCard = GetBusinessFrom(fullCard);
-
-                IFullCard otherFace = GetOtherFace(fullCard);
-                if (otherFace != null)
-                {
-                    mappedCard.cardFaces.Add(new DeckInfoCardFace { CardType = otherFace.CardType.ToString() });
-
-                    //Remember the other face so it won't be mapped as well
-                    alreadyMapped.Add(otherFace);
-                }
-
                 result.Add(mappedCard);
             }
             return result;
@@ -38,16 +23,11 @@ namespace Tolarian.Copyshop.Controller.Mappers
                 {
                     PrintId = fullCard.PrintId,
                     Copies = fullCard.CardCount,
-                    cardFaces = new List<DeckInfoCardFace>
+                    cardFaces = fullCard.CardFaces.Select(cf => new DeckInfoCardFace 
                     {
-                        new DeckInfoCardFace{ CardType = fullCard.CardType.ToString() },
-                    }
+                        CardType = cf.CardType.ToString(),
+                    }).ToList(),
                 };
-            }
-
-            IFullCard GetOtherFace(IFullCard firstFace)
-            {
-                return sources.FirstOrDefault(card => card.PrintId == firstFace.PrintId && card.Name != firstFace.Name && card != firstFace);
             }
         }
     }

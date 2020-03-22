@@ -22,7 +22,7 @@ namespace Tolarian.Copyshop.Controller
             {
                 var cards = new List<Uri>();
                 for(int i = 0; i < card.CardCount; i++)
-                    cards.Add(card.CroppedImage);
+                    cards.AddRange(card.CardFaces.Select(cf => cf.CroppedImage));
 
                 return cards;
             }

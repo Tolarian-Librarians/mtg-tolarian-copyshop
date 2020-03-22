@@ -59,16 +59,16 @@ namespace Tests.ControllerTests
 
             //Assert
             Assert.IsNotNull(response);
-            Assert.IsNotNull(response.Cards);
-            Assert.AreEqual(1, response.Cards.Count);
-            Assert.AreEqual(expected.Name, response.Cards[0].Name);
+            Assert.IsNotNull(response.Card);
+            Assert.AreEqual(1, response.Card.CardFaces.Count);
+            Assert.AreEqual(expected.Name, response.Card.CardFaces.First().Name);
 
             //Check that the legalities were separated correctly
             List<MtgPlayModes> expectedFirstHalf = new List<MtgPlayModes>{ MtgPlayModes.Commander, MtgPlayModes.Brawl, MtgPlayModes.Duel, MtgPlayModes.Future};
             List<MtgPlayModes> expectedSecondHalf = new List<MtgPlayModes>{ MtgPlayModes.Historic, MtgPlayModes.Legacy, MtgPlayModes.Modern};
 
-            Assert.IsTrue(expectedFirstHalf.All(legality => response.Cards[0].Legalities1.ContainsKey(legality.ToString())));
-            Assert.IsTrue(expectedSecondHalf.All(legality => response.Cards[0].Legalities2.ContainsKey(legality.ToString())));
+            Assert.IsTrue(expectedFirstHalf.All(legality => response.Card.Legalities1.ContainsKey(legality.ToString())));
+            Assert.IsTrue(expectedSecondHalf.All(legality => response.Card.Legalities2.ContainsKey(legality.ToString())));
         }
 
         [TestMethod]
@@ -85,10 +85,10 @@ namespace Tests.ControllerTests
 
             //Assert
             Assert.IsNotNull(response);
-            Assert.IsNotNull(response.Cards);
-            Assert.AreEqual(1, response.Cards.Count);
-            Assert.AreEqual(expected.Name, response.Cards[0].Name);
-            Assert.AreEqual("Text 1 // Text 2", response.Cards[0].Text);
+            Assert.IsNotNull(response.Card);
+            Assert.AreEqual(1, response.Card.CardFaces.Count);
+            Assert.AreEqual(expected.Name, response.Card.CardFaces.First().Name);
+            Assert.AreEqual("Text 1 // Text 2", response.Card.CardFaces.First().Text);
 
         }
 
@@ -106,10 +106,10 @@ namespace Tests.ControllerTests
 
             //Assert
             Assert.IsNotNull(response);
-            Assert.IsNotNull(response.Cards);
-            Assert.AreEqual(2, response.Cards.Count);
-            Assert.AreEqual(expected.CardFaces[0].Name, response.Cards[0].Name);
-            Assert.AreEqual(expected.CardFaces[1].Name, response.Cards[1].Name);
+            Assert.IsNotNull(response.Card);
+            Assert.AreEqual(2, response.Card.CardFaces.Count);
+            Assert.AreEqual(expected.CardFaces[0].Name, response.Card.CardFaces.First().Name);
+            Assert.AreEqual(expected.CardFaces[1].Name, response.Card.CardFaces.Skip(1).First().Name);
         }
 
         [TestMethod]
