@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows;
 using Tolarian.Copyshop.Controller.ResponseObjects;
 using Tolarian.Copyshop.ScreenPresenter.Model;
@@ -21,6 +22,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
                 new FullCardModel()
                 {
                     CardId = new Guid(),
+                    FormattedCardName = "Mountain",
                     CardFaces = new ObservableCollection<CardFace>
                     {
                         new CardFace()
@@ -35,6 +37,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
                 new FullCardModel()
                 {
                     CardId = new Guid(),
+                    FormattedCardName = "Swamp",
                     CardFaces = new ObservableCollection<CardFace>
                     {
                         new CardFace()
@@ -49,6 +52,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
                 new FullCardModel()
                 {
                     CardId = new Guid(),
+                    FormattedCardName = "Plains",
                     CardFaces = new ObservableCollection<CardFace>
                     {
                         new CardFace()
@@ -63,6 +67,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
                 new FullCardModel()
                 {
                     CardId = new Guid(),
+                    FormattedCardName = "Island",
                     CardFaces = new ObservableCollection<CardFace>
                     {
                         new CardFace()
@@ -77,6 +82,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
                 new FullCardModel()
                 {
                     CardId = new Guid(),
+                    FormattedCardName = "Forest",
                     CardFaces = new ObservableCollection<CardFace>
                     {
                         new CardFace()
@@ -91,6 +97,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             };
 
             this.SelectedCard = this.DeckCards[0];
+            this.SelectedCard.SelectedCardFace = this.SelectedCard.CardFaces.First().LargeImage;
         }
     }
 }

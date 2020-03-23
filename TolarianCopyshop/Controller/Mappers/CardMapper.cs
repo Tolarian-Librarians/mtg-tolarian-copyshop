@@ -84,10 +84,12 @@ namespace Tolarian.Copyshop.Controller.Mappers
             {
                 CardId = source.CardId,
                 PrintId = source.PrintId,
+                FormattedCardName = GetFormattedNameOfCard(source),
                 Legalities1 = GetFirstHalfOfLegalities(source),
                 Legalities2 = GetSecondHalfOfLegalities(source),
                 CardCount = 1,
-                CardFaces = MapCardFacesOf(source)
+                CardFaces = MapCardFacesOf(source),
+                IsTransformable = source.IsTransformable,
             };
 
             return result;
@@ -110,7 +112,7 @@ namespace Tolarian.Copyshop.Controller.Mappers
             }
             else
             {
-                result.Add(new CardFace 
+                result.Add(new CardFace
                 {
                     LargeImage = source.ImageUris.ContainsKey(CardImageTypes.Large) ? source.ImageUris[CardImageTypes.Large] : null,
                     SmallImage = source.ImageUris.ContainsKey(CardImageTypes.Small) ? source.ImageUris[CardImageTypes.Small] : null,
@@ -141,6 +143,18 @@ namespace Tolarian.Copyshop.Controller.Mappers
                 return count / 2;
             else
                 return (count / 2) + 1;
+        }
+
+        private static string GetFormattedNameOfCard(SfCard source)
+        {
+            if (source.IsTransformable)
+            {
+                return string.Join(" // ", source.CardFaces.Select(c => c.Name).ToArray());
+            }
+            else
+            {
+                return source.Name ?? "";
+            }
         }
 
         private static string GetTextOfCard(SfCard source)
