@@ -25,7 +25,10 @@
                     <DataTemplate>
                         <Grid>
                             <Controls:ProgressRing Foreground="{DynamicResource AccentColorBrush}" />
-                            <Image Height="400" Margin="15" Source="{Binding CroppedImage}" />
+                            <Image Width="280"
+                                   Height="400"
+                                   Margin="15"
+                                   Source="{Binding CardFaces[0].CroppedImage}" />
                         </Grid>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>

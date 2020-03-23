@@ -11,46 +11,31 @@ namespace Tolarian.Copyshop.ScreenPresenter.Views
     public partial class DeckBuilderView : UserControl
     {
         public DeckBuilderView()
-        {
-            InitializeComponent();
-        }
+            => this.InitializeComponent();
 
         private void SearchTextBox_PreviewKeyDown(object sender, KeyEventArgs e)
-        {
-            HandleSearchUpDown(e);
-        }
+            => this.HandleSearchUpDown(e);
 
         private void SearchResultBox_PreviewKeyDown(object sender, KeyEventArgs e)
-        {
-            HandleSearchUpDown(e);
-        }
+            => this.HandleSearchUpDown(e);
 
         private void HandleSearchUpDown(KeyEventArgs e)
         {
-            if (e.Key == Key.Down)
-            {
-
-            }
-            else if (e.Key == Key.Up)
-            {
-
-            }
-
             switch (e.Key)
             {
                 case Key.Up:
-                    if (_SearchResultBox.SelectedIndex != 0)
+                    if (this._SearchResultBox.SelectedIndex != 0)
                     {
-                        SetSearchResultItem(_SearchResultBox.SelectedIndex - 1);
+                        this.SetSearchResultItem(_SearchResultBox.SelectedIndex - 1);
                     }
                     else
                     {
-                        _SearchTextBox.Focus();
+                        this._SearchTextBox.Focus();
                     }
                     e.Handled = true;
                     break;
                 case Key.Down:
-                    SetSearchResultItem(_SearchResultBox.SelectedIndex + 1);
+                    this.SetSearchResultItem(_SearchResultBox.SelectedIndex + 1);
                     e.Handled = true;
                     break;
                 case Key.A:
@@ -100,9 +85,9 @@ namespace Tolarian.Copyshop.ScreenPresenter.Views
                 case Key.NumPad8:
                 case Key.NumPad9:
                 case Key.Back:
-                    if (!_SearchTextBox.IsFocused)
+                    if (!this._SearchTextBox.IsFocused)
                     {
-                        _SearchTextBox.Focus();
+                        this._SearchTextBox.Focus();
                     }
                     break;
             }
@@ -110,9 +95,9 @@ namespace Tolarian.Copyshop.ScreenPresenter.Views
 
         private void SetSearchResultItem(int index)
         {
-            if (!_SearchResultBox.IsFocused)
+            if (!this._SearchResultBox.IsFocused)
             {
-                _SearchResultBox.Focus();
+                this._SearchResultBox.Focus();
             }
             if (this.DataContext is DeckBuilderViewModel oModel && oModel.SearchResults.Count > index)
             {

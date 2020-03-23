@@ -22,6 +22,8 @@ namespace Tolarian.Copyshop.Controller.ResponseObjects
                 Legalities2 = card.Legalities2,
                 SetCode = card.SetCode,
                 CardFaces = card.CardFaces,
+                IsTransformable = card.IsTransformable,
+                FormattedCardName = card.FormattedCardName,
             };
         }
 
@@ -32,5 +34,7 @@ namespace Tolarian.Copyshop.Controller.ResponseObjects
         public Dictionary<string, string> Legalities2 { get; set; }
         public string SetCode { get; set; }
         public ICollection<CardFace> CardFaces { get; set; }
+        public bool IsTransformable { get; set; }
+        public string FormattedCardName { get; set; }
     }
 }

@@ -100,10 +100,11 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Communication\Notifications.cs" />
+    <Compile Include="Converter\NumericMultiplicationConverter.cs" />
     <Compile Include="Helper\CollectionExtension.cs" />
     <Compile Include="Communication\Dialogs.cs" />
     <Compile Include="Converter\BoolToVisibilityConverter.cs" />
-    <Compile Include="Converter\IntSubstractionConverter.cs" />
+    <Compile Include="Converter\NumericSubstractionConverter.cs" />
     <Compile Include="Converter\InvertedBoolToVisibilityConverter.cs" />
     <Compile Include="Model\DeckCardModel.cs" />
     <Compile Include="Model\FullCardModel.cs" />
