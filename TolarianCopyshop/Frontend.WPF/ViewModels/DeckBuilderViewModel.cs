@@ -60,6 +60,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             this.ApplySelectedSearchItemCommand = new Command(this.ApplySelectedSearchItem);
             this.ClearSearchCommand = new Command(this.ClearSearch);
             this.SelectArtworkCommand = new Command(this.SelectArtwork);
+            this.TransformCardCommand = new Command(this.TransformCard);
 
             this._deckCardModel.DeckCards.CollectionChanged += this.DeckCards_CollectionChanged;
         }
@@ -92,7 +93,11 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
         public FullCardModel SelectedCard
         {
             get => this._selectedCard;
-            set => this.SetProperty(ref this._selectedCard, value);
+            set
+            {
+                this.SetProperty(ref this._selectedCard, value);
+                SelectedCard.SelectedCardFace = SelectedCard?.CardFaces.First().CroppedImage;
+            }
         }
 
         public ObservableCollection<SearchCard> SearchResults
@@ -173,6 +178,8 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
 
         public Command SelectArtworkCommand { get; set; }
 
+        public Command TransformCardCommand { get; set; }
+
         #endregion
 
         #region Static Methods
@@ -204,6 +211,18 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
 
                 Application.Current.Dispatcher.Invoke(() => this.AddCard(newCard));
                 this.SelectedCard = newCard;
+            }
+        }
+
+        private void TransformCard(object _)
+        {
+            if (SelectedCard.SelectedCardFace == SelectedCard.CardFaces.First().CroppedImage)
+            {
+                SelectedCard.SelectedCardFace = SelectedCard.CardFaces.Last().CroppedImage;
+            }
+            else
+            {
+                SelectedCard.SelectedCardFace = SelectedCard.CardFaces.First().CroppedImage;
             }
         }
 
