@@ -9,9 +9,12 @@
                                xmlns:simpleChildWindow="clr-namespace:MahApps.Metro.SimpleChildWindow;assembly=MahApps.Metro.SimpleChildWindow"
                                x:Name="_ChildView"
                                Title="Select Artwork"
-                               Width="800"
-                               Height="450"
+                               BorderBrush="{DynamicResource MahApps.Brushes.AccentBase}"
+                               BorderThickness="1"
+                               CloseByEscape="True"
+                               CloseOnOverlay="False"
                                GlowBrush="{DynamicResource MahApps.Brushes.Accent}"
+                               IsWindowHostActive="True"
                                ShowCloseButton="True"
                                mc:Ignorable="d">
 
@@ -23,10 +26,6 @@
                                        Foreground="White"
                                        Kind="PaletteSolid" />
     </simpleChildWindow:ChildWindow.Icon>
-
-    <simpleChildWindow:ChildWindow.OverlayBrush>
-        <SolidColorBrush Opacity="0.7" Color="{DynamicResource MahApps.Colors.Black}" />
-    </simpleChildWindow:ChildWindow.OverlayBrush>
 
     <simpleChildWindow:ChildWindow.Resources>
         <Style x:Key="ArtworkNameStyle" TargetType="{x:Type Grid}">

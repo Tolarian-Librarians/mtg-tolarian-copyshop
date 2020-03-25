@@ -7,9 +7,12 @@
                                xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                                xmlns:simpleChildWindow="clr-namespace:MahApps.Metro.SimpleChildWindow;assembly=MahApps.Metro.SimpleChildWindow"
                                Title="Import Cards"
-                               Width="800"
-                               Height="450"
+                               BorderBrush="{DynamicResource MahApps.Brushes.AccentBase}"
+                               BorderThickness="1"
+                               CloseByEscape="True"
+                               CloseOnOverlay="False"
                                GlowBrush="{DynamicResource MahApps.Brushes.Accent}"
+                               IsWindowHostActive="True"
                                ShowCloseButton="True"
                                mc:Ignorable="d">
 
@@ -21,10 +24,6 @@
                                        Foreground="White"
                                        Kind="AngleDoubleRightSolid" />
     </simpleChildWindow:ChildWindow.Icon>
-
-    <simpleChildWindow:ChildWindow.OverlayBrush>
-        <SolidColorBrush Opacity="0.7" Color="{DynamicResource MahApps.Colors.Black}" />
-    </simpleChildWindow:ChildWindow.OverlayBrush>
 
     <Grid>
         <Grid.RowDefinitions>

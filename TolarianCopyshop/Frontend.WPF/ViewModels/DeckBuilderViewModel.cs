@@ -96,7 +96,10 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             set
             {
                 this.SetProperty(ref this._selectedCard, value);
-                SelectedCard.SelectedCardFace = SelectedCard?.CardFaces.First().CroppedImage;
+                if (this.SelectedCard != null)
+                {
+                    this.SelectedCard.SelectedCardFace = this.SelectedCard.CardFaces?.First().CroppedImage;
+                }
             }
         }
 
@@ -196,7 +199,6 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             var view = CopyShopView.GetInstance();
             var result = await this._dialogs.ShowChildWindowOnUIThread<Guid>(new SelectArtworkChildView(this._cardController, this.SelectedCard.CardId)
             {
-                IsModal = false,
                 Width = view.ActualWidth - 200d,
                 Height = view.ActualHeight - 150d,
             }).ConfigureAwait(false);

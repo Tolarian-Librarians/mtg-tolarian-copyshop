@@ -195,7 +195,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
                 string importCards = string.Empty;
                 if (importType.Equals("TEXT", StringComparison.OrdinalIgnoreCase))
                 {
-                    importCards = await this._dialogs.ShowChildWindowOnUIThread<string>(new ImportCardsChildView() { IsModal = false }).ConfigureAwait(false);
+                    importCards = await this._dialogs.ShowChildWindowOnUIThread<string>(new ImportCardsChildView()).ConfigureAwait(false);
                 }
                 else if (importType.Equals("CLIPBOARD", StringComparison.OrdinalIgnoreCase))
                 {
