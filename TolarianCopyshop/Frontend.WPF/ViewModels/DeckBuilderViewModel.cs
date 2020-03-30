@@ -199,8 +199,8 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             var view = CopyShopView.GetInstance();
             var result = await this._dialogs.ShowChildWindowOnUIThread<Guid>(new SelectArtworkChildView(this._cardController, this.SelectedCard.CardId)
             {
-                Width = view.ActualWidth - 200d,
-                Height = view.ActualHeight - 150d,
+                ChildWindowWidth = view.ActualWidth - 200d,
+                ChildWindowHeight = view.ActualHeight - 150d,
             }).ConfigureAwait(false);
 
             if (result is Guid printId && printId != Guid.Empty && printId != this.SelectedCard.PrintId)
