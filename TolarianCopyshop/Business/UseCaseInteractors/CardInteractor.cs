@@ -52,7 +52,7 @@ namespace Tolarian.Copyshop.Business.UseCaseInteractors
 
         public List<SfCard> GetPrintsOfCard(Guid cardId)
         {
-            return _gateway.GetPrintsOfCard(cardId).Data.ToList();
+            return _gateway.GetPrintsOfCard(cardId);
         }
     }
 }

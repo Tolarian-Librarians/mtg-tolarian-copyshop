@@ -74,11 +74,11 @@ namespace Tests.ScryfallDataAccessTests
             Guid dummyOracleGuid = new Guid("900ca697-ad38-4b2b-bc74-2ff7eb6ea951"); //Emrakul, the aeons torn
 
             CardDataMapper mapper = GetMapper();
-            SfPaginatedCardList result = mapper.GetPrintsOfCard(dummyOracleGuid);
+            var result = mapper.GetPrintsOfCard(dummyOracleGuid);
 
             Assert.IsNotNull(result);
-            Assert.AreEqual(8, result.CardCount);
-            Assert.AreEqual(8, result.Data.Count(x => x.CardId == dummyOracleGuid));
+            Assert.AreEqual(8, result.Count);
+            Assert.AreEqual(8, result.Count(x => x.CardId == dummyOracleGuid));
         }
 
         [TestMethod]

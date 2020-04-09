@@ -65,7 +65,7 @@ namespace Tests.InteractorTests
         public void GetPrintsOfCard_Test()
         {
             var dummyList = TestUtils.GetDummyCardList();
-            _gatewayMock.Setup(m => m.GetPrintsOfCard(It.IsAny<Guid>())).Returns(dummyList);
+            _gatewayMock.Setup(m => m.GetPrintsOfCard(It.IsAny<Guid>())).Returns(dummyList.Data.ToList());
             CardInteractor unitUnderTest = GetInteractor();
 
             var result = unitUnderTest.GetPrintsOfCard(Guid.Empty);

@@ -17,6 +17,9 @@ namespace Tolarian.Copyshop.Business.Models.SfCardInfo
         [JsonProperty(PropertyName = "warnings")]
         public string[] Warnings { get; set; }
 
+        [JsonProperty(PropertyName = "next_page")]
+        public Uri NextPageUri { get; set; }
+
         public static SfPaginatedCardList GetEmpty()
         {
             return new SfPaginatedCardList

@@ -10,6 +10,6 @@ namespace Tolarian.Copyshop.Business.Interfaces
         SfCatalog GetCardNamesByAutoCompleteQuery(string query);
         SfCard GetCardByPrintId(Guid printId);
         SfCardCollection GetCardCollectionByIdentifiers(List<GetCardCollectionRequest> cardNames);
-        SfPaginatedCardList GetPrintsOfCard(Guid oracleId);
+        List<SfCard> GetPrintsOfCard(Guid oracleId);
     }
 }

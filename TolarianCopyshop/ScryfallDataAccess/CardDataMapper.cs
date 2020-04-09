@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using Tolarian.Copyshop.Business.DbRequestModels;
 using Tolarian.Copyshop.Business.Interfaces;
 using Tolarian.Copyshop.Business.Models.SfCardInfo;
@@ -37,22 +38,55 @@ namespace Tolarian.Copyshop.ScryfallDataAccess
             return null;
         }
 
-        public SfPaginatedCardList GetPrintsOfCard(Guid oracleId)
+        public List<SfCard> GetPrintsOfCard(Guid oracleId)
         {
-            ApiResponse<SfPaginatedCardList> response = _service.GetPrintsBySearchQuery(oracleId).Result;
+            ApiResponse<SfPaginatedCardList> firstPageResponse = _service.GetPrintsBySearchQuery(oracleId, 1).Result;
 
-            switch (response.StatusCode)
+            switch (firstPageResponse.StatusCode)
             {
                 case HttpStatusCode.OK:
-                    return response.Content;
+                    SfPaginatedCardList currentPage = firstPageResponse.Content;
+                    var result = currentPage.Data.ToList();
+
+                    if(currentPage.MorePagesAvailable)
+                        result.AddRange(ReadNextPagesOf(currentPage, oracleId));
+
+                    return result;
                 case HttpStatusCode.NotFound:
-                    return SfPaginatedCardList.GetEmpty();
+                    return new List<SfCard>();
                 default:
-                    HandleUnexpectedStatusCodeForResponse(response);
+                    HandleUnexpectedStatusCodeForResponse(firstPageResponse);
                     break;
             }
 
             return null;
+        }
+
+        private List<SfCard> ReadNextPagesOf(SfPaginatedCardList firstPage, Guid oracleId)
+        {
+            SfPaginatedCardList currentPage = firstPage;
+            int currentPageNumber = 1;
+            var result = new List<SfCard>();
+
+            while (currentPage.MorePagesAvailable)
+            {
+                currentPageNumber++;
+                var nextPageResponse = _service.GetPrintsBySearchQuery(oracleId, currentPageNumber)
+                                               .Result;
+
+                switch (nextPageResponse.StatusCode)
+                {
+                    case HttpStatusCode.OK:
+                        currentPage = nextPageResponse.Content;
+                        result.AddRange(currentPage.Data);
+                        break;
+                    default:
+                        HandleUnexpectedStatusCodeForResponse(nextPageResponse);
+                        break;
+                }
+            }
+
+            return result;
         }
 
         public SfCardCollection GetCardCollectionByIdentifiers(List<GetCardCollectionRequest> request)
@@ -62,6 +96,7 @@ namespace Tolarian.Copyshop.ScryfallDataAccess
                 return SfCardCollection.GetEmpty();
             }
 
+            //List needs to be chunked into lists of max 75 items because SF will return a maximum of 75 cards
             List<List<GetCardCollectionRequest>> chunkedRequests = ChunkListBySize(request, _scryfallApiReturnCountMaximum);
 
             var container = chunkedRequests.Select(cr => new SfIdentifierContainer
