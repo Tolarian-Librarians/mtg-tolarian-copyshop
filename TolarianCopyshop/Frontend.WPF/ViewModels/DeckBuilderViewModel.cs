@@ -30,7 +30,8 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
 
         private int _deckCardCount;
         private FullCardModel _selectedCard;
-        private Visibility _searchResultVisibility = Visibility.Hidden;
+        private bool _isSearchResultVisible;
+        private bool _isSearchProgressVisible;
         private string _searchText;
         private string _searchResultCount;
         private bool _hasSearchText;
@@ -109,10 +110,16 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             set => this.SetProperty(ref this._searchResults, value);
         }
 
-        public Visibility SearchResultVisibility
+        public bool IsSearchResultVisible
         {
-            get => this._searchResultVisibility;
-            set => this.SetProperty(ref this._searchResultVisibility, value);
+            get => this._isSearchResultVisible;
+            set => this.SetProperty(ref this._isSearchResultVisible, value);
+        }
+
+        public bool IsSearchProgressVisible
+        {
+            get => this._isSearchProgressVisible;
+            set => this.SetProperty(ref this._isSearchProgressVisible, value);
         }
 
         public string SearchText
@@ -142,7 +149,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
                 }
                 else
                 {
-                    this.OnPropertyChanged(nameof(SelectedSearchItem));
+                    this.OnPropertyChanged(nameof(this.SelectedSearchItem));
                 }
             }
         }
@@ -158,7 +165,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
                 }
                 else
                 {
-                    this.OnPropertyChanged(nameof(SelectedSearchIndex));
+                    this.OnPropertyChanged(nameof(this.SelectedSearchIndex));
                 }
             }
         }
@@ -218,13 +225,13 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
 
         private void TransformCard(object _)
         {
-            if (SelectedCard.SelectedCardFace == SelectedCard.CardFaces.First().CroppedImage)
+            if (this.SelectedCard.SelectedCardFace == this.SelectedCard.CardFaces.First().CroppedImage)
             {
-                SelectedCard.SelectedCardFace = SelectedCard.CardFaces.Last().CroppedImage;
+                this.SelectedCard.SelectedCardFace = this.SelectedCard.CardFaces.Last().CroppedImage;
             }
             else
             {
-                SelectedCard.SelectedCardFace = SelectedCard.CardFaces.First().CroppedImage;
+                this.SelectedCard.SelectedCardFace = this.SelectedCard.CardFaces.First().CroppedImage;
             }
         }
 
@@ -271,7 +278,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
         {
             if (asNewList)
             {
-                CreateNewDeckList();
+                this.CreateNewDeckList();
             }
 
             if (cardList != null)
@@ -305,22 +312,22 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
 
         private async void OnSearchTextChangedAsync()
         {
-            Console.WriteLine($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff")}]: OnSearchTextChangedAsync: {this._searchText}");
+            Console.WriteLine($"[{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}]: OnSearchTextChangedAsync: {this._searchText}");
             // Run async to not lock the UI
-            if (task != null && this.task.Status != TaskStatus.RanToCompletion)
+            if (this.task != null && this.task.Status != TaskStatus.RanToCompletion)
             {
-                tokenSource.Cancel();
+                this.tokenSource.Cancel();
                 await this.task.ConfigureAwait(false);
             }
             this.tokenSource = new CancellationTokenSource();
-            this.token = tokenSource.Token;
-            this.task = Task.Run(() => OnSearchTextChanged(), this.token);
+            this.token = this.tokenSource.Token;
+            this.task = Task.Run(() => this.OnSearchTextChanged(), this.token);
             await this.task.ConfigureAwait(false);
         }
 
         private void OnSearchTextChanged()
         {
-            Console.WriteLine($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff")}]: OnSearchTextChanged(): Start");
+            Console.WriteLine($"[{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}]: OnSearchTextChanged(): Start");
             this.HasSearchText = this.SearchText.Length > 0;
 
             if (this.SearchText.Length < 3)
@@ -328,33 +335,36 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
                 this.ResetSearchedItems();
                 return;
             }
+            this.IsSearchResultVisible = true;
+            this.IsSearchProgressVisible = true;
 
-            Console.WriteLine($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff")}]: OnSearchTextChanged(): Request");
+            Console.WriteLine($"[{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}]: OnSearchTextChanged(): Request");
             var result = this._cardController.GetSearchResults(this.SearchText, 12);
-            Console.WriteLine($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff")}]: OnSearchTextChanged(): Result");
+            Console.WriteLine($"[{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}]: OnSearchTextChanged(): Result");
             if (this.token.IsCancellationRequested)
             {
-                Console.WriteLine($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff")}]: OnSearchTextChanged(): Task Cancel");
+                Console.WriteLine($"[{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}]: OnSearchTextChanged(): Task Cancel");
                 return;
             }
 
-            Console.WriteLine($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff")}]: OnSearchTextChanged(): UI Begin");
+            Console.WriteLine($"[{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}]: OnSearchTextChanged(): UI Begin");
             this._dialogs.SendErrorMessage(this._cardController.GetErrorMessage());
             this.SearchResultCount = result.ResultsCount;
             this.SearchResults = new ObservableCollection<SearchCard>(result.Results);
-            this.SearchResultVisibility = Visibility.Visible;
-            Console.WriteLine($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff")}]: OnSearchTextChanged(): UI End");
+            this.IsSearchProgressVisible = false;
+
+            Console.WriteLine($"[{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}]: OnSearchTextChanged(): UI End");
             if (this.SearchResults.Count > 0)
             {
                 Application.Current.Dispatcher.Invoke(new Action(() =>
                 {
-                    Console.WriteLine($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff")}]: OnSearchTextChanged(): Invoke Begin");
+                    Console.WriteLine($"[{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}]: OnSearchTextChanged(): Invoke Begin");
                     this.SelectedSearchItem = this.SearchResults.FirstOrDefault(o => o.PrintId == this.SelectedSearchItem?.PrintId) ?? this.SearchResults[0];
                     this.SelectedSearchIndex = this.SearchResults.IndexOf(this.SelectedSearchItem);
-                    Console.WriteLine($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff")}]: OnSearchTextChanged(): Invoke End");
+                    Console.WriteLine($"[{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}]: OnSearchTextChanged(): Invoke End");
                 }), DispatcherPriority.Normal);
             }
-            Console.WriteLine($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff")}]: OnSearchTextChanged(): End");
+            Console.WriteLine($"[{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}]: OnSearchTextChanged(): End");
         }
 
         private void ApplySelectedSearchItem(object _)
@@ -377,7 +387,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             this.SearchResultCount = "0";
             this.SelectedSearchItem = null;
             this.SearchResults = new ObservableCollection<SearchCard>();
-            this.SearchResultVisibility = Visibility.Collapsed;
+            this.IsSearchResultVisible = false;
         }
 
         private void ClearSearch(object obj)

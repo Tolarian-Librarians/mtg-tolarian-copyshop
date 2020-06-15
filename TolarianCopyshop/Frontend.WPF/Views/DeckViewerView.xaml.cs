@@ -9,7 +9,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.Views
     {
         public DeckViewerView()
         {
-            InitializeComponent();
+            this.InitializeComponent();
         }
     }
 }

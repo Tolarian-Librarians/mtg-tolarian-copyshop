@@ -90,7 +90,7 @@
                     Panel.ZIndex="1000"
                     BorderBrush="Black"
                     BorderThickness="1"
-                    Visibility="{Binding SearchResultVisibility}">
+                    Visibility="{Binding IsSearchResultVisible, Converter={StaticResource BoolToVisibilityConverter}}">
                 <Grid Height="325" Background="White">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*" />
@@ -100,6 +100,11 @@
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="230" />
                     </Grid.ColumnDefinitions>
+                    <Controls:ProgressRing Grid.Row="0"
+                                           Grid.Column="0"
+                                           Panel.ZIndex="1"
+                                           Foreground="{DynamicResource MahApps.Brushes.Accent}"
+                                           Visibility="{Binding IsSearchProgressVisible, Converter={StaticResource BoolToVisibilityConverter}}" />
                     <ListBox x:Name="_SearchResultBox"
                              Grid.Row="0"
                              Grid.Column="0"

@@ -33,7 +33,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             _copyshop = this;
             this._cardController = cardController;
             this._printController = printController;
-            _deckController = deckController;
+            this._deckController = deckController;
             this._dialogs = dialogs;
 
             // Commands

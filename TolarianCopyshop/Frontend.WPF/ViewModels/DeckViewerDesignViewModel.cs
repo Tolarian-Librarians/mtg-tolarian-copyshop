@@ -10,7 +10,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
         public DeckViewerDesignViewModel()
         {
             this._deckBuilderDesignViewModel = new DeckBuilderDesignViewModel();
-            this.DeckCards = _deckBuilderDesignViewModel.DeckCards;
+            this.DeckCards = this._deckBuilderDesignViewModel.DeckCards;
         }
 
         public ObservableCollection<FullCardModel> DeckCards { get; set; }
