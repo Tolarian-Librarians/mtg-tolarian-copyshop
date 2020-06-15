@@ -26,7 +26,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.Views
                 case Key.Up:
                     if (this._SearchResultBox.SelectedIndex != 0)
                     {
-                        this.SetSearchResultItem(_SearchResultBox.SelectedIndex - 1);
+                        this.SetSearchResultItem(this._SearchResultBox.SelectedIndex - 1);
                     }
                     else
                     {
@@ -35,7 +35,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.Views
                     e.Handled = true;
                     break;
                 case Key.Down:
-                    this.SetSearchResultItem(_SearchResultBox.SelectedIndex + 1);
+                    this.SetSearchResultItem(this._SearchResultBox.SelectedIndex + 1);
                     e.Handled = true;
                     break;
                 case Key.A:

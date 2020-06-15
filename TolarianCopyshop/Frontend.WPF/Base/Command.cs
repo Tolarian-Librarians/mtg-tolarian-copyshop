@@ -22,8 +22,8 @@ namespace Tolarian.Copyshop.ScreenPresenter.Base
         public Command(Action<object> execute, Predicate<object> canExecute)
             : base()
         {
-            _execute = execute;
-            _canExecute = canExecute;
+            this._execute = execute;
+            this._canExecute = canExecute;
         }
 
         #endregion
@@ -31,7 +31,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.Base
         #region Methods
 
         public bool CanExecute(object parameter)
-            => _canExecute == null ? true : _canExecute(parameter);
+            => this._canExecute == null ? true : this._canExecute(parameter);
 
         public event EventHandler CanExecuteChanged
         {
@@ -41,7 +41,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.Base
 
         public void Execute(object parameter)
         {
-            _execute(parameter);
+            this._execute(parameter);
         }
 
         #endregion

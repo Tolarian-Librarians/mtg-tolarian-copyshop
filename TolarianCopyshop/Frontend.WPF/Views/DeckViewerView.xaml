@@ -24,7 +24,7 @@
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Grid>
-                            <Controls:ProgressRing Foreground="{DynamicResource AccentColorBrush}" />
+                            <Controls:ProgressRing Foreground="{DynamicResource MahApps.Brushes.Accent}" />
                             <Image Width="280"
                                    Height="400"
                                    Margin="15"

@@ -56,7 +56,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.Communication
 
         private MessageDialogResult ShowQuestion(string header, string message, MessageDialogStyle style,
             string affirmativeButtonText, string negativeButtonText, string firstAuxiliaryButtonText, string secondAuxiliaryButtonText)
-            => _DialogWindow.ShowModalMessageExternal(header, message, style,
+            => this._DialogWindow.ShowModalMessageExternal(header, message, style,
                  new MetroDialogSettings()
                  {
                      AffirmativeButtonText = affirmativeButtonText,
