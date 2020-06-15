@@ -10,19 +10,20 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
     {
         #region Fields
 
-        private ObservableCollection<ArtworkCard> _artworks;
+        private ObservableCollection<ArtworkCard> _artworks = new ObservableCollection<ArtworkCard>();
+        private bool _artworksLoaded;
         private readonly CardController _cardController;
+        private readonly Guid _cardId;
 
         #endregion
 
         #region ctor
 
         public SelectArtworkViewModel(CardController cardController, Guid cardId, Command affirmativeCommand)
-		{
+        {
             this._cardController = cardController;
             this.AffirmativeCommand = affirmativeCommand;
-
-            Artworks = new ObservableCollection<ArtworkCard>(_cardController.GetArtworksOfCard(cardId).Artworks);
+            this._cardId = cardId;
         }
 
         #endregion
@@ -31,15 +32,27 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
 
         public Command AffirmativeCommand { get; }
 
-		public ObservableCollection<ArtworkCard> Artworks
-		{
-			get => this._artworks;
-			set => SetProperty(ref _artworks, value);
-		}
+        public ObservableCollection<ArtworkCard> Artworks
+        {
+            get => this._artworks;
+            set => this.SetProperty(ref this._artworks, value);
+        }
+
+        public bool ArtworksLoaded
+        {
+            get => this._artworksLoaded;
+            set => this.SetProperty(ref this._artworksLoaded, value);
+        }
 
         #endregion
 
         #region Methods
+
+        public void LoadArtworks()
+        {
+            this.Artworks = new ObservableCollection<ArtworkCard>(this._cardController.GetArtworksOfCard(this._cardId).Artworks);
+            this.ArtworksLoaded = true;
+        }
 
         #endregion
     }
