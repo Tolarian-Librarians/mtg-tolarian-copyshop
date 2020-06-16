@@ -9,24 +9,61 @@ using Tolarian.Copyshop.Controller.ResponseObjects.Enums;
 
 namespace Tolarian.Copyshop.Controller.Mappers
 {
-    public abstract class CardMapper
+    internal abstract class CardMapper
     {
-        public static CardSearchCard MapToSearchResultDto(SfCard source)
+        internal static List<string> PrepareImportStringForBusiness(string source)
         {
-            var result = new CardSearchCard
+            List<string> result = source.Split(
+                new[] { "\r\n", "\r", "\n" },
+                StringSplitOptions.None).ToList();
+
+            return result;
+        }
+
+        internal static List<ArtworkCard> MapToArtworkDto(List<SfCard> source)
+        {
+            List<ArtworkCard> result = source.Select(card =>
+            {
+                return new ArtworkCard
+                {
+                    SetCode = card.SetCode.ToUpper(),
+                    SetName = TruncateSetname(card.SetName),
+                    PrintId = card.PrintId,
+                    Image = card.IsTransformable ? card.CardFaces[0].ImageUris[CardImageTypes.Border_Crop] : card.ImageUris[CardImageTypes.Border_Crop],
+                    ReleaseDate = card.ReleaseDate,
+                };
+            }).ToList();
+
+            return result;
+        }
+
+        private static string TruncateSetname(string setName)
+        {
+            const int maxLength = 20;
+            if(setName.Length <= maxLength)
+            {
+                return setName;
+            }
+
+            return string.Concat(setName.Substring(0, maxLength), "...");
+        }
+
+        internal static SearchCard MapToSearchResultDto(SfCard source)
+        {
+            var result = new SearchCard
             {
                 Name = source.Name,
                 CardType = GetBaseCardTypeFromTypeLine(source.TypeLine),
-                Id = source.Id,
-                Image = source.ImageUris?[CardImageTypes.Normal] ?? source.CardFaces?[0]?.ImageUris?[CardImageTypes.Normal],
+                PrintId = source.PrintId,
+                Image = source.IsTransformable ? source.CardFaces[0].ImageUris[CardImageTypes.Border_Crop] : source.ImageUris[CardImageTypes.Border_Crop],
             };
 
             return result;
         }
 
-        public static CardSearchResponse MapToSearchResultDto(List<SfCard> source, int resultsCount)
+        internal static CardSearchResponse MapToSearchResultDto(List<SfCard> source, string resultsCount)
         {
-            List<CardSearchCard> foundCards = source.Select(card => MapToSearchResultDto(card)).ToList();
+            List<SearchCard> foundCards = source.Select(card => MapToSearchResultDto(card)).ToList();
 
             return new CardSearchResponse
             {
@@ -35,62 +72,56 @@ namespace Tolarian.Copyshop.Controller.Mappers
             };
         }
 
-        public static List<IFullCard> MapToCardDto(List<SfCard> sources)
+        internal static List<IFullCard> MapToCardDto(List<SfCard> sources)
         {
-            var result =
-                sources.SelectMany(card => MapToCardDto(card)).ToList();
-
+            var result = sources.Select(card => MapToCardDto(card)).ToList();
             return result;
         }
 
-        public static List<IFullCard> MapToCardDto(SfCard source)
+        internal static IFullCard MapToCardDto(SfCard source)
         {
-            var result = new List<FullCardResponse>();
-
-            if(source.IsTransformable)
+            var result = new FullCard
             {
-                result.AddRange(MapDoubleSidedCardToDto(source));
-            }
-            else
-            {
-                result.Add(MapSingleFacedCardToDto(source));
-            }
-
-            return result.Cast<IFullCard>().ToList();
-        }
-
-        private static List<FullCardResponse> MapDoubleSidedCardToDto(SfCard source)
-        {
-            List<FullCardResponse> result = source.CardFaces.Select(card => new FullCardResponse
-            {
-                Name = card.Name,
-                Id = source.Id,
-                Text = card.Text,
-                CardType = GetBaseCardTypeFromTypeLine(card.TypeLine),
-                CardCount = 1,
-                LargeImage = card.ImageUris.ContainsKey(CardImageTypes.Large) ? card.ImageUris[CardImageTypes.Large] : null,
-                SmallImage = card.ImageUris.ContainsKey(CardImageTypes.Small) ? card.ImageUris[CardImageTypes.Small] : null,
-                Legalities1 = GetFirstHalfOfLegalities(source),
-                Legalities2 = GetSecondHalfOfLegalities(source)
-            }).ToList();
-
-            return result;
-        }
-
-        private static FullCardResponse MapSingleFacedCardToDto(SfCard source)
-        {
-            var result = new FullCardResponse
-            {
-                Name = source.Name,
-                Id = source.Id,
-                LargeImage = source.ImageUris.ContainsKey(CardImageTypes.Large) ? source.ImageUris[CardImageTypes.Large] : null,
-                SmallImage = source.ImageUris.ContainsKey(CardImageTypes.Small) ? source.ImageUris[CardImageTypes.Small] : null,
+                CardId = source.CardId,
+                PrintId = source.PrintId,
+                FormattedCardName = GetFormattedNameOfCard(source),
                 Legalities1 = GetFirstHalfOfLegalities(source),
                 Legalities2 = GetSecondHalfOfLegalities(source),
                 CardCount = 1,
-                Text = GetTextOfCard(source),
-                CardType = GetBaseCardTypeFromTypeLine(source.TypeLine)
+                CardFaces = MapCardFacesOf(source),
+                IsTransformable = source.IsTransformable,
             };
+
+            return result;
+        }
+
+        private static ICollection<CardFace> MapCardFacesOf(SfCard source)
+        {
+            var result = new List<CardFace>();
+            if (source.IsTransformable)
+            {
+                result = source.CardFaces.Select(cf => new CardFace
+                {
+                    LargeImage = cf.ImageUris.ContainsKey(CardImageTypes.Large) ? cf.ImageUris[CardImageTypes.Large] : null,
+                    SmallImage = cf.ImageUris.ContainsKey(CardImageTypes.Small) ? cf.ImageUris[CardImageTypes.Small] : null,
+                    CroppedImage = cf.ImageUris.ContainsKey(CardImageTypes.Border_Crop) ? cf.ImageUris[CardImageTypes.Border_Crop] : null,
+                    Name = cf.Name,
+                    Text = cf.Text,
+                    CardType = GetBaseCardTypeFromTypeLine(cf.TypeLine),
+                }).ToList();
+            }
+            else
+            {
+                result.Add(new CardFace
+                {
+                    LargeImage = source.ImageUris.ContainsKey(CardImageTypes.Large) ? source.ImageUris[CardImageTypes.Large] : null,
+                    SmallImage = source.ImageUris.ContainsKey(CardImageTypes.Small) ? source.ImageUris[CardImageTypes.Small] : null,
+                    CroppedImage = source.ImageUris.ContainsKey(CardImageTypes.Border_Crop) ? source.ImageUris[CardImageTypes.Border_Crop] : null,
+                    Name = source.Name,
+                    Text = GetTextOfCard(source),
+                    CardType = GetBaseCardTypeFromTypeLine(source.TypeLine),
+                });
+            }
 
             return result;
         }
@@ -114,6 +145,18 @@ namespace Tolarian.Copyshop.Controller.Mappers
                 return (count / 2) + 1;
         }
 
+        private static string GetFormattedNameOfCard(SfCard source)
+        {
+            if (source.IsTransformable)
+            {
+                return string.Join(" // ", source.CardFaces.Select(c => c.Name).ToArray());
+            }
+            else
+            {
+                return source.Name ?? "";
+            }
+        }
+
         private static string GetTextOfCard(SfCard source)
         {
             if (source.IsMultifaced)
@@ -132,6 +175,9 @@ namespace Tolarian.Copyshop.Controller.Mappers
 
             typesOfCard = typesOfCard.Select(str => str.ToLower().Trim()).ToList();
             typesOfCard.RemoveAll(str => string.IsNullOrWhiteSpace(str) || str == "-");
+
+            if (typesOfCard.Contains("token"))
+                return CardType.Token;
 
             if (typesOfCard.Contains("creature"))
                 return CardType.Creature;

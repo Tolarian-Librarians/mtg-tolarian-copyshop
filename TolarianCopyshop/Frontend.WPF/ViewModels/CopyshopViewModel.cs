@@ -1,24 +1,16 @@
-﻿using MahApps.Metro.Controls;
-using MahApps.Metro.Controls.Dialogs;
-using MahApps.Metro.SimpleChildWindow;
+﻿using MahApps.Metro.Controls.Dialogs;
 using Microsoft.Win32;
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Threading;
 using Tolarian.Copyshop.Controller;
 using Tolarian.Copyshop.Controller.Interfaces;
-using Tolarian.Copyshop.Controller.ResponseObjects;
 using Tolarian.Copyshop.ScreenPresenter.Base;
+using Tolarian.Copyshop.ScreenPresenter.Communication;
 using Tolarian.Copyshop.ScreenPresenter.Model;
 using Tolarian.Copyshop.ScreenPresenter.Views;
-using static MahApps.Metro.SimpleChildWindow.ChildWindowManager;
 
 namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
 {
@@ -30,19 +22,19 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
         private readonly CardController _cardController;
         private readonly DeckController _deckController;
         private readonly PrintController _printController;
-        private readonly IDialogCoordinator _dialogCoordinator;
+        private readonly Dialogs _dialogs;
 
         #endregion
 
         #region Constructor
 
-        public CopyShopViewModel(CardController cardController, PrintController printController, DeckController deckController, DialogCoordinator dialogCoordinator)
+        public CopyShopViewModel(CardController cardController, PrintController printController, DeckController deckController, Dialogs dialogs)
         {
             _copyshop = this;
             this._cardController = cardController;
             this._printController = printController;
-            _deckController = deckController;
-            this._dialogCoordinator = dialogCoordinator;
+            this._deckController = deckController;
+            this._dialogs = dialogs;
 
             // Commands
             this.NewCommand = new Command(this.NewDeck);
@@ -113,7 +105,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
                 };
                 if (openFileDialog.ShowDialog() == true)
                 {
-                    DeckBuilderViewModel.GetInstance().AddCards(this._deckController.LoadDeckFromFile(openFileDialog.FileName).Cast<FullCard>(), true);
+                    DeckBuilderViewModel.GetInstance().AddCards(this._deckController.LoadDeckFromFile(openFileDialog.FileName).Cast<FullCardModel>(), true);
                     this.SaveFile = openFileDialog.FileName;
                 }
             }
@@ -128,7 +120,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             {
                 return true;
             }
-            switch (this.ShowQuestion("Save", "Do you want to save your Deck?", MessageDialogStyle.AffirmativeAndNegativeAndSingleAuxiliary))
+            switch (this._dialogs.ShowQuestionOnUIThread("Save", "Do you want to save your Deck?", MessageDialogStyle.AffirmativeAndNegativeAndSingleAuxiliary))
             {
                 case MessageDialogResult.Canceled:
                 case MessageDialogResult.FirstAuxiliary:
@@ -176,13 +168,14 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
 
         private async void ImportDeck(object commandParameter)
         {
-            if (commandParameter is string importType && this.HandleRequestSave())
+            if (commandParameter is string importType)
             {
                 bool overrideDeck = false;
                 if (DeckBuilderViewModel.GetInstance().DeckCards.Count > 0)
                 {
-                    switch (this.ShowQuestion("Import", "Do you want to override your Deck?", MessageDialogStyle.AffirmativeAndNegativeAndSingleAuxiliary, "Save Deck & Override", "Discard Deck & Override", "Add Cards"))
+                    switch (this._dialogs.ShowQuestionOnUIThread("Import", "Do you want to override your Deck?", MessageDialogStyle.AffirmativeAndNegativeAndDoubleAuxiliary, "Save Deck & Override", "Discard Deck & Override", "Add Cards", "Cancel"))
                     {
+                        case MessageDialogResult.SecondAuxiliary:
                         case MessageDialogResult.Canceled:
                             return;
                         case MessageDialogResult.Negative:
@@ -202,7 +195,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
                 string importCards = string.Empty;
                 if (importType.Equals("TEXT", StringComparison.OrdinalIgnoreCase))
                 {
-                    importCards = await CopyShopView.GetInstance().ShowChildWindowAsync<string>(new ImportCardsChildView() { IsModal = false }).ConfigureAwait(false);
+                    importCards = await this._dialogs.ShowChildWindowOnUIThread<string>(new ImportCardsChildView()).ConfigureAwait(false);
                 }
                 else if (importType.Equals("CLIPBOARD", StringComparison.OrdinalIgnoreCase))
                 {
@@ -213,17 +206,25 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
                     return;
                 }
 
-                this.ShowProgress("IMPORT", "Please wait while your deck is imported...", new Action(() => this.ImportDeckCards(importCards, overrideDeck)));
+                if (!string.IsNullOrWhiteSpace(importCards))
+                {
+                    this._dialogs.ShowProgressOnUIThread("IMPORT", "Please wait while your deck is imported...", new Action(() => this.ImportDeckCards(importCards, overrideDeck)));
+                }
             }
         }
 
         private void ImportDeckCards(string cards, bool overrideDeck)
         {
-            List<IFullCard> importedCards = this._cardController.GetCardsByNameList(cards ?? "");
-            this.SendErrorMessage(this._cardController.ErrorMessage);
-            if (importedCards.Count > 0)
+            var response = this._cardController.GetCardsByImportString(cards ?? "");
+            this._dialogs.SendErrorMessage(this._cardController.GetErrorMessage());
+            if (response.Cards.Count > 0)
             {
-                DeckBuilderViewModel.GetInstance().AddCards(importedCards.ConvertAll(card => new FullCard(card)), overrideDeck);
+                DeckBuilderViewModel.GetInstance().AddCards(response.Cards.ConvertAll(FullCardModel.Create), overrideDeck);
+            }
+
+            if (!string.IsNullOrWhiteSpace(response.NotFound))
+            {
+                this._dialogs.ShowMessageOnUIThread("Missing Cards", "The following cards could not be found:" + Environment.NewLine + response.NotFound);
             }
         }
 
@@ -237,7 +238,8 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
 
             if (printDlg.ShowDialog() == true)
             {
-                _printController.PrintDeck(printDlg, DeckBuilderViewModel.GetInstance().DeckCards.Cast<IFullCard>().ToList());
+                this._printController.PrintDeck(printDlg, DeckBuilderViewModel.GetInstance().DeckCards.Cast<IFullCard>().ToList());
+                Notifications.SendNotification("Print", "Your deck has been send to your selected Printer. Enjoy!", System.Windows.Forms.ToolTipIcon.Info);
             }
         }
 
@@ -245,50 +247,8 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
         {
             if (commandParameter is string link && Uri.TryCreate(link, UriKind.Absolute, out Uri hyperlink))
             {
-                Process.Start(new ProcessStartInfo(hyperlink.AbsoluteUri));
+                _ = Process.Start(new ProcessStartInfo(hyperlink.AbsoluteUri));
             }
-        }
-
-        // Methods
-        private void SendErrorMessage(string errorMessage)
-        {
-            if (!string.IsNullOrEmpty(errorMessage))
-            {
-                this.ShowMessage("Error", errorMessage);
-            }
-        }
-
-        #endregion
-
-        #region Dialogs
-
-        internal async void ShowMessage(string header, string message)
-            => await this._dialogCoordinator.ShowMessageAsync(this, header, message).ConfigureAwait(false);
-
-        internal MessageDialogResult ShowQuestion(string header, string message, MessageDialogStyle style,
-            string affirmativeButtonText = "YES", string negativeButtonText = "NO", string firstAuxiliaryButtonText = "CANCEL", string secondAuxiliaryButtonText = "")
-            => CopyShopView.GetInstance().ShowModalMessageExternal(header, message, style,
-                 new MetroDialogSettings()
-                 {
-                     AffirmativeButtonText = affirmativeButtonText,
-                     NegativeButtonText = negativeButtonText,
-                     FirstAuxiliaryButtonText = firstAuxiliaryButtonText,
-                     SecondAuxiliaryButtonText = secondAuxiliaryButtonText,
-                     DialogResultOnCancel = MessageDialogResult.Canceled,
-                     DefaultButtonFocus = MessageDialogResult.Affirmative
-                 });
-
-        internal async void ShowProgress(string header, string message, Action FunctionWhileProgress)
-        {
-            // Show...
-            ProgressDialogController controller = await this._dialogCoordinator.ShowProgressAsync(this, header, message).ConfigureAwait(true);
-            controller.SetIndeterminate();
-
-            // Do your work...
-            await Task.Run(FunctionWhileProgress).ConfigureAwait(true);
-
-            // Close...
-            await controller.CloseAsync().ConfigureAwait(true);
         }
 
         #endregion

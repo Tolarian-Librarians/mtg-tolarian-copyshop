@@ -2,22 +2,28 @@
 using System;
 using System.Threading.Tasks;
 using Tolarian.Copyshop.Business.Models.SfCardInfo;
+using Tolarian.Copyshop.Business.Models.SfSetInfo;
 
 namespace Tolarian.Copyshop.ScryfallDataAccess
 {
     public interface IScryfallApi
     {
-        [Get("/cards/{id}")]
-        Task<ApiResponse<SfCard>> GetCardById(Guid id);
+        [Get("/cards/{printId}")]
+        Task<ApiResponse<SfCard>> GetCardByPrintId(Guid printId);
 
-        [Get("/cards/search?q=\"{searchQuery}\"")]
-        Task<ApiResponse<SfPaginatedCardList>> GetCardsBySearchQuery(string searchQuery);
-        
-        [Get("/cards/search?q=!\"{searchQuery}\"&unique=art")]
-        Task<ApiResponse<SfPaginatedCardList>> GetCardsBySearchQueryUniqueArt(string searchQuery);
+        [Get("/cards/autocomplete?q=\"{searchQuery}\"&include_extras={includeExtras}")]
+        Task<ApiResponse<SfCatalog>> GetCardsByAutoCompleteQuery(string searchQuery, bool includeExtras = true);
+
+        [Get("/cards/named?exact=\"{cardName}\"")]
+        Task<ApiResponse<SfPaginatedCardList>> GetCardByExactName(string cardName);
+
+        [Get("/cards/search?q=oracleid:{oracleId}&unique=prints&include_extras=true&page={page}")]
+        Task<ApiResponse<SfPaginatedCardList>> GetPrintsBySearchQuery(Guid oracleId, int page);
 
         [Post("/cards/collection")]
-        Task<ApiResponse<SfPaginatedCardList>> GetCardsByCollection([Body] SfIdentifierContainer identifiers);
+        Task<ApiResponse<SfCardCollection>> GetCardsByCollection([Body] SfIdentifierContainer identifiers);
 
+        [Get("/sets")]
+        Task<ApiResponse<SfPaginatedSetList>> GetAllSets();
     }
 }

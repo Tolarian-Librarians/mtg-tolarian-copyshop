@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Tolarian.Copyshop.Business.DbRequestModels;
 using Tolarian.Copyshop.Business.Interfaces;
 using Tolarian.Copyshop.Business.Models.SfCardInfo;
-using Tolarian.Copyshop.Business.Utility;
 
 namespace Tolarian.Copyshop.Business.UseCaseInteractors
 {
@@ -16,35 +16,27 @@ namespace Tolarian.Copyshop.Business.UseCaseInteractors
             _gateway = gateway;
         }
 
-        public SfCard GetCardById(Guid id)
+        public SfCard GetCardByPrintId(Guid printId)
         {
-            SfCard result = _gateway.GetCardById(id);
+            SfCard result = _gateway.GetCardByPrintId(printId);
             return result;
         }
 
-        public List<SfCard> GetCardsByNameList(List<string> cardNames)
-        {
-            //Scryfall will return a maximum of 75 Cards per request
-            int scryfallApiReturnCountMaximum = 75;
-
-            List<string> resolvedNames = DeckImportHelper.ResolveCardNamesFromList(cardNames);
-
-            List<List<string>> requestLists = ChunkListBySize(resolvedNames, scryfallApiReturnCountMaximum);
-
-            List<SfCard> result = requestLists.SelectMany(r => _gateway.GetCardsByNameList(r).Data.ToList()).ToList();
-            return result;
-        }
-
-        public (List<SfCard>, int) GetCardsBySearchQuery(string searchQuery, int maxCountOfItems)
+        public (List<SfCard>, string) GetCardsBySearchQuery(string searchQuery, int maxCountOfItems)
         {
             const int minimumQueryLength = 3;
-            if (searchQuery.Length < minimumQueryLength)
+            if (searchQuery.Length < minimumQueryLength || maxCountOfItems <= 0)
             {
-                return (new List<SfCard>(), 0);
+                return (new List<SfCard>(), "0");
             }
 
-            List<SfCard> result = _gateway.GetCardsByQuery(searchQuery).Data.ToList();
-            return (TruncateListToMaxSize(maxCountOfItems, result), result.Count);
+            List<string> cardNames = _gateway.GetCardNamesByAutoCompleteQuery(searchQuery).Data.ToList();
+
+            List<SfCard> result = _gateway.GetCardCollectionByIdentifiers(
+                cardNames.Select(name => new GetCardCollectionRequest { Name = name}).ToList()
+                ).Data.ToList();
+
+            return (TruncateListToMaxSize(maxCountOfItems, result), cardNames.Count >= 20 ? "20+" : cardNames.Count.ToString());
         }
 
         private List<SfCard> TruncateListToMaxSize(int maxCountOfItems, List<SfCard> targetList)
@@ -58,13 +50,9 @@ namespace Tolarian.Copyshop.Business.UseCaseInteractors
             return resultList;
         }
 
-        public static List<List<T>> ChunkListBySize<T>(List<T> source, int chunkSize)
+        public List<SfCard> GetPrintsOfCard(Guid cardId)
         {
-            return source
-                .Select((x, i) => new { Index = i, Value = x })
-                .GroupBy(x => x.Index / chunkSize)
-                .Select(x => x.Select(v => v.Value).ToList())
-                .ToList();
+            return _gateway.GetPrintsOfCard(cardId);
         }
     }
 }

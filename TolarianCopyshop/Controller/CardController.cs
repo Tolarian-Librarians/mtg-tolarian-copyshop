@@ -4,7 +4,6 @@ using System.Linq;
 using System.Web;
 using Tolarian.Copyshop.Business.Interfaces;
 using Tolarian.Copyshop.Business.Models.SfCardInfo;
-using Tolarian.Copyshop.Controller.Interfaces;
 using Tolarian.Copyshop.Controller.ResponseObjects;
 using Tolarian.Copyshop.Controller.Mappers;
 
@@ -13,31 +12,33 @@ namespace Tolarian.Copyshop.Controller
     public class CardController : TolarianControllerBase
     {
         private readonly ICardDataRequester _requester;
+        private readonly IDeckImportInteractor _importInteractor;
 
-        public CardController(ICardDataRequester requester)
+        public CardController(ICardDataRequester requester, IDeckImportInteractor importInteractor)
         {
             _requester = requester;
+            _importInteractor = importInteractor;
         }
 
         /// <summary>
         /// Gets the information for one Card by ID. This returns a List because the target card may be multifaced.
         /// </summary>
-        public List<IFullCard> GetCardById(Guid id)
+        public FullCardResponse GetCardByPrintId(Guid printId)
         {
-            List<IFullCard> response = null;
+            FullCardResponse response = new FullCardResponse();
+
             try
             {
-                SfCard card = _requester.GetCardById(id);
-
-                response = CardMapper.MapToCardDto(card);
+                SfCard card = _requester.GetCardByPrintId(printId);
+                response.Card = CardMapper.MapToCardDto(card);
             }
             catch (HttpException ex)
             {
-                this.ErrorMessage = BuildErrorMessage(ex);
+                SetErrorMessage(ex);
             }
             catch (AggregateException ex)
             {
-                this.ErrorMessage = BuildErrorMessage(ex);
+                SetErrorMessage(ex);
             }
 
             return response;
@@ -45,43 +46,65 @@ namespace Tolarian.Copyshop.Controller
 
         public CardSearchResponse GetSearchResults(string query, int maxCountOfItems)
         {
-            CardSearchResponse response = null;
+            CardSearchResponse response = new CardSearchResponse();
+
             try
             {
-                (List<SfCard>, int) businessResponse = _requester.GetCardsBySearchQuery(query, maxCountOfItems);
-                response = CardMapper.MapToSearchResultDto(businessResponse.Item1, businessResponse.Item2);
+                (List<SfCard> Cards, string amountFound) businessResponse = _requester.GetCardsBySearchQuery(query, maxCountOfItems);
+                response = CardMapper.MapToSearchResultDto(businessResponse.Cards, businessResponse.amountFound);
             }
             catch (HttpException ex)
             {
-                this.ErrorMessage = BuildErrorMessage(ex);
+                SetErrorMessage(ex);
             }
             catch (AggregateException ex)
             {
-                this.ErrorMessage = BuildErrorMessage(ex);
+                SetErrorMessage(ex);
             }
 
             return response;
         }
 
-        public List<IFullCard> GetCardsByNameList(string importString)
+        public CardArtworkResponse GetArtworksOfCard(Guid cardId)
         {
-            List<IFullCard> response = new List<IFullCard>();
-
+            CardArtworkResponse response = new CardArtworkResponse();
+                
             try
             {
-                List<string> lines = importString.Split(
-                                new[] { "\r\n", "\r", "\n" },
-                                StringSplitOptions.None).ToList();
-
-                return CardMapper.MapToCardDto(_requester.GetCardsByNameList(lines));
+                var artworks = CardMapper.MapToArtworkDto(_requester.GetPrintsOfCard(cardId));
+                artworks = artworks.OrderByDescending(card => card.ReleaseDate).ToList();
+                response.Artworks = artworks;
             }
             catch (HttpException ex)
             {
-                this.ErrorMessage = BuildErrorMessage(ex);
+                SetErrorMessage(ex);
             }
             catch (AggregateException ex)
             {
-                this.ErrorMessage = BuildErrorMessage(ex);
+                SetErrorMessage(ex);
+            }
+
+            return response;
+        }
+
+        public CardImportResponse GetCardsByImportString(string importString)
+        {
+            CardImportResponse response = new CardImportResponse();
+
+            try
+            {
+                List<string> lines = CardMapper.PrepareImportStringForBusiness(importString);
+                (List<SfCard> Cards, string NotFound) = _importInteractor.GetCardsForImport(lines);
+                response.Cards = CardMapper.MapToCardDto(Cards);
+                response.NotFound = NotFound;
+            }
+            catch (HttpException ex)
+            {
+                SetErrorMessage(ex);
+            }
+            catch (AggregateException ex)
+            {
+                SetErrorMessage(ex);
             }
 
             return response;

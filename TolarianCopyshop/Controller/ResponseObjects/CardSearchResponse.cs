@@ -5,7 +5,8 @@ namespace Tolarian.Copyshop.Controller.ResponseObjects
 {
     public class CardSearchResponse
     {
-        public int ResultsCount { get; set; }
-        public List<CardSearchCard> Results { get; set; }
+        public string ResultsCount { get; set; }
+
+        public List<SearchCard> Results { get; set; } = new List<SearchCard>();
     }
 }

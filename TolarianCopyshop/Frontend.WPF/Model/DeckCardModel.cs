@@ -1,19 +1,18 @@
 ﻿using System.Collections.ObjectModel;
-using Tolarian.Copyshop.Controller.ResponseObjects;
 using Tolarian.Copyshop.ScreenPresenter.Base;
 
 namespace Tolarian.Copyshop.ScreenPresenter.Model
 {
     public class DeckCardModel : BindableBase
     {
-        private ObservableCollection<FullCard> _deckCards;
+        private ObservableCollection<FullCardModel> _deckCards;
 
         public DeckCardModel()
         {
-            this.DeckCards = new ObservableCollection<FullCard>();
+            this.DeckCards = new ObservableCollection<FullCardModel>();
         }
 
-        public ObservableCollection<FullCard> DeckCards
+        public ObservableCollection<FullCardModel> DeckCards
         {
             get => this._deckCards;
             set => this.SetProperty(ref this._deckCards, value);

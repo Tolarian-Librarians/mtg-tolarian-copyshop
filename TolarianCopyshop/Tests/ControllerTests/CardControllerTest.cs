@@ -6,7 +6,6 @@ using Moq;
 using Tolarian.Copyshop.Controller;
 using Tolarian.Copyshop.Controller.ResponseObjects;
 using Tolarian.Copyshop.Business.Models.Enums;
-using Tolarian.Copyshop.Controller.Interfaces;
 using Tolarian.Copyshop.Business.Interfaces;
 using Tolarian.Copyshop.Business.Models.SfCardInfo;
 
@@ -18,20 +17,22 @@ namespace Tests.ControllerTests
     {
         MockRepository _repo;
         Mock<ICardDataRequester> _requesterMock;
+        Mock<IDeckImportInteractor> _importerMock;
 
         [TestInitialize]
         public void Initialize()
         {
             _repo = new MockRepository(MockBehavior.Strict);
             _requesterMock = _repo.Create<ICardDataRequester>();
+            _importerMock = _repo.Create<IDeckImportInteractor>();
         }
 
         [TestMethod]
         public void GetSearchResults_Test()
         {
             //Arrange
-            SfCard dummy = GetDummyCard();
-            _requesterMock.Setup(m => m.GetCardsBySearchQuery(It.IsAny<string>(), It.IsAny<int>())).Returns((new List<SfCard> { dummy }, 1));
+            SfCard dummy = TestUtils.GetDummyCard();
+            _requesterMock.Setup(m => m.GetCardsBySearchQuery(It.IsAny<string>(), It.IsAny<int>())).Returns((new List<SfCard> { dummy }, "1"));
             CardController unitUnterTest = GetController();
 
             //Act
@@ -39,123 +40,115 @@ namespace Tests.ControllerTests
 
             //Assert
             Assert.IsNotNull(response);
-            Assert.AreEqual(1, response.ResultsCount);
-            CardSearchCard result = response.Results[0];
+            Assert.AreEqual("1", response.ResultsCount);
+            SearchCard result = response.Results[0];
             Assert.AreEqual(dummy.Name, result.Name);
-            Assert.AreEqual(dummy.Id, result.Id);
+            Assert.AreEqual(dummy.PrintId, result.PrintId);
         }
 
         [TestMethod]
-        public void GetCardById_StandardCard_Test()
+        public void GetCardByPrintId_StandardCard_Test()
         {
             //Arrange
-            SfCard expected = GetDummyCard();
-            _requesterMock.Setup(m => m.GetCardById(It.IsAny<Guid>())).Returns(expected);
+            SfCard expected = TestUtils.GetDummyCard();
+            _requesterMock.Setup(m => m.GetCardByPrintId(It.IsAny<Guid>())).Returns(expected);
             CardController unitUnterTest = GetController();
 
             //Act
-            List<IFullCard> response = unitUnterTest.GetCardById(Guid.Empty);
+            FullCardResponse response = unitUnterTest.GetCardByPrintId(Guid.Empty);
 
             //Assert
             Assert.IsNotNull(response);
-            Assert.AreEqual(1, response.Count);
-            Assert.AreEqual(expected.Name, response[0].Name);
+            Assert.IsNotNull(response.Card);
+            Assert.AreEqual(1, response.Card.CardFaces.Count);
+            Assert.AreEqual(expected.Name, response.Card.CardFaces.First().Name);
 
             //Check that the legalities were separated correctly
             List<MtgPlayModes> expectedFirstHalf = new List<MtgPlayModes>{ MtgPlayModes.Commander, MtgPlayModes.Brawl, MtgPlayModes.Duel, MtgPlayModes.Future};
             List<MtgPlayModes> expectedSecondHalf = new List<MtgPlayModes>{ MtgPlayModes.Historic, MtgPlayModes.Legacy, MtgPlayModes.Modern};
 
-            Assert.IsTrue(expectedFirstHalf.All(legality => response[0].Legalities1.ContainsKey(legality.ToString())));
-            Assert.IsTrue(expectedSecondHalf.All(legality => response[0].Legalities2.ContainsKey(legality.ToString())));
+            Assert.IsTrue(expectedFirstHalf.All(legality => response.Card.Legalities1.ContainsKey(legality.ToString())));
+            Assert.IsTrue(expectedSecondHalf.All(legality => response.Card.Legalities2.ContainsKey(legality.ToString())));
         }
 
         [TestMethod]
-        public void GetCardById_DoubleCard_Test()
+        public void GetCardByPrintId_DoubleCard_Test()
         {
             //Arrange
-            SfCard expected = GetDummyDoubleCard();
+            SfCard expected = TestUtils.GetDummyDoubleCard();
 
-            _requesterMock.Setup(m => m.GetCardById(It.IsAny<Guid>())).Returns(expected);
+            _requesterMock.Setup(m => m.GetCardByPrintId(It.IsAny<Guid>())).Returns(expected);
             CardController unitUnterTest = GetController();
 
             //Act
-            List<IFullCard> response = unitUnterTest.GetCardById(Guid.Empty);
+            FullCardResponse response = unitUnterTest.GetCardByPrintId(Guid.Empty);
 
             //Assert
             Assert.IsNotNull(response);
-            Assert.AreEqual(1, response.Count);
-            Assert.AreEqual(expected.Name, response[0].Name);
-            Assert.AreEqual("Text 1 // Text 2", response[0].Text);
+            Assert.IsNotNull(response.Card);
+            Assert.AreEqual(1, response.Card.CardFaces.Count);
+            Assert.AreEqual(expected.Name, response.Card.CardFaces.First().Name);
+            Assert.AreEqual("Text 1 // Text 2", response.Card.CardFaces.First().Text);
 
         }
 
         [TestMethod]
-        public void GetCardById_DualFaceCard_Test()
+        public void GetCardByPrintId_DualFaceCard_Test()
         {
             //Arrange
-            SfCard expected = GetDummyDualFacedCard();
+            SfCard expected = TestUtils.GetDummyDualFacedCard();
 
-            _requesterMock.Setup(m => m.GetCardById(It.IsAny<Guid>())).Returns(expected);
+            _requesterMock.Setup(m => m.GetCardByPrintId(It.IsAny<Guid>())).Returns(expected);
             CardController unitUnterTest = GetController();
 
             //Act
-            List<IFullCard> response = unitUnterTest.GetCardById(Guid.Empty);
+            FullCardResponse response = unitUnterTest.GetCardByPrintId(Guid.Empty);
 
             //Assert
             Assert.IsNotNull(response);
-            Assert.AreEqual(2, response.Count);
-            Assert.AreEqual(expected.CardFaces[0].Name, response[0].Name);
-            Assert.AreEqual(expected.CardFaces[1].Name, response[1].Name);
+            Assert.IsNotNull(response.Card);
+            Assert.AreEqual(2, response.Card.CardFaces.Count);
+            Assert.AreEqual(expected.CardFaces[0].Name, response.Card.CardFaces.First().Name);
+            Assert.AreEqual(expected.CardFaces[1].Name, response.Card.CardFaces.Skip(1).First().Name);
+        }
+
+        [TestMethod]
+        public void GetPrintsOfCard_LongSetName_Test()
+        {
+            SfCard dummy = TestUtils.GetDummyCard();
+            dummy.SetName = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+            dummy.SetCode = "SSS";
+            _requesterMock.Setup(m => m.GetPrintsOfCard(It.IsAny<Guid>())).Returns(new List<SfCard>{ dummy });
+            CardController unitUnterTest = GetController();
+
+            var result = unitUnterTest.GetArtworksOfCard(Guid.Empty);
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(1, result.Artworks.Count);
+            Assert.AreEqual(23, result.Artworks[0].SetName.Length);
+            Assert.IsTrue(result.Artworks[0].SetName.EndsWith("..."));
+        }
+
+        [TestMethod]
+        public void GetPrintsOfCard_Test()
+        {
+            SfCard dummy = TestUtils.GetDummyCard();
+            dummy.SetName = "Kaladesh";
+            dummy.SetCode = "KDH";
+            _requesterMock.Setup(m => m.GetPrintsOfCard(It.IsAny<Guid>())).Returns(new List<SfCard> { dummy });
+            CardController unitUnterTest = GetController();
+
+            var result = unitUnterTest.GetArtworksOfCard(Guid.Empty);
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(1, result.Artworks.Count);
+            Assert.AreEqual(result.Artworks[0].SetName.Length, dummy.SetName.Length);
+            Assert.IsFalse(result.Artworks[0].SetName.EndsWith("..."));
         }
 
         private CardController GetController()
         {
-            return new CardController(_requesterMock.Object);
-        }
-
-        private SfCard GetDummyDualFacedCard()
-        {
-            SfCard card = GetDummyDoubleCard();
-            card.ImageUris = null;
-
-            return card;
-        }
-
-        private SfCard GetDummyDoubleCard()
-        {
-            SfCard card = GetDummyCard();
-            card.Text = null;
-            card.CardFaces = new List<SfCardFace> { 
-                new SfCardFace 
-                {
-                    Name = "Face 1",
-                    Text = "Text 1",
-                    TypeLine = "Artifact Creature - Dummy",
-                    ImageUris = new Dictionary<CardImageTypes, Uri>() ,
-                },
-                new SfCardFace 
-                { 
-                    Name = "Face 2", 
-                    Text = "Text 2", 
-                    TypeLine = "Artifact Creature - Dummy",
-                    ImageUris = new Dictionary<CardImageTypes, Uri>(),
-                } 
-            };
-
-            return card;
-        }
-
-        private SfCard GetDummyCard()
-        {
-            return new SfCard
-            {
-                Name = "Dummy Mtg Card",
-                Id = Guid.Empty,
-                ImageUris = new Dictionary<CardImageTypes, Uri> { { CardImageTypes.Png, new Uri("https://img.scryfall.com/cards/png/front/e/6/e672d408-997c-4a19-810a-3da8411eecf2.png?1568004958") }, { CardImageTypes.Small, new Uri("https://img.scryfall.com/cards/small/front/e/6/e672d408-997c-4a19-810a-3da8411eecf2.jpg?1568004958") } },
-                Legalities = new Dictionary<MtgPlayModes, string> { { MtgPlayModes.Commander, "legal" }, { MtgPlayModes.Brawl, "legal" }, { MtgPlayModes.Duel, "legal" }, { MtgPlayModes.Future, "legal" }, { MtgPlayModes.Historic, "legal" }, { MtgPlayModes.Legacy, "legal" }, { MtgPlayModes.Modern, "legal" } },
-                Text = "Does dummy stuff.",
-                TypeLine = "Artifact Creature - Dummy"
-            };
+            return new CardController(_requesterMock.Object, _importerMock.Object);
         }
     }
 }
