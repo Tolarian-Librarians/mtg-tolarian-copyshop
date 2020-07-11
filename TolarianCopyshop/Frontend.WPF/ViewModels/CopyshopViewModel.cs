@@ -42,6 +42,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             this.SaveCommand = new Command(this.SaveDeck);
             this.ImportCommand = new Command(this.ImportDeck);
             this.ClearCommand = new Command(this.ClearDeck);
+            this.ImportTokenCommand = new Command(this.ImportToken);
             this.PrintCommand = new Command(this.PrintDeck);
             this.OpenLinkCommand = new Command(this.OpenLink);
         }
@@ -57,6 +58,8 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
         public Command SaveCommand { get; }
 
         public Command ImportCommand { get; }
+
+        public Command ImportTokenCommand { get; }
 
         public Command PrintCommand { get; }
 
@@ -164,6 +167,11 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             {
                 this.HandleSave(saveAs);
             }
+        }
+
+        private void ImportToken(object _)
+        {
+            // ToDo: Start Import
         }
 
         private async void ImportDeck(object commandParameter)
