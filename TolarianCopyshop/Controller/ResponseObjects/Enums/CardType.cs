@@ -10,6 +10,7 @@
         Enchantment,
         Artifact,
         Unknown,
-        Token
+        Token,
+        Emblem
     }
 }

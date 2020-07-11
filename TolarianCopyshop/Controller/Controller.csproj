@@ -58,7 +58,9 @@
     <Compile Include="ResponseObjects\CardArtworkResponse.cs" />
     <Compile Include="ResponseObjects\CardFace.cs" />
     <Compile Include="ResponseObjects\CardImportResponse.cs" />
+    <Compile Include="ResponseObjects\Enums\MtgColor.cs" />
     <Compile Include="ResponseObjects\FullCardResponse.cs" />
+    <Compile Include="ResponseObjects\GetDeckStatisticsResponse.cs" />
     <Compile Include="ResponseObjects\SearchCard.cs" />
     <Compile Include="ResponseObjects\CardSearchResponse.cs" />
     <Compile Include="ResponseObjects\Enums\CardType.cs" />

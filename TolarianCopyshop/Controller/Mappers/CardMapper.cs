@@ -13,7 +13,7 @@ namespace Tolarian.Copyshop.Controller.Mappers
     {
         internal static List<Guid> GetTokenGuidsOfDeck(List<IFullCard> deck)
         {
-            var nontokenCards = deck.Where(dc => !dc.CardFaces.Any(cf => cf.CardType == CardType.Token));
+            var nontokenCards = deck.Where(dc => !dc.CardFaces.Any(cf => cf.CardType == ResponseObjects.Enums.CardType.Token));
                 
             var tokenGuids = nontokenCards.SelectMany(dc => dc?.RelatedCards?.Where(rc => rc?.Type == RelatedCardType.token)?.Select(rc => rc.Id)
             ?? new List<Guid>())?.ToList();
@@ -102,6 +102,9 @@ namespace Tolarian.Copyshop.Controller.Mappers
                 CardFaces = MapCardFacesOf(source),
                 RelatedCards = MapRelatedCardsOf(source),
                 IsTransformable = source.IsTransformable,
+                ConvertedManaCost = source.ConvertedManaCost,
+                ColorIdentity = source.ColorIdentity.Select(c => (ResponseObjects.Enums.MtgColor)((int)c)).ToList(),
+                ManaCostLine = source.ManaCostLine,
             };
 
             return result;
@@ -197,7 +200,7 @@ namespace Tolarian.Copyshop.Controller.Mappers
             }
         }
 
-        private static CardType GetBaseCardTypeFromTypeLine(string cardType)
+        private static ResponseObjects.Enums.CardType GetBaseCardTypeFromTypeLine(string cardType)
         {
             List<string> typesOfCard = cardType.Split(' ').ToList();
 
@@ -205,30 +208,30 @@ namespace Tolarian.Copyshop.Controller.Mappers
             typesOfCard.RemoveAll(str => string.IsNullOrWhiteSpace(str) || str == "-");
 
             if (typesOfCard.Contains("token"))
-                return CardType.Token;
+                return ResponseObjects.Enums.CardType.Token;
 
             if (typesOfCard.Contains("creature"))
-                return CardType.Creature;
+                return ResponseObjects.Enums.CardType.Creature;
 
             if (typesOfCard.Contains("enchantment"))
-                return CardType.Enchantment;
+                return ResponseObjects.Enums.CardType.Enchantment;
 
             if (typesOfCard.Contains("sorcery"))
-                return CardType.Sorcery;
+                return ResponseObjects.Enums.CardType.Sorcery;
 
             if (typesOfCard.Contains("instant"))
-                return CardType.Instant;
+                return ResponseObjects.Enums.CardType.Instant;
 
             if (typesOfCard.Contains("land"))
-                return CardType.Land;
+                return ResponseObjects.Enums.CardType.Land;
 
             if (typesOfCard.Contains("artifact"))
-                return CardType.Artifact;
+                return ResponseObjects.Enums.CardType.Artifact;
 
             if (typesOfCard.Contains("planeswalker"))
-                return CardType.Planeswalker;
+                return ResponseObjects.Enums.CardType.Planeswalker;
 
-            return CardType.Unknown;
+            return ResponseObjects.Enums.CardType.Unknown;
         }
     }
 }

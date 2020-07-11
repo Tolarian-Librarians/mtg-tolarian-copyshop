@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Tolarian.Copyshop.Controller.Interfaces;
 using Tolarian.Copyshop.Controller.ResponseObjects;
+using Tolarian.Copyshop.Controller.ResponseObjects.Enums;
 using Tolarian.Copyshop.ScreenPresenter.Base;
 
 namespace Tolarian.Copyshop.ScreenPresenter.Model
@@ -17,11 +18,15 @@ namespace Tolarian.Copyshop.ScreenPresenter.Model
         private Dictionary<string, string> _legalities2;
         private Guid _printId;
         private string _setCode;
+        private string _manaCostLine;
         private ICollection<CardFace> _cardFaces;
         private ICollection<RelatedCard> _relatedCards;
         private bool _hasArtworks = true;
         private bool _isTransformable;
         private Uri _selectedCardFace;
+        private float _convertedManaCost;
+        private List<MtgColor> _colorIdentity;
+        private List<MtgColor> _producedMana;
 
         #endregion
 
@@ -47,6 +52,9 @@ namespace Tolarian.Copyshop.ScreenPresenter.Model
                 RelatedCards = card.RelatedCards,
                 IsTransformable = card.IsTransformable,
                 HasArtworks = true,
+                ConvertedManaCost = card.ConvertedManaCost,
+                ColorIdentity = card.ColorIdentity,
+                ManaCostLine = card.ManaCostLine,
             };
         }
 
@@ -59,6 +67,24 @@ namespace Tolarian.Copyshop.ScreenPresenter.Model
             get => this._cardId;
             set => this.SetProperty(ref this._cardId, value);
         }
+        
+        public float ConvertedManaCost
+        {
+            get => this._convertedManaCost;
+            set => this.SetProperty(ref this._convertedManaCost, value);
+        }
+        
+        public List<MtgColor> ColorIdentity
+        {
+            get => this._colorIdentity;
+            set => this.SetProperty(ref this._colorIdentity, value);
+        }
+        
+        public List<MtgColor> ProducedMana
+        {
+            get => this._producedMana;
+            set => this.SetProperty(ref this._producedMana, value);
+        }
 
         public Guid PrintId
         {
@@ -70,6 +96,12 @@ namespace Tolarian.Copyshop.ScreenPresenter.Model
         {
             get => this._formattedCardName;
             set => this.SetProperty(ref this._formattedCardName, value);
+        }
+        
+        public string ManaCostLine
+        {
+            get => this._manaCostLine;
+            set => this.SetProperty(ref this._manaCostLine, value);
         }
 
         public int CardCount
