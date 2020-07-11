@@ -101,14 +101,15 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
                 OpenFileDialog openFileDialog = new OpenFileDialog()
                 {
                     AddExtension = true,
-                    DefaultExt = ".xml",
-                    Filter = "XML-files (*.xml)|*.xml|All files (*.*)|*.*",
+                    DefaultExt = ".tcd",
+                    Filter = "Tolarian Copyshop Deck (*.tcd)|*.tcd|All files (*.*)|*.*",
                     InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
 
                 };
                 if (openFileDialog.ShowDialog() == true)
                 {
-                    DeckBuilderViewModel.GetInstance().AddCards(this._deckController.LoadDeckFromFile(openFileDialog.FileName).Cast<FullCardModel>(), true);
+                    this._dialogs.ShowProgressOnUIThread("Loading Deck", "Please wait while your deck is loaded...", new Action(() => DeckBuilderViewModel.GetInstance().AddCards(this._deckController.LoadDeckFromFile(openFileDialog.FileName).ConvertAll(FullCardModel.Create), true)));
+                    
                     this.SaveFile = openFileDialog.FileName;
                 }
             }
@@ -116,8 +117,6 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
 
         private bool HandleRequestSave()
         {
-            // Till save is implemented...
-            return true;
 
             if (DeckBuilderViewModel.GetInstance().DeckCards.Count == 0)
             {
@@ -147,8 +146,8 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             SaveFileDialog saveFileDialog = new SaveFileDialog()
             {
                 AddExtension = true,
-                DefaultExt = ".xml",
-                Filter = "XML-files (*.xml)|*.xml|All files (*.*)|*.*",
+                DefaultExt = ".tcd",
+                Filter = "Tolarian Copyshop Deck (*.tcd)|*.tcd|All files (*.*)|*.*",
                 InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
 
             };

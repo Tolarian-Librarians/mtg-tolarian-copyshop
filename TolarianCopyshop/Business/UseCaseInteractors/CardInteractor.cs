@@ -61,12 +61,12 @@ namespace Tolarian.Copyshop.Business.UseCaseInteractors
             return (result, result.Count.ToString());
         }
 
-        public List<SfCard> GetTokensForDeck(List<Guid> tokenGuids)
+        public List<SfCard> GetCardsByIds(List<Guid> cardIds)
         {
-            if (!tokenGuids.Any())
+            if (!cardIds.Any())
                 return new List<SfCard>();
 
-            var result = _gateway.GetCardCollectionByIdentifiers(tokenGuids.Select(tg => new GetCardCollectionRequest { Id = tg }).ToList()).Data
+            var result = _gateway.GetCardCollectionByIdentifiers(cardIds.Select(tg => new GetCardCollectionRequest { Id = tg }).ToList()).Data
                 .ToList();
             return result;
         }

@@ -10,6 +10,6 @@ namespace Tolarian.Copyshop.Business.Interfaces
         SfCard GetCardByPrintId(Guid printId);
         List<SfCard> GetPrintsOfCard(Guid cardId);
         (List<SfCard>, string) GetTokensByQuery(string searchQuery);
-        List<SfCard> GetTokensForDeck(List<Guid> tokenGuids);
+        List<SfCard> GetCardsByIds(List<Guid> tokenGuids);
     }
 }

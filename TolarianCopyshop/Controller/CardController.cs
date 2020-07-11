@@ -143,7 +143,7 @@ namespace Tolarian.Copyshop.Controller
                     deckCards.RemoveAll(c => c.CardFaces.Any(cf => cf.CardType == ResponseObjects.Enums.CardType.Token));
                 }
 
-                var businessResponse = _requester.GetTokensForDeck(CardMapper.GetTokenGuidsOfDeck(deckCards));
+                var businessResponse = _requester.GetCardsByIds(CardMapper.GetTokenGuidsOfDeck(deckCards));
                 deckCards.AddRange(CardMapper.MapToCardDto(businessResponse));
                 response.Deck = deckCards;
             }

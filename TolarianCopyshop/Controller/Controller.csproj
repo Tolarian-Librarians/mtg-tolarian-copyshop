@@ -50,6 +50,7 @@
     <Compile Include="DeckController.cs" />
     <Compile Include="Mappers\CardMapper.cs" />
     <Compile Include="Mappers\DeckMapper.cs" />
+    <Compile Include="Mappers\SaveAndLoadMapper.cs" />
     <Compile Include="PrintController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResponseObjects\AddTokensToDeckResponse.cs" />
