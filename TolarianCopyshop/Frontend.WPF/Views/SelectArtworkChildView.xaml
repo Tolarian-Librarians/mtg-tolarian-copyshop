@@ -57,7 +57,10 @@
                       Margin="15"
                       VerticalScrollBarVisibility="Auto">
 
-            <ItemsControl Margin="0,15,0,15" ItemsSource="{Binding Artworks}">
+            <ItemsControl Margin="0,15,0,15"
+                          ItemsSource="{Binding Artworks}"
+                          VirtualizingPanel.IsVirtualizing="True"
+                          VirtualizingPanel.VirtualizationMode="Recycling">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <WrapPanel />

@@ -18,6 +18,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.Model
         private Guid _printId;
         private string _setCode;
         private ICollection<CardFace> _cardFaces;
+        private bool _hasArtworks = true;
         private bool _isTransformable;
         private Uri _selectedCardFace;
 
@@ -43,6 +44,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.Model
                 SetCode = card.SetCode,
                 CardFaces = card.CardFaces,
                 IsTransformable = card.IsTransformable,
+                HasArtworks = true,
             };
         }
 
@@ -102,6 +104,12 @@ namespace Tolarian.Copyshop.ScreenPresenter.Model
         {
             get => this._isTransformable;
             set => this.SetProperty(ref this._isTransformable, value);
+        }
+
+        public bool HasArtworks
+        {
+            get => this._hasArtworks;
+            set => this.SetProperty(ref this._hasArtworks, value);
         }
 
         public Uri SelectedCardFace
