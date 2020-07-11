@@ -54,5 +54,11 @@ namespace Tolarian.Copyshop.Business.UseCaseInteractors
         {
             return _gateway.GetPrintsOfCard(cardId);
         }
+
+        public (List<SfCard>, string) GetTokensByQuery(string searchQuery)
+        {
+            var result = _gateway.GetTokensByQuery(searchQuery);
+            return (result, result.Count.ToString());
+        }
     }
 }

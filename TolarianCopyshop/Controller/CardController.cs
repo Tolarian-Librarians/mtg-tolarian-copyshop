@@ -109,5 +109,26 @@ namespace Tolarian.Copyshop.Controller
 
             return response;
         }
+        
+        public CardSearchResponse GetTokenSearchResults(string query)
+        {
+            CardSearchResponse response = new CardSearchResponse();
+
+            try
+            {
+                (List<SfCard> Cards, string amountFound) businessResponse = _requester.GetTokensByQuery(query);
+                response = CardMapper.MapToSearchResultDto(businessResponse.Cards, businessResponse.amountFound);
+            }
+            catch (HttpException ex)
+            {
+                SetErrorMessage(ex);
+            }
+            catch (AggregateException ex)
+            {
+                SetErrorMessage(ex);
+            }
+
+            return response;
+        }
     }
 }

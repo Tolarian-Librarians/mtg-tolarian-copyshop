@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using Tolarian.Copyshop.Business.DbRequestModels;
 using Tolarian.Copyshop.Business.Interfaces;
 using Tolarian.Copyshop.Business.Models.SfCardInfo;
@@ -155,6 +154,24 @@ namespace Tolarian.Copyshop.ScryfallDataAccess
                     return response.Content;
                 case HttpStatusCode.NotFound:
                     return SfCatalog.GetEmpty();
+                default:
+                    HandleUnexpectedStatusCodeForResponse(response);
+                    break;
+            }
+
+            return null;
+        }
+
+        public List<SfCard> GetTokensByQuery(string query)
+        {
+            ApiResponse<SfPaginatedCardList> response = _service.GetTokensByQuery(query).Result;
+
+            switch (response.StatusCode)
+            {
+                case HttpStatusCode.OK:
+                    return response.Content.Data.ToList();
+                case HttpStatusCode.NotFound:
+                    return  new List<SfCard>();
                 default:
                     HandleUnexpectedStatusCodeForResponse(response);
                     break;

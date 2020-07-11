@@ -11,5 +11,6 @@ namespace Tolarian.Copyshop.Business.Interfaces
         SfCard GetCardByPrintId(Guid printId);
         SfCardCollection GetCardCollectionByIdentifiers(List<GetCardCollectionRequest> cardNames);
         List<SfCard> GetPrintsOfCard(Guid oracleId);
+        List<SfCard> GetTokensByQuery(string query);
     }
 }

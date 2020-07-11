@@ -100,10 +100,24 @@ namespace Tests.ScryfallDataAccessTests
             Assert.AreEqual(2, result.Data.Length);
         }
 
+        [TestMethod]
+        public void GetTokensByQuery_Test()
+        {
+            //Arrange
+            const string query = "Gobl";
+            CardDataMapper mapper = GetMapper();
+
+            //Act
+            var result = mapper.GetTokensByQuery(query);
+
+            //Assert
+            Assert.AreEqual(result.Count, 8);
+            Assert.IsTrue(!result.Any(c => !c.Name.Contains(query) && !c.TypeLine.Contains("Token")));
+        }
+
         private CardDataMapper GetMapper()
         {
             return new CardDataMapper();
         }
-
     }
 }
