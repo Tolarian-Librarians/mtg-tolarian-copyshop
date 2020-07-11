@@ -171,7 +171,36 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
 
         private void ImportToken(object _)
         {
+            bool replaceTokens = false;
+            if (DeckBuilderViewModel.GetInstance().DeckCards.Count > 0)
+            {
+                switch (this._dialogs.ShowQuestionOnUIThread("Import Tokens", "Do you want to remove exiting tokens in your deck?", MessageDialogStyle.AffirmativeAndNegativeAndSingleAuxiliary))
+                {
+                    case MessageDialogResult.FirstAuxiliary:
+                    case MessageDialogResult.SecondAuxiliary:
+                    case MessageDialogResult.Canceled:
+                        return;
+                    case MessageDialogResult.Negative:
+                        replaceTokens = false;
+                        break;
+                    case MessageDialogResult.Affirmative:
+                        replaceTokens = true;
+                        break;
+                }
+            }
+
+            this._dialogs.ShowProgressOnUIThread("IMPORT TOKEN", "Please wait while your tokens are imported...", new Action(() => this.ImportTokenCards(replaceTokens)));
+        }
+
+        private void ImportTokenCards(bool replaceTokens)
+        {
             // ToDo: Start Import
+            //var response = this._cardController.AddTokensToDeck(DeckBuilderViewModel.GetInstance().DeckCards.Cast<IFullCard>().ToList(), replaceTokens);
+            //this._dialogs.SendErrorMessage(this._cardController.GetErrorMessage());
+            //if (response.Cards.Count > 0)
+            //{
+            //    DeckBuilderViewModel.GetInstance().AddCards(response.Cards.ConvertAll(FullCardModel.Create), true);
+            //}
         }
 
         private async void ImportDeck(object commandParameter)
