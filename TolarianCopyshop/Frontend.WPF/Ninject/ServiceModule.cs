@@ -22,6 +22,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.Ninject
             this.Bind<IDeckImportInteractor>().To<DeckImportInteractor>().InSingletonScope();
             this.Bind<ISetCodeTranslator>().To<SetCodeTranslator>().InSingletonScope();
             this.Bind<IImportStringParser>().To<ImportStringParser>().InSingletonScope();
+            this.Bind<ISaveAndLoadInteractor>().To<SaveAndLoadInteractor>().InSingletonScope();
 
             // View
             this.Bind<IDialogCoordinator>().To<DialogCoordinator>().InSingletonScope();

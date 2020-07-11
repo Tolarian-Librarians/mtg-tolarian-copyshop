@@ -60,5 +60,15 @@ namespace Tolarian.Copyshop.Business.UseCaseInteractors
             var result = _gateway.GetTokensByQuery(searchQuery);
             return (result, result.Count.ToString());
         }
+
+        public List<SfCard> GetCardsByIds(List<Guid> cardIds)
+        {
+            if (!cardIds.Any())
+                return new List<SfCard>();
+
+            var result = _gateway.GetCardCollectionByIdentifiers(cardIds.Select(tg => new GetCardCollectionRequest { Id = tg }).ToList()).Data
+                .ToList();
+            return result;
+        }
     }
 }

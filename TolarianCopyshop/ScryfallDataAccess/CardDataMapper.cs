@@ -100,7 +100,7 @@ namespace Tolarian.Copyshop.ScryfallDataAccess
 
             var container = chunkedRequests.Select(cr => new SfIdentifierContainer
             {
-                Identifiers = cr.Select(r => new SfIdentifier { Name = r.Name, SetCode = r.SetCode }).ToList()
+                Identifiers = cr.Select(r => new SfIdentifier { Name = r.Name, SetCode = r.SetCode, Id = r.Id }).ToList()
             });
 
             var response = container.Select(c => IssueGetCardCollectionRequest(c));

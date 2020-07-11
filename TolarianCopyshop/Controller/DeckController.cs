@@ -10,17 +10,43 @@ namespace Tolarian.Copyshop.Controller
     public class DeckController : TolarianControllerBase
     {
         private readonly IDeckInfoInteractor _deckInfoInteractor;
+        private readonly ISaveAndLoadInteractor _saveAndLoadInteractor;
 
-        public DeckController(IDeckInfoInteractor deckInfoInteractor)
+        public DeckController(IDeckInfoInteractor deckInfoInteractor, ISaveAndLoadInteractor saveAndLoadInteractor)
         {
             this._deckInfoInteractor = deckInfoInteractor;
+            this._saveAndLoadInteractor = saveAndLoadInteractor;
         }
 
         public List<IFullCard> LoadDeckFromFile(string fileName)
-            => throw new NotImplementedException();
+        {
+            var response = new List<IFullCard>();
+            try
+            {
+                var businessResponse = _saveAndLoadInteractor.LoadDeck(fileName);
+                response = CardMapper.MapToCardDto(businessResponse);
+            }
+            catch (Exception ex)
+            {
+                SetErrorMessage(ex);
+            }
+
+            return response;
+        }
 
         public bool SaveDeckToFile(string fileName, List<IFullCard> deckCards)
-            => throw new NotImplementedException();
+        {
+            try
+            {
+                _saveAndLoadInteractor.SaveDeck(SaveAndLoadMapper.ConvertToBusiness(deckCards), fileName);
+                return true;
+            }
+            catch(Exception ex)
+            {
+                SetErrorMessage(ex);
+                return false;
+            }
+        }
 
         public int GetTotalCardCountOfDeck(List<IFullCard> deckCards)
         {
