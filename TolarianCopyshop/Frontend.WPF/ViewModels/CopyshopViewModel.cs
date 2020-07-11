@@ -194,13 +194,12 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
 
         private void ImportTokenCards(bool replaceTokens)
         {
-            // ToDo: Start Import
-            //var response = this._cardController.AddTokensToDeck(DeckBuilderViewModel.GetInstance().DeckCards.Cast<IFullCard>().ToList(), replaceTokens);
-            //this._dialogs.SendErrorMessage(this._cardController.GetErrorMessage());
-            //if (response.Cards.Count > 0)
-            //{
-            //    DeckBuilderViewModel.GetInstance().AddCards(response.Cards.ConvertAll(FullCardModel.Create), true);
-            //}
+            var response = this._cardController.AddTokensToDeck(DeckBuilderViewModel.GetInstance().DeckCards.Cast<IFullCard>().ToList(), replaceTokens);
+            this._dialogs.SendErrorMessage(this._cardController.GetErrorMessage());
+            if (response.Deck.Count > 0)
+            {
+                DeckBuilderViewModel.GetInstance().AddCards(response.Deck.ConvertAll(FullCardModel.Create), true);
+            }
         }
 
         private async void ImportDeck(object commandParameter)
