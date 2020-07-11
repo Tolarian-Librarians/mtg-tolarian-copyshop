@@ -30,6 +30,7 @@
         <converter:InvertedBoolToVisibilityConverter x:Key="InvertedBoolToVisibilityConverter" />
         <converter:NumericSubstractionConverter x:Key="SubstractionConverter" />
         <converter:NumericMultiplicationConverter x:Key="MultiplicationConverter" />
+        <converter:LeftMarginPercentageConverter x:Key="LeftMarginPercentageConverter" />
     </UserControl.Resources>
 
     <Grid>
@@ -326,46 +327,29 @@
 
             <Grid Grid.Row="0" Grid.ColumnSpan="3" FocusVisualStyle="{x:Null}">
                 <Image x:Name="_SelectedImage" FocusVisualStyle="{x:Null}" Source="{Binding SelectedCard.SelectedCardFace}" />
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="55*" />
-                        <RowDefinition Height="45*" />
-                    </Grid.RowDefinitions>
-                    <Button Grid.Row="0"
+                <StackPanel Margin="{Binding ElementName=_SelectedImage, Path=ActualWidth, Converter={StaticResource LeftMarginPercentageConverter}, ConverterParameter=1.2}" Orientation="Vertical">
+                    <Button Margin="0,55,0,0"
                             Command="{Binding SelectArtworkCommand}"
-                            FocusVisualStyle="{x:Null}"
-                            Style="{StaticResource ImageButton}">
-                        <Grid Width="{Binding ElementName=_SelectedImage, Path=ActualWidth}" Style="{StaticResource ChangeArtwork}">
-                            <iconPacks:PackIconFontAwesome Width="172"
-                                                           Height="172"
-                                                           Margin="0,40,0,0"
-                                                           HorizontalAlignment="Center"
-                                                           VerticalAlignment="Center"
-                                                           Panel.ZIndex="10"
-                                                           Foreground="White"
-                                                           Kind="PaintBrushSolid" />
-
-                        </Grid>
+                            Style="{StaticResource RoundButton}"
+                            Visibility="{Binding Path=SelectedCard.HasArtworks, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue=Collapsed}">
+                        <iconPacks:PackIconFontAwesome Width="45"
+                                                       Height="45"
+                                                       Foreground="White"
+                                                       Kind="PaintBrushSolid" />
                     </Button>
-                    <Button Grid.Row="1"
+                    <Button Margin="0,5,0,0"
                             Command="{Binding TransformCardCommand}"
-                            FocusVisualStyle="{x:Null}"
-                            Style="{StaticResource ImageButton}"
-                            Visibility="{Binding Path=SelectedCard.IsTransformable, Converter={StaticResource BoolToVisibilityConverter}}">
-                        <Grid Width="{Binding ElementName=_SelectedImage, Path=ActualWidth}" Style="{StaticResource ChangeArtwork}">
+                            Style="{StaticResource RoundButton}"
+                            Visibility="{Binding Path=SelectedCard.IsTransformable, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue=Collapsed}">
 
-                            <iconPacks:PackIconFontAwesome Width="172"
-                                                           Height="172"
-                                                           HorizontalAlignment="Center"
-                                                           VerticalAlignment="Center"
-                                                           Panel.ZIndex="10"
-                                                           Foreground="White"
-                                                           Kind="SyncAltSolid" />
-
-                        </Grid>
+                        <iconPacks:PackIconFontAwesome Width="45"
+                                                       Height="45"
+                                                       Foreground="White"
+                                                       Kind="SyncAltSolid" />
                     </Button>
-                </Grid>
+                </StackPanel>
             </Grid>
+
 
             <Grid Grid.Row="1" Grid.Column="0" Margin="0,15,0,0">
                 <DataGrid HorizontalAlignment="Right"
