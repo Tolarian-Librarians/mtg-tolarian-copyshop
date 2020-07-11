@@ -41,14 +41,15 @@
         </Grid.ColumnDefinitions>
         <Grid Grid.Column="0">
             <Grid.RowDefinitions>
-                <RowDefinition Height="30" />
+                <RowDefinition Height="40" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="50" />
+                <ColumnDefinition Width="40" />
                 <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="30" />
+                <ColumnDefinition Width="40" />
             </Grid.ColumnDefinitions>
 
             <iconPacks:PackIconFontAwesome Grid.Row="0"
@@ -58,11 +59,27 @@
                                            HorizontalAlignment="Center"
                                            VerticalAlignment="Center"
                                            Kind="SearchenginBrands" />
+            <ToggleButton Grid.Column="1"
+                          Width="36"
+                          Height="36"
+                          HorizontalAlignment="Center"
+                          VerticalAlignment="Center"
+                          Command="{Binding ToggleSearchCommand}"
+                          CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}"
+                          ToolTip="Activate token search">
+                <iconPacks:PackIconFontAwesome Width="16"
+                                               Height="16"
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center"
+                                               Kind="ChessPawnSolid" />
+            </ToggleButton>
             <TextBox x:Name="_SearchTextBox"
                      Grid.Row="0"
-                     Grid.Column="1"
+                     Grid.Column="2"
                      Margin="2"
+                     VerticalAlignment="Center"
                      AcceptsReturn="False"
+                     FontSize="16"
                      PreviewKeyDown="SearchTextBox_PreviewKeyDown"
                      Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged, Delay=200}">
                 <TextBox.InputBindings>
@@ -70,22 +87,21 @@
                     <KeyBinding Key="Esc" Command="{Binding ClearSearchCommand}" />
                 </TextBox.InputBindings>
             </TextBox>
-            <Grid Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                <Button Width="24"
-                        Height="24"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        Command="{Binding ClearSearchCommand}"
-                        Visibility="{Binding HasSearchText, Converter={StaticResource BoolToVisibilityConverter}}">
-                    <iconPacks:PackIconFontAwesome Width="16"
-                                                   Height="16"
-                                                   HorizontalAlignment="Center"
-                                                   VerticalAlignment="Center"
-                                                   Kind="TimesCircleSolid" />
-                </Button>
-            </Grid>
+            <Button Grid.Column="3"
+                    Width="36"
+                    Height="36"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Command="{Binding ClearSearchCommand}"
+                    Visibility="{Binding HasSearchText, Converter={StaticResource BoolToVisibilityConverter}}">
+                <iconPacks:PackIconFontAwesome Width="16"
+                                               Height="16"
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center"
+                                               Kind="TimesCircleSolid" />
+            </Button>
             <Border Grid.Row="1"
-                    Grid.Column="1"
+                    Grid.Column="2"
                     Margin="2,-2,2,2"
                     VerticalAlignment="Top"
                     Panel.ZIndex="1000"
@@ -123,6 +139,7 @@
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="35" />
                                         <ColumnDefinition Width="75" />
                                     </Grid.ColumnDefinitions>
                                     <TextBlock Grid.Column="0"
@@ -131,6 +148,14 @@
                                                FontWeight="DemiBold"
                                                Text="{Binding Name}" />
                                     <TextBlock Grid.Column="2"
+                                               Margin="0,0,10,0"
+                                               VerticalAlignment="Center"
+                                               FontSize="11"
+                                               FontStyle="Italic"
+                                               FontWeight="Medium"
+                                               Foreground="Gray"
+                                               Text="{Binding PowerToughness}" />
+                                    <TextBlock Grid.Column="3"
                                                Margin="0,0,10,0"
                                                VerticalAlignment="Center"
                                                FontSize="11"

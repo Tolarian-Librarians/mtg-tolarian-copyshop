@@ -38,6 +38,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
         private ObservableCollection<SearchCard> _searchResults;
         private SearchCard _selectedSearchItem;
         private int _selectedSearchIndex;
+        private SearchCardType _searchType = SearchCardType.Normal;
 
         private Task task;
         private CancellationTokenSource tokenSource;
@@ -60,6 +61,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             this.DeleteCardCommand = new Command(this.DeleteSelectedCard);
             this.ApplySelectedSearchItemCommand = new Command(this.ApplySelectedSearchItem);
             this.ClearSearchCommand = new Command(this.ClearSearch);
+            this.ToggleSearchCommand = new Command(this.ToggleSearch);
             this.SelectArtworkCommand = new Command(this.SelectArtwork);
             this.TransformCardCommand = new Command(this.TransformCard);
 
@@ -176,6 +178,17 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             set => this.SetProperty(ref this._searchResultCount, value);
         }
 
+        public enum SearchCardType
+        {
+            Normal,Token
+        }
+
+        public SearchCardType SearchType
+        {
+            get => this._searchType;
+            set => this.SetProperty(ref this._searchType, value);
+        }
+
         public Command IncreaseCardAmountCommand { get; set; }
 
         public Command ReduceCardAmountCommand { get; set; }
@@ -189,6 +202,8 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
         public Command SelectArtworkCommand { get; set; }
 
         public Command TransformCardCommand { get; set; }
+
+        public Command ToggleSearchCommand { get; set; }
 
         #endregion
 
@@ -310,6 +325,20 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             this._deckCardModel.DeckCards.CollectionChanged += this.DeckCards_CollectionChanged;
         }
 
+        private void ToggleSearch(object state)
+        {
+            if ((bool)state)
+            {
+                //checked
+                this.SearchType = SearchCardType.Token;
+            }
+            else
+            {
+                //unchecked
+                this.SearchType = SearchCardType.Normal;
+            }
+        }
+
         private async void OnSearchTextChangedAsync()
         {
             Console.WriteLine($"[{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}]: OnSearchTextChangedAsync: {this._searchText}");
@@ -339,8 +368,14 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             this.IsSearchProgressVisible = true;
 
             Console.WriteLine($"[{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}]: OnSearchTextChanged(): Request");
-            var result = this._cardController.GetSearchResults(this.SearchText, 12);
+            CardSearchResponse result = this.SearchType switch
+            {
+                SearchCardType.Normal => this._cardController.GetSearchResults(this.SearchText, 12),
+                SearchCardType.Token => this._cardController.GetTokenSearchResults(this.SearchText),
+                _ => new CardSearchResponse(),
+            };
             Console.WriteLine($"[{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}]: OnSearchTextChanged(): Result");
+
             if (this.token.IsCancellationRequested)
             {
                 Console.WriteLine($"[{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}]: OnSearchTextChanged(): Task Cancel");

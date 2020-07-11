@@ -88,6 +88,11 @@
                 </MenuItem>
             </MenuItem>
             <MenuItem Header="ACTION">
+                <MenuItem Command="{Binding ImportTokenCommand}" Header="Import Tokens">
+                    <MenuItem.Icon>
+                        <iconPacks:PackIconFontAwesome Height="16" Margin="4,0,0,0" Kind="ChessSolid" />
+                    </MenuItem.Icon>
+                </MenuItem>
                 <MenuItem Command="{Binding PrintCommand}" Header="Print Deck">
                     <MenuItem.Icon>
                         <iconPacks:PackIconFontAwesome Height="16" Margin="4,0,0,0" Kind="PrintSolid" />

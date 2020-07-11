@@ -37,6 +37,12 @@ namespace Tolarian.Copyshop.Business.Models.SfCardInfo
         [JsonProperty(PropertyName = "set")]
         public string SetCode { get; set; }
 
+        [JsonProperty(PropertyName = "power")]
+        public string Power { get; set; }
+
+        [JsonProperty(PropertyName = "toughness")]
+        public string Toughness { get; set; }
+
         [JsonProperty(PropertyName = "released_at")]
         public DateTime ReleaseDate { get; set; }
 

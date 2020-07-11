@@ -12,5 +12,7 @@ namespace Tolarian.Copyshop.Controller.ResponseObjects
         public Guid PrintId { get; set; }
 
         public Uri Image { get; set; }
+
+        public string PowerToughness { get; set; }
     }
 }
