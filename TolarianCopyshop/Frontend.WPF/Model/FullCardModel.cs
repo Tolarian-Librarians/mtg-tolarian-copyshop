@@ -44,6 +44,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.Model
                 Legalities2 = card.Legalities2,
                 SetCode = card.SetCode,
                 CardFaces = card.CardFaces,
+                RelatedCards = card.RelatedCards,
                 IsTransformable = card.IsTransformable,
                 HasArtworks = true,
             };

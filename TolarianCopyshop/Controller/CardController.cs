@@ -144,6 +144,8 @@ namespace Tolarian.Copyshop.Controller
                 }
 
                 var businessResponse = _requester.GetTokensForDeck(CardMapper.GetTokenGuidsOfDeck(deckCards));
+                deckCards.AddRange(CardMapper.MapToCardDto(businessResponse));
+                response.Deck = deckCards;
             }
             catch (HttpException ex)
             {

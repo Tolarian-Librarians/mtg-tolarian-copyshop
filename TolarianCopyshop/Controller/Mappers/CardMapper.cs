@@ -13,7 +13,12 @@ namespace Tolarian.Copyshop.Controller.Mappers
     {
         internal static List<Guid> GetTokenGuidsOfDeck(List<IFullCard> deck)
         {
+            var nontokenCards = deck.Where(dc => !dc.CardFaces.Any(cf => cf.CardType == CardType.Token));
+                
+            var tokenGuids = nontokenCards.SelectMany(dc => dc?.RelatedCards?.Where(rc => rc?.Type == RelatedCardType.token)?.Select(rc => rc.Id)
+            ?? new List<Guid>())?.ToList();
 
+            return tokenGuids; 
         }
 
         internal static List<string> PrepareImportStringForBusiness(string source)
@@ -136,11 +141,15 @@ namespace Tolarian.Copyshop.Controller.Mappers
         private static ICollection<RelatedCard> MapRelatedCardsOf(SfCard source)
         {
             var result = new List<RelatedCard>();
-            result = source.RelatedCards.Select(rc => new RelatedCard 
-            { 
-                Id = rc.Id,
-                Type = (RelatedCardType)(int)rc.Type
-            }).ToList();
+
+            if (source.RelatedCards != null)
+            {
+                result = source.RelatedCards.Select(rc => new RelatedCard
+                {
+                    Id = rc.Id,
+                    Type = (RelatedCardType)(int)rc.Type
+                }).ToList();
+            }
 
             return result;
         }
