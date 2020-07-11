@@ -119,6 +119,9 @@
             <TabItem Header="View Deck">
                 <local:DeckViewerView x:Name="_DeckViewerView" />
             </TabItem>
+            <TabItem Header="Deck Statistics">
+                <local:DeckStatisticsView x:Name="_DeckStatisticsView" />
+            </TabItem>
         </TabControl>
         <StatusBar Grid.Row="2">
             <StatusBarItem Content="Total Cards:" />
