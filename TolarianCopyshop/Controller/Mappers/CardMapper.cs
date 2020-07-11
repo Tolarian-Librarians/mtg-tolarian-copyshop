@@ -40,7 +40,7 @@ namespace Tolarian.Copyshop.Controller.Mappers
         private static string TruncateSetname(string setName)
         {
             const int maxLength = 20;
-            if(setName.Length <= maxLength)
+            if (setName.Length <= maxLength)
             {
                 return setName;
             }
@@ -56,6 +56,7 @@ namespace Tolarian.Copyshop.Controller.Mappers
                 CardType = GetBaseCardTypeFromTypeLine(source.TypeLine),
                 PrintId = source.PrintId,
                 Image = source.IsTransformable ? source.CardFaces[0].ImageUris[CardImageTypes.Border_Crop] : source.ImageUris[CardImageTypes.Border_Crop],
+                PowerToughness = string.IsNullOrWhiteSpace(source.Power) && string.IsNullOrWhiteSpace(source.Toughness) ? "" : $"{source.Power,-2}/{source.Toughness,2}",
             };
 
             return result;
