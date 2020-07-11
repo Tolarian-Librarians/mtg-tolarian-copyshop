@@ -11,6 +11,11 @@ namespace Tolarian.Copyshop.Controller.Mappers
 {
     internal abstract class CardMapper
     {
+        internal static List<Guid> GetTokenGuidsOfDeck(List<IFullCard> deck)
+        {
+
+        }
+
         internal static List<string> PrepareImportStringForBusiness(string source)
         {
             List<string> result = source.Split(
@@ -89,6 +94,7 @@ namespace Tolarian.Copyshop.Controller.Mappers
                 Legalities2 = GetSecondHalfOfLegalities(source),
                 CardCount = 1,
                 CardFaces = MapCardFacesOf(source),
+                RelatedCards = MapRelatedCardsOf(source),
                 IsTransformable = source.IsTransformable,
             };
 
@@ -122,6 +128,18 @@ namespace Tolarian.Copyshop.Controller.Mappers
                     CardType = GetBaseCardTypeFromTypeLine(source.TypeLine),
                 });
             }
+
+            return result;
+        }
+
+        private static ICollection<RelatedCard> MapRelatedCardsOf(SfCard source)
+        {
+            var result = new List<RelatedCard>();
+            result = source.RelatedCards.Select(rc => new RelatedCard 
+            { 
+                Id = rc.Id,
+                Type = (RelatedCardType)(int)rc.Type
+            }).ToList();
 
             return result;
         }

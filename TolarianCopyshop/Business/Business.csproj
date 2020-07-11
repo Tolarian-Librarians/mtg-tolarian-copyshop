@@ -58,6 +58,8 @@
     <Compile Include="Interfaces\IImportStringParser.cs" />
     <Compile Include="Interfaces\ISetCodeTranslator.cs" />
     <Compile Include="Interfaces\ISetDataGateway.cs" />
+    <Compile Include="Models\SfCardInfo\SfRelatedCard.cs" />
+    <Compile Include="Models\SfCardInfo\SfRelatedCardType.cs" />
     <Compile Include="Models\SfSetInfo\SfPaginatedSetList.cs" />
     <Compile Include="Models\SfSetInfo\SfSet.cs" />
     <Compile Include="UseCaseInteractors\DeckImportInteractor.cs" />

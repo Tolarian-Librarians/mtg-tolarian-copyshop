@@ -62,6 +62,8 @@
     <Compile Include="ResponseObjects\Enums\CardType.cs" />
     <Compile Include="ResponseObjects\FullCard.cs" />
     <Compile Include="Interfaces\IFullCard.cs" />
+    <Compile Include="ResponseObjects\RelatedCard.cs" />
+    <Compile Include="ResponseObjects\Enums\RelatedCardType.cs" />
     <Compile Include="TolarianControllerBase.cs" />
   </ItemGroup>
   <ItemGroup>

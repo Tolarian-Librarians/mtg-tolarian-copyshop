@@ -14,6 +14,7 @@ namespace Tolarian.Copyshop.Controller.Interfaces
         Dictionary<string, string> Legalities2 { get; set; }
         string SetCode { get; set; }
         ICollection<CardFace> CardFaces { get; set; }
+        ICollection<RelatedCard> RelatedCards { get; set; }
         bool IsTransformable { get; set; }
     }
 }
