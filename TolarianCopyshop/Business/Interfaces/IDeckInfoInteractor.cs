@@ -9,6 +9,7 @@ namespace Tolarian.Copyshop.Business.Interfaces
         int GetTotalCardCountOfDeck(List<DeckInfoCard> deck);
         Dictionary<float, int> GetManaCurve(List<DeckInfoCard> deck);
         Dictionary<MtgColor, int> GetColorSymbolCounts(List<DeckInfoCard> deck);
+        Dictionary<MtgColor, int> GetManaSourcesCounts(List<DeckInfoCard> deck);
         Dictionary<CardType, int> GetCardTypeCounts(List<DeckInfoCard> deck);
     }
 }
