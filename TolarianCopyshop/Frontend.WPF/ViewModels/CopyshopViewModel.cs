@@ -109,7 +109,6 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
                 if (openFileDialog.ShowDialog() == true)
                 {
                     this._dialogs.ShowProgressOnUIThread("Loading Deck", "Please wait while your deck is loaded...", new Action(() => DeckBuilderViewModel.GetInstance().AddCards(this._deckController.LoadDeckFromFile(openFileDialog.FileName).ConvertAll(FullCardModel.Create), true)));
-                    
                     this.SaveFile = openFileDialog.FileName;
                 }
             }

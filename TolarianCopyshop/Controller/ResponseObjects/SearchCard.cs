@@ -7,7 +7,7 @@ namespace Tolarian.Copyshop.Controller.ResponseObjects
     {
         public string Name { get; set; }
 
-        public CardType CardType { get; set; }
+        public CardType PrimaryCardType { get; set; }
 
         public Guid PrintId { get; set; }
 

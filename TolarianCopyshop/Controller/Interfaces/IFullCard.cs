@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Tolarian.Copyshop.Controller.ResponseObjects;
+using Tolarian.Copyshop.Controller.ResponseObjects.Enums;
 
 namespace Tolarian.Copyshop.Controller.Interfaces
 {
@@ -13,6 +14,10 @@ namespace Tolarian.Copyshop.Controller.Interfaces
         Dictionary<string, string> Legalities1 { get; set; }
         Dictionary<string, string> Legalities2 { get; set; }
         string SetCode { get; set; }
+        string ManaCostLine { get; set; }
+        float ConvertedManaCost { get; set; }
+        List<MtgColor> ColorIdentity { get; set; }
+        List<MtgColor> ProducedMana { get; set; }
         ICollection<CardFace> CardFaces { get; set; }
         ICollection<RelatedCard> RelatedCards { get; set; }
         bool IsTransformable { get; set; }

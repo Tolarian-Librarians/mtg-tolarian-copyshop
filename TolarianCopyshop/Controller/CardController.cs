@@ -140,7 +140,7 @@ namespace Tolarian.Copyshop.Controller
             {
                 if(overwriteTokens)
                 {
-                    deckCards.RemoveAll(c => c.CardFaces.Any(cf => cf.CardType == ResponseObjects.Enums.CardType.Token));
+                    deckCards.RemoveAll(c => c.CardFaces.Any(cf => cf.PrimaryCardType == ResponseObjects.Enums.CardType.Token));
                 }
 
                 var businessResponse = _requester.GetCardsByIds(CardMapper.GetTokenGuidsOfDeck(deckCards));
