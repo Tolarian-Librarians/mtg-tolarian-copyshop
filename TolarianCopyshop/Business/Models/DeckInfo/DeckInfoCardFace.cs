@@ -4,6 +4,6 @@ namespace Tolarian.Copyshop.Business.Models.DeckInfo
 {
     public class DeckInfoCardFace
     {
-        public CardType CardType { get; set; }
+        public CardType PrimaryCardType { get; set; }
     }
 }

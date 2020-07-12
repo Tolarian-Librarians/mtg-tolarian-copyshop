@@ -29,7 +29,8 @@ namespace Tolarian.Copyshop.Controller.Mappers
                     ProducedMana = fullCard.ProducedMana?.Select(pm => (MtgColor)((int)pm)).ToList(),
                     cardFaces = fullCard.CardFaces.Select(cf => new DeckInfoCardFace
                     {
-                        CardType = (CardType)((int)cf.CardType),
+                        PrimaryCardType = (CardType)((int)cf.PrimaryCardType),
+
                     }).ToList(),
                 };
             }

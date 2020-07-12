@@ -19,10 +19,10 @@
     <UserControl.Resources>
         <CollectionViewSource x:Key="_deckCardCollection" x:Name="_deckCardCollection" Source="{Binding DeckCards}">
             <CollectionViewSource.GroupDescriptions>
-                <PropertyGroupDescription PropertyName="CardFaces[0].CardType" StringComparison="OrdinalIgnoreCase" />
+                <PropertyGroupDescription PropertyName="CardFaces[0].PrimaryCardType" StringComparison="OrdinalIgnoreCase" />
             </CollectionViewSource.GroupDescriptions>
             <CollectionViewSource.SortDescriptions>
-                <scm:SortDescription PropertyName="CardFaces[0].CardType" />
+                <scm:SortDescription PropertyName="CardFaces[0].PrimaryCardType" />
                 <scm:SortDescription PropertyName="CardFaces[0].Name" />
             </CollectionViewSource.SortDescriptions>
         </CollectionViewSource>
@@ -162,7 +162,7 @@
                                                FontStyle="Italic"
                                                FontWeight="Medium"
                                                Foreground="Gray"
-                                               Text="{Binding CardType}" />
+                                               Text="{Binding PrimaryCardType}" />
                                 </Grid>
                             </DataTemplate>
                         </ListBox.ItemTemplate>

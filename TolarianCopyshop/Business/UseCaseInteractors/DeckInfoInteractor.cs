@@ -3,6 +3,7 @@ using Tolarian.Copyshop.Business.Interfaces;
 using Tolarian.Copyshop.Business.Models.DeckInfo;
 using Tolarian.Copyshop.Business.Models.Enums;
 using System.Linq;
+using System;
 
 namespace Tolarian.Copyshop.Business.UseCaseInteractors
 {
@@ -18,7 +19,15 @@ namespace Tolarian.Copyshop.Business.UseCaseInteractors
         public Dictionary<CardType, int> GetCardTypeCounts(List<DeckInfoCard> deck)
         {
             var playables = GetOnlyPlayables(deck, true);
-            return new Dictionary<CardType, int>();
+
+            var result = new Dictionary<CardType, int>();
+
+            foreach (var cardType in Enum.GetValues(typeof(CardType)).Cast<CardType>())
+            {
+                result.Add(cardType, deck.Count(c => c.cardFaces[0].PrimaryCardType == cardType));
+            }
+
+            return result;
         }
 
         public Dictionary<MtgColor, int> GetManaSourcesCounts(List<DeckInfoCard> deck)
@@ -90,10 +99,10 @@ namespace Tolarian.Copyshop.Business.UseCaseInteractors
 
         private List<DeckInfoCard> GetOnlyPlayables(List<DeckInfoCard> deck, bool includeLands)
         {
-            return deck.Where(dc => dc.cardFaces.Any(cf => cf.CardType != CardType.Token && 
-                                                    cf.CardType != CardType.Emblem && 
-                                                    cf.CardType != CardType.Unknown && 
-                                                    (includeLands || cf.CardType != CardType.Land)
+            return deck.Where(dc => dc.cardFaces.Any(cf => cf.PrimaryCardType != CardType.Token && 
+                                                    cf.PrimaryCardType != CardType.Emblem && 
+                                                    cf.PrimaryCardType != CardType.Unknown && 
+                                                    (includeLands || cf.PrimaryCardType != CardType.Land)
             )).ToList();
         }
     }
