@@ -1,7 +1,9 @@
-﻿namespace Tolarian.Copyshop.Business.Models.DeckInfo
+﻿using Tolarian.Copyshop.Business.Models.Enums;
+
+namespace Tolarian.Copyshop.Business.Models.DeckInfo
 {
     public class DeckInfoCardFace
     {
-        public string CardType { get; set; }
+        public CardType CardType { get; set; }
     }
 }
