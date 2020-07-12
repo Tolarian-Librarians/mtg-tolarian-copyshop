@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Tolarian.Copyshop.Controller;
 using Tolarian.Copyshop.Controller.Interfaces;
 using Tolarian.Copyshop.Controller.ResponseObjects;
+using Tolarian.Copyshop.Controller.ResponseObjects.Enums;
 using Tolarian.Copyshop.ScreenPresenter.Base;
 
 namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
@@ -22,7 +23,6 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
         private ChartValues<float> _redManaCollection;
         private ChartValues<float> _blueManaCollection;
         private ChartValues<float> _greenManaCollection;
-        //private ChartValues<float> _colorlessManaCollection;
         private ChartValues<float> _landCardTypCount;
         private ChartValues<float> _creatureCardTypCount;
         private ChartValues<float> _instantCardTypCount;
@@ -36,7 +36,10 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
         {
             this._deckController = deckController;
 
-            this.ChartPointLabel = this.ChartPoint;
+            this.PieChartPointLabel = chartPoint => $"{chartPoint.Y} ({chartPoint.Participation:P})";
+            this.BarChartPointLabel = chartPoint => chartPoint.Y.ToString();
+            this.XAxisLabelFormatter = val => val.ToString();
+            this.YAxisLabelFormatter = val => val.ToString();
 
             this.ManaCurveCollection = new ChartValues<float>();
             this.BlackManaCollection = new ChartValues<float>();
@@ -89,12 +92,6 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             set => this.SetProperty(ref this._greenManaCollection, value);
         }
 
-        //public ChartValues<float> ColorlessManaCollection
-        //{
-        //    get => this._colorlessManaCollection;
-        //    set => this.SetProperty(ref this._colorlessManaCollection, value);
-        //}
-
         public ChartValues<float> LandCardTypCount
         {
             get => this._landCardTypCount;
@@ -137,12 +134,15 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             set => this.SetProperty(ref this._planeswalkerCardTypCount, value);
         }
 
-        public Func<ChartPoint, string> ChartPointLabel { get; }
+        public Func<ChartPoint, string> BarChartPointLabel { get; }
+
+        public Func<ChartPoint, string> PieChartPointLabel { get; }
+
+        public Func<ChartPoint, string> XAxisLabelFormatter { get; }
+
+        public Func<ChartPoint, string> YAxisLabelFormatter { get; }
 
         #region Methods
-
-        private string ChartPoint(ChartPoint chartPoint)
-            => $"{chartPoint.Y} ({chartPoint.Participation:P})";
 
         public void LoadChartData()
         {
@@ -161,28 +161,57 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
 
             this.BlackManaCollection = new ChartValues<float>
             {
-                result.ManaSourcesCounts[Controller.ResponseObjects.Enums.MtgColor.B],
-                result.ColorSymbolCounts[Controller.ResponseObjects.Enums.MtgColor.B],
+                result.ManaSourcesCounts[MtgColor.B],
+                result.ColorSymbolCounts[MtgColor.B],
             };
             this.BlueManaCollection = new ChartValues<float>
             {
-                result.ManaSourcesCounts[Controller.ResponseObjects.Enums.MtgColor.U],
-                result.ColorSymbolCounts[Controller.ResponseObjects.Enums.MtgColor.U],
+                result.ManaSourcesCounts[MtgColor.U],
+                result.ColorSymbolCounts[MtgColor.U],
             };
             this.GreenManaCollection = new ChartValues<float>
             {
-                result.ManaSourcesCounts[Controller.ResponseObjects.Enums.MtgColor.G],
-                result.ColorSymbolCounts[Controller.ResponseObjects.Enums.MtgColor.G],
+                result.ManaSourcesCounts[MtgColor.G],
+                result.ColorSymbolCounts[MtgColor.G],
             };
             this.RedManaCollection = new ChartValues<float>
             {
-                result.ManaSourcesCounts[Controller.ResponseObjects.Enums.MtgColor.R],
-                result.ColorSymbolCounts[Controller.ResponseObjects.Enums.MtgColor.R],
+                result.ManaSourcesCounts[MtgColor.R],
+                result.ColorSymbolCounts[MtgColor.R],
             };
             this.WhiteManaCollection = new ChartValues<float>
             {
-                result.ManaSourcesCounts[Controller.ResponseObjects.Enums.MtgColor.W],
-                result.ColorSymbolCounts[Controller.ResponseObjects.Enums.MtgColor.W],
+                result.ManaSourcesCounts[MtgColor.W],
+                result.ColorSymbolCounts[MtgColor.W],
+            };
+
+            this.LandCardTypCount = new ChartValues<float>()
+            {
+                result.CardTypeCounts[CardType.Land],
+            };
+            this.CreatureCardTypCount = new ChartValues<float>()
+            {
+                result.CardTypeCounts[CardType.Creature],
+            };
+            this.InstantCardTypCount = new ChartValues<float>()
+            {
+                result.CardTypeCounts[CardType.Instant],
+            };
+            this.SorceryCardTypCount = new ChartValues<float>()
+            {
+                result.CardTypeCounts[CardType.Sorcery],
+            };
+            this.EnchantmentCardTypCount = new ChartValues<float>()
+            {
+                result.CardTypeCounts[CardType.Enchantment],
+            };
+            this.ArtifactCardTypCount = new ChartValues<float>()
+            {
+                result.CardTypeCounts[CardType.Artifact],
+            };
+            this.PlaneswalkerCardTypCount = new ChartValues<float>()
+            {
+                result.CardTypeCounts[CardType.Planeswalker],
             };
         }
 

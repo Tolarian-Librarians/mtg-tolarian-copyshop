@@ -22,90 +22,142 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
+            <RowDefinition Height="40" />
             <RowDefinition Height="*" />
-            <RowDefinition Height="5" />
+            <RowDefinition Height="40" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <lvc:CartesianChart Grid.Row="0" Grid.Column="0">
-            <lvc:CartesianChart.Series>
-                <lvc:ColumnSeries Title="Number of Cards" Values="{Binding ManaCurveCollection}" />
-            </lvc:CartesianChart.Series>
-            <!--<lvc:CartesianChart.AxisX>
-                <lvc:Axis Title="Mana" />
-            </lvc:CartesianChart.AxisX>
-            <lvc:CartesianChart.AxisY>
-                <lvc:Axis Title="Cardcount" />
-            </lvc:CartesianChart.AxisY>-->
-        </lvc:CartesianChart>
+        <TextBlock Grid.Row="0"
+                   Grid.Column="0"
+                   HorizontalAlignment="Center"
+                   FontSize="26"
+                   Foreground="{StaticResource MahApps.Brushes.Accent}"
+                   Text="Overview" />
 
-        <lvc:PieChart Grid.Row="0" Grid.Column="2" LegendLocation="Right">
-            <lvc:PieChart.Series>
-                <lvc:PieSeries Title="Green"
-                               DataLabels="True"
-                               Fill="Green"
-                               LabelPoint="{Binding ChartPointLabel}"
-                               Values="{Binding GreenManaCollection}" />
-                <lvc:PieSeries Title="Blue"
-                               DataLabels="True"
-                               Fill="Blue"
-                               LabelPoint="{Binding ChartPointLabel}"
-                               Values="{Binding BlueManaCollection}" />
-                <lvc:PieSeries Title="Black"
-                               DataLabels="True"
-                               Fill="Black"
-                               LabelPoint="{Binding ChartPointLabel}"
-                               Values="{Binding BlackManaCollection}" />
-                <lvc:PieSeries Title="Red"
-                               DataLabels="True"
-                               Fill="Red"
-                               LabelPoint="{Binding ChartPointLabel}"
-                               Values="{Binding RedManaCollection}" />
-                <lvc:PieSeries Title="White"
-                               DataLabels="True"
-                               Fill="LightGoldenrodYellow"
-                               LabelPoint="{Binding ChartPointLabel}"
-                               Values="{Binding WhiteManaCollection}" />
-            </lvc:PieChart.Series>
-        </lvc:PieChart>
-        <lvc:PieChart Grid.Row="2" Grid.Column="2" LegendLocation="Right">
+        <TextBlock Grid.Row="0"
+                   Grid.Column="3"
+                   HorizontalAlignment="Center"
+                   FontSize="26"
+                   Foreground="{StaticResource MahApps.Brushes.Accent}"
+                   Text="Card Types" />
+        <lvc:PieChart Grid.Row="1" Grid.Column="2" LegendLocation="Right">
             <lvc:PieChart.Series>
                 <lvc:PieSeries Title="Land"
                                DataLabels="True"
                                Fill="Brown"
-                               LabelPoint="{Binding ChartPointLabel}"
+                               LabelPoint="{Binding PieChartPointLabel}"
                                Values="{Binding LandCardTypCount}" />
                 <lvc:PieSeries Title="Creature"
                                DataLabels="True"
                                Fill="Green"
-                               LabelPoint="{Binding ChartPointLabel}"
+                               LabelPoint="{Binding PieChartPointLabel}"
                                Values="{Binding CreatureCardTypCount}" />
                 <lvc:PieSeries Title="Instant"
                                DataLabels="True"
                                Fill="MediumPurple"
-                               LabelPoint="{Binding ChartPointLabel}"
+                               LabelPoint="{Binding PieChartPointLabel}"
                                Values="{Binding InstantCardTypCount}" />
                 <lvc:PieSeries Title="Sorcery"
                                DataLabels="True"
                                Fill="Purple"
-                               LabelPoint="{Binding ChartPointLabel}"
+                               LabelPoint="{Binding PieChartPointLabel}"
                                Values="{Binding SorceryCardTypCount}" />
                 <lvc:PieSeries Title="Enchantment"
                                DataLabels="True"
                                Fill="LightBlue"
-                               LabelPoint="{Binding ChartPointLabel}"
+                               LabelPoint="{Binding PieChartPointLabel}"
                                Values="{Binding EnchantmentCardTypCount}" />
                 <lvc:PieSeries Title="Artifact"
                                DataLabels="True"
                                Fill="Gray"
-                               LabelPoint="{Binding ChartPointLabel}"
+                               LabelPoint="{Binding PieChartPointLabel}"
                                Values="{Binding ArtifactCardTypCount}" />
-                <lvc:PieSeries Title="Planeswalker"
+                <lvc:PieSeries Title="Planeswalker    "
                                DataLabels="True"
                                Fill="Gold"
-                               LabelPoint="{Binding ChartPointLabel}"
+                               LabelPoint="{Binding PieChartPointLabel}"
                                Values="{Binding PlaneswalkerCardTypCount}" />
             </lvc:PieChart.Series>
+            <lvc:PieChart.DataTooltip>
+                <lvc:DefaultTooltip BulletSize="20" />
+            </lvc:PieChart.DataTooltip>
+            <lvc:PieChart.ChartLegend>
+                <lvc:DefaultLegend BulletSize="30" />
+            </lvc:PieChart.ChartLegend>
         </lvc:PieChart>
+
+        <TextBlock Grid.Row="2"
+                   Grid.Column="0"
+                   HorizontalAlignment="Center"
+                   FontSize="26"
+                   Foreground="{StaticResource MahApps.Brushes.Accent}"
+                   Text="Mana Curve" />
+        <lvc:CartesianChart Grid.Row="3" Grid.Column="0" DataTooltip="{x:Null}">
+            <lvc:CartesianChart.Series>
+                <lvc:ColumnSeries Title="Number of Cards"
+                                  DataLabels="True"
+                                  Fill="Orange"
+                                  LabelPoint="{Binding BarChartPointLabel}"
+                                  Stroke="DarkOrange"
+                                  ToolTip=""
+                                  Values="{Binding ManaCurveCollection}" />
+            </lvc:CartesianChart.Series>
+            <lvc:CartesianChart.AxisX>
+                <lvc:Axis Title="Converted mana costs" LabelFormatter="{Binding XAxisLabelFormatter}">
+                    <lvc:Axis.Separator>
+                        <lvc:Separator IsEnabled="False" Step="1" />
+                    </lvc:Axis.Separator>
+                </lvc:Axis>
+            </lvc:CartesianChart.AxisX>
+            <lvc:CartesianChart.AxisY>
+                <lvc:Axis Title="Amout of cards" LabelFormatter="{Binding YAxisLabelFormatter}" />
+            </lvc:CartesianChart.AxisY>
+        </lvc:CartesianChart>
+
+        <TextBlock Grid.Row="2"
+                   Grid.Column="3"
+                   HorizontalAlignment="Center"
+                   FontSize="26"
+                   Foreground="{StaticResource MahApps.Brushes.Accent}"
+                   Text="Mana Source (inner) - Card Cost (outer)" />
+        <lvc:PieChart Grid.Row="3" Grid.Column="2" LegendLocation="Right">
+            <lvc:PieChart.Series>
+                <lvc:PieSeries Title="Green                "
+                               DataLabels="True"
+                               Fill="#11A263"
+                               LabelPoint="{Binding PieChartPointLabel}"
+                               Values="{Binding GreenManaCollection}" />
+                <lvc:PieSeries Title="Blue"
+                               DataLabels="True"
+                               Fill="#6BBFFF"
+                               LabelPoint="{Binding PieChartPointLabel}"
+                               Values="{Binding BlueManaCollection}" />
+                <lvc:PieSeries Title="Black"
+                               DataLabels="True"
+                               Fill="#332D2C"
+                               LabelPoint="{Binding PieChartPointLabel}"
+                               Values="{Binding BlackManaCollection}" />
+                <lvc:PieSeries Title="Red"
+                               DataLabels="True"
+                               Fill="#FF634E"
+                               LabelPoint="{Binding PieChartPointLabel}"
+                               Values="{Binding RedManaCollection}" />
+                <lvc:PieSeries Title="White"
+                               DataLabels="True"
+                               Fill="#FEFDC9"
+                               Foreground="Black"
+                               LabelPoint="{Binding PieChartPointLabel}"
+                               Values="{Binding WhiteManaCollection}" />
+            </lvc:PieChart.Series>
+            <lvc:PieChart.DataTooltip>
+                <lvc:DefaultTooltip BulletSize="20" />
+            </lvc:PieChart.DataTooltip>
+            <lvc:PieChart.ChartLegend>
+                <lvc:DefaultLegend BulletSize="30" />
+            </lvc:PieChart.ChartLegend>
+        </lvc:PieChart>
+
+
     </Grid>
 </UserControl>
