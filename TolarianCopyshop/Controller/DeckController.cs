@@ -70,7 +70,7 @@ namespace Tolarian.Copyshop.Controller
                 ColorSymbolCounts = _deckInfoInteractor.GetColorSymbolCounts(businessModel).ToDictionary(x => (MtgColor)((int)x.Key), x => x.Value),
                 ManaSourcesCounts = _deckInfoInteractor.GetManaSourcesCounts(businessModel).ToDictionary(x => (MtgColor)((int)x.Key), x => x.Value),
                 ManaCurveCreatures = _deckInfoInteractor.GetCreatureManaCurve(businessModel),
-                ManaCurveNonCreatures = _deckInfoInteractor.GetCreatureManaCurve(businessModel),
+                ManaCurveNonCreatures = _deckInfoInteractor.GetNonCreatureManaCurve(businessModel),
                 TotalCards = _deckInfoInteractor.GetTotalCardCountOfDeck(businessModel),
                 AverageCmc = _deckInfoInteractor.GetAverageCmc(businessModel),
                 CreatureCount = _deckInfoInteractor.GetCreatureCount(businessModel),

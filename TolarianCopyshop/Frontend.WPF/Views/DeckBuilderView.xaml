@@ -13,7 +13,7 @@
                                               IsDesignTimeCreatable=True}"
              d:DesignHeight="600"
              d:DesignWidth="1200"
-             Background="{DynamicResource MahApps.Brushes.White}"
+             Background="{StaticResource MahApps.Brushes.Window.Background}"
              DataContext="{Binding Path=DeckBuilderViewModel, Source={StaticResource ServiceLocator}}"
              mc:Ignorable="d">
     <UserControl.Resources>

@@ -17,7 +17,12 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
 {
     public class DeckStatisticsViewModel : BindableBase
     {
-        private ChartValues<float> _manaCurveCollection;
+        private int _creatureCount;
+        private int _nonCreatureCount;
+        private int _totalCards;
+        private float _averageCmc;
+        private ChartValues<float> _manaCurveCreatureCollection;
+        private ChartValues<float> _manaCurveNonCreatureCollection;
         private ChartValues<float> _blackManaCollection;
         private ChartValues<float> _whiteManaCollection;
         private ChartValues<float> _redManaCollection;
@@ -41,7 +46,8 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             this.XAxisLabelFormatter = val => val.ToString();
             this.YAxisLabelFormatter = val => val.ToString();
 
-            this.ManaCurveCollection = new ChartValues<float>();
+            this.ManaCurveCreatureCollection = new ChartValues<float>();
+            this.ManaCurveNonCreatureCollection = new ChartValues<float>();
             this.BlackManaCollection = new ChartValues<float>();
             this.WhiteManaCollection = new ChartValues<float>();
             this.RedManaCollection = new ChartValues<float>();
@@ -56,10 +62,16 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             this.PlaneswalkerCardTypCount = new ChartValues<float>();
         }
 
-        public ChartValues<float> ManaCurveCollection
+        public ChartValues<float> ManaCurveCreatureCollection
         {
-            get => this._manaCurveCollection;
-            set => this.SetProperty(ref this._manaCurveCollection, value);
+            get => this._manaCurveCreatureCollection;
+            set => this.SetProperty(ref this._manaCurveCreatureCollection, value);
+        }
+
+        public ChartValues<float> ManaCurveNonCreatureCollection
+        {
+            get => this._manaCurveNonCreatureCollection;
+            set => this.SetProperty(ref this._manaCurveNonCreatureCollection, value);
         }
 
         public ChartValues<float> BlackManaCollection
@@ -134,6 +146,30 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             set => this.SetProperty(ref this._planeswalkerCardTypCount, value);
         }
 
+        public int CreatureCount
+        {
+            get => this._creatureCount;
+            set => this.SetProperty(ref this._creatureCount, value);
+        }
+
+        public int NonCreatureCount
+        {
+            get => this._nonCreatureCount;
+            set => this.SetProperty(ref this._nonCreatureCount, value);
+        }
+
+        public int TotalCards
+        {
+            get => this._totalCards;
+            set => this.SetProperty(ref this._totalCards, value);
+        }
+
+        public float AverageCmc
+        {
+            get => this._averageCmc;
+            set => this.SetProperty(ref this._averageCmc, value);
+        }
+
         public Func<ChartPoint, string> BarChartPointLabel { get; }
 
         public Func<ChartPoint, string> PieChartPointLabel { get; }
@@ -148,15 +184,16 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
         {
             GetDeckStatisticsResponse result = this._deckController.GetDeckStatistics(DeckBuilderViewModel.GetInstance().DeckCards.Cast<IFullCard>().ToList());
 
-            this.ManaCurveCollection = new ChartValues<float>();
-            foreach (KeyValuePair<float, int> keyValuePair in result.ManaCurve)
+            this.ManaCurveCreatureCollection = new ChartValues<float>();
+            foreach (KeyValuePair<float, int> keyValuePair in result.ManaCurveCreatures)
             {
-                this.ManaCurveCollection.Add(keyValuePair.Value);
+                this.ManaCurveCreatureCollection.Add(keyValuePair.Value);
             }
 
-            if (this.ManaCurveCollection.Count == 0)
+            this.ManaCurveNonCreatureCollection = new ChartValues<float>();
+            foreach (KeyValuePair<float, int> keyValuePair in result.ManaCurveNonCreatures)
             {
-                this.ManaCurveCollection.Add(0);
+                this.ManaCurveNonCreatureCollection.Add(keyValuePair.Value);
             }
 
             this.BlackManaCollection = new ChartValues<float>
@@ -213,6 +250,11 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             {
                 result.CardTypeCounts[CardType.Planeswalker],
             };
+
+            this.TotalCards = result.TotalCards;
+            this.CreatureCount = result.CreatureCount;
+            this.NonCreatureCount = result.NonCreatureCount;
+            this.AverageCmc = result.AverageCmc;
         }
 
         #endregion
