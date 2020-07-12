@@ -24,7 +24,7 @@ namespace Tolarian.Copyshop.Business.UseCaseInteractors
 
             foreach (var cardType in Enum.GetValues(typeof(CardType)).Cast<CardType>())
             {
-                result.Add(cardType, deck.Count(c => c.cardFaces[0].PrimaryCardType == cardType));
+                result.Add(cardType, playables.Sum(c => c.cardFaces[0].PrimaryCardType == cardType ? c.Copies : 0));
             }
 
             return result;
@@ -32,30 +32,13 @@ namespace Tolarian.Copyshop.Business.UseCaseInteractors
 
         public Dictionary<MtgColor, int> GetManaSourcesCounts(List<DeckInfoCard> deck)
         {
-            var result = new Dictionary<MtgColor, int>
-            {
-                {MtgColor.B, 0},
-                {MtgColor.G, 0},
-                {MtgColor.R, 0},
-                {MtgColor.U, 0},
-                {MtgColor.W, 0},
-            };
+            var result = new Dictionary<MtgColor, int>();
 
-            foreach (var card in GetOnlyPlayables(deck, true))
-            {
-                if (card.ProducedMana == null)
-                    continue;
+            var playables = GetOnlyPlayables(deck, true);
 
-                if (card.ProducedMana.Contains(MtgColor.B))
-                    result[MtgColor.B]++;                
-                if (card.ProducedMana.Contains(MtgColor.U))
-                    result[MtgColor.U]++;                
-                if (card.ProducedMana.Contains(MtgColor.R))
-                    result[MtgColor.R]++;               
-                if (card.ProducedMana.Contains(MtgColor.G))
-                    result[MtgColor.G]++;               
-                if (card.ProducedMana.Contains(MtgColor.W))
-                    result[MtgColor.W]++;
+            foreach (var color in Enum.GetValues(typeof(MtgColor)).Cast<MtgColor>())
+            {
+                result.Add(color, playables.Sum(c => c.ProducedMana?.Contains(color) ?? false ? c.Copies : 0));
             }
 
             return result;
@@ -63,22 +46,13 @@ namespace Tolarian.Copyshop.Business.UseCaseInteractors
 
         public Dictionary<MtgColor, int> GetColorSymbolCounts(List<DeckInfoCard> deck)
         {
-            var result = new Dictionary<MtgColor, int>
-            {
-                {MtgColor.B, 0},
-                {MtgColor.G, 0},
-                {MtgColor.R, 0},
-                {MtgColor.U, 0},
-                {MtgColor.W, 0},
-            };
+            var result = new Dictionary<MtgColor, int>();
 
-            foreach (var card in GetOnlyPlayables(deck, false))
+            var playables = GetOnlyPlayables(deck, false);
+
+            foreach (var color in Enum.GetValues(typeof(MtgColor)).Cast<MtgColor>())
             {
-                result[MtgColor.B] += card.ManaCostLine.Count(c => c == 'B');
-                result[MtgColor.G] += card.ManaCostLine.Count(c => c == 'G');
-                result[MtgColor.R] += card.ManaCostLine.Count(c => c == 'R');
-                result[MtgColor.U] += card.ManaCostLine.Count(c => c == 'U');
-                result[MtgColor.W] += card.ManaCostLine.Count(c => c == 'W');
+                result.Add(color, playables.Select(c => (c.ManaCostLine?.Count(cha => cha == Convert.ToChar(color.ToString())) ?? default) * c.Copies).Sum());
             }
 
             return result;
