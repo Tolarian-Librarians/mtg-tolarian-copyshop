@@ -11,5 +11,8 @@ namespace Tolarian.Copyshop.Business.Interfaces
         Dictionary<MtgColor, int> GetColorSymbolCounts(List<DeckInfoCard> deck);
         Dictionary<MtgColor, int> GetManaSourcesCounts(List<DeckInfoCard> deck);
         Dictionary<CardType, int> GetCardTypeCounts(List<DeckInfoCard> deck);
+        float GetAverageCmc(List<DeckInfoCard> deck);
+        int GetCreatureCount(List<DeckInfoCard> deck);
+        int GetNonCreatureCount(List<DeckInfoCard> deck);
     }
 }

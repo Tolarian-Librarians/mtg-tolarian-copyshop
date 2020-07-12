@@ -12,7 +12,8 @@ namespace Tolarian.Copyshop.Business.UseCaseInteractors
         public int GetTotalCardCountOfDeck(List<DeckInfoCard> deck)
         {
             int cardCountInDeck = 0;
-            deck.ForEach(card => cardCountInDeck += card.Copies);
+            var playables = GetOnlyPlayables(deck, true);
+            playables.ForEach(card => cardCountInDeck += card.Copies);
             return cardCountInDeck;
         }
 
@@ -69,6 +70,29 @@ namespace Tolarian.Copyshop.Business.UseCaseInteractors
 
             var result = grouped.ToDictionary(gr => gr.Cmc, gr => gr.CountOfCards);
             return result;
+        }
+
+        public float GetAverageCmc(List<DeckInfoCard> deck)
+        {
+            var playables = GetOnlyPlayables(deck, false);
+
+            var summedUpCmcs = playables.Sum(c => c.ConvertedManaCost * c.Copies);
+
+            return (float)Math.Round(summedUpCmcs / GetTotalCardCountOfDeck(playables), 2);
+        }
+
+        public int GetCreatureCount(List<DeckInfoCard> deck)
+        {
+            var playables = GetOnlyPlayables(deck, false);
+
+            return playables.Sum(c => c.cardFaces[0].PrimaryCardType == CardType.Creature ? c.Copies : 0);
+        }
+
+        public int GetNonCreatureCount(List<DeckInfoCard> deck)
+        {
+            var playables = GetOnlyPlayables(deck, false);
+
+            return playables.Sum(c => c.cardFaces[0].PrimaryCardType != CardType.Creature ? c.Copies : 0);
         }
 
         private List<DeckInfoCard> GetOnlyPlayables(List<DeckInfoCard> deck, bool includeLands)
