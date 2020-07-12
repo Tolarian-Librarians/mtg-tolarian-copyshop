@@ -79,7 +79,7 @@ namespace Tolarian.Copyshop.Business.UseCaseInteractors
             {
                 Cmc = cmc,
                 CountOfCards = countOfCards.Count()
-            });
+            }).OrderBy(x => x.Cmc);
 
             var result = grouped.ToDictionary(gr => gr.Cmc, gr => gr.CountOfCards);
             return result;
