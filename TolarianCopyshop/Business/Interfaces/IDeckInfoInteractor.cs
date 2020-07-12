@@ -7,7 +7,8 @@ namespace Tolarian.Copyshop.Business.Interfaces
     public interface IDeckInfoInteractor
     {
         int GetTotalCardCountOfDeck(List<DeckInfoCard> deck);
-        Dictionary<float, int> GetManaCurve(List<DeckInfoCard> deck);
+        Dictionary<float, int> GetCreatureManaCurve(List<DeckInfoCard> deck);
+        Dictionary<float, int> GetNonCreatureManaCurve(List<DeckInfoCard> deck);
         Dictionary<MtgColor, int> GetColorSymbolCounts(List<DeckInfoCard> deck);
         Dictionary<MtgColor, int> GetManaSourcesCounts(List<DeckInfoCard> deck);
         Dictionary<CardType, int> GetCardTypeCounts(List<DeckInfoCard> deck);

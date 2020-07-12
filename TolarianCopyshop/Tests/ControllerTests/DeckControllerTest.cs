@@ -47,7 +47,7 @@ namespace Tests.ControllerTests
 
         private DeckController GetController()
         {
-            return new DeckController(_deckInfoMock.Object);
+            return new DeckController(_deckInfoMock.Object, null);
         }
     }
 }

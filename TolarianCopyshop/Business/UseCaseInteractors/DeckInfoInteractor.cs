@@ -59,10 +59,21 @@ namespace Tolarian.Copyshop.Business.UseCaseInteractors
             return result;
         }
 
-        public Dictionary<float, int> GetManaCurve(List<DeckInfoCard> deck)
+        public Dictionary<float, int> GetCreatureManaCurve(List<DeckInfoCard> deck)
         {
-            var playables = GetOnlyPlayables(deck, false);
-            var grouped = playables.GroupBy(c => c.ConvertedManaCost, c => c.ConvertedManaCost, (cmc, countOfCards) => new
+            var creatures = GetOnlyPlayables(deck, false).Where(c => c.cardFaces[0].PrimaryCardType == CardType.Creature);
+            return GetManaCurve(creatures);
+        }
+        
+        public Dictionary<float, int> GetNonCreatureManaCurve(List<DeckInfoCard> deck)
+        {
+            var nonCreatures = GetOnlyPlayables(deck, false).Where(c => c.cardFaces[0].PrimaryCardType != CardType.Creature);
+            return GetManaCurve(nonCreatures);
+        }
+
+        private Dictionary<float, int> GetManaCurve(IEnumerable<DeckInfoCard> deck)
+        {
+            var grouped = deck.GroupBy(c => c.ConvertedManaCost, c => c.ConvertedManaCost, (cmc, countOfCards) => new
             {
                 Cmc = cmc,
                 CountOfCards = countOfCards.Count()
