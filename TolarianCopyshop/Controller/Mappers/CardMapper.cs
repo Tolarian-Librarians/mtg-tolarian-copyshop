@@ -104,7 +104,7 @@ namespace Tolarian.Copyshop.Controller.Mappers
                 IsTransformable = source.IsTransformable,
                 ConvertedManaCost = source.ConvertedManaCost,
                 ColorIdentity = source.ColorIdentity.Select(c => (ResponseObjects.Enums.MtgColor)((int)c)).ToList(),
-                ManaCostLine = source.ManaCostLine,
+                ManaCostLine = source.ManaCostLine ?? source.CardFaces?.FirstOrDefault()?.ManaCostLine,
                 ProducedMana = source.ProducedMana?.Select(c => (ResponseObjects.Enums.MtgColor)((int)c)).ToList(),
             };
 
