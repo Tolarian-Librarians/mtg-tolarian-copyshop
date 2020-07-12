@@ -60,7 +60,7 @@ namespace Tolarian.Copyshop.Controller
         public GetDeckStatisticsResponse GetDeckStatistics(List<IFullCard> deckCards)
         {
             if (deckCards == null)
-                return new GetDeckStatisticsResponse();
+                return GetDeckStatisticsResponse.Empty();
 
             var businessModel = DeckMapper.MapDeckDtoToBusiness(deckCards);
 
