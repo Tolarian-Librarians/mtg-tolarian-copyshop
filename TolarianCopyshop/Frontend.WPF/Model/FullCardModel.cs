@@ -55,6 +55,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.Model
                 ConvertedManaCost = card.ConvertedManaCost,
                 ColorIdentity = card.ColorIdentity,
                 ManaCostLine = card.ManaCostLine,
+                ProducedMana = card.ProducedMana,
             };
         }
 

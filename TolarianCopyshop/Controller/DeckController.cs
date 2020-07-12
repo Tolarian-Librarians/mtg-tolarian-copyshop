@@ -68,6 +68,7 @@ namespace Tolarian.Copyshop.Controller
             {
                 CardTypeCounts = _deckInfoInteractor.GetCardTypeCounts(businessModel).ToDictionary(x => (CardType)((int)x.Key), x => x.Value),
                 ColorSymbolCounts = _deckInfoInteractor.GetColorSymbolCounts(businessModel).ToDictionary(x => (MtgColor)((int)x.Key), x => x.Value),
+                ManaSourcesCounts = _deckInfoInteractor.GetManaSourcesCounts(businessModel).ToDictionary(x => (MtgColor)((int)x.Key), x => x.Value),
                 ManaCurve = _deckInfoInteractor.GetManaCurve(businessModel),
             };
 

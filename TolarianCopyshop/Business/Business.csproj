@@ -59,6 +59,7 @@
     <Compile Include="Interfaces\ISaveAndLoadInteractor.cs" />
     <Compile Include="Interfaces\ISetCodeTranslator.cs" />
     <Compile Include="Interfaces\ISetDataGateway.cs" />
+    <Compile Include="Models\Enums\CardType.cs" />
     <Compile Include="Models\Enums\MtgColor.cs" />
     <Compile Include="Models\SaveAndLoad\SaveCard.cs" />
     <Compile Include="Models\SfCardInfo\SfRelatedCard.cs" />
@@ -82,7 +83,6 @@
     <Compile Include="Interfaces\IDeckInfoInteractor.cs" />
     <Compile Include="Interfaces\IPrintRequester.cs" />
     <Compile Include="Models\Enums\CardImageTypes.cs" />
-    <Compile Include="Models\Enums\CardType.cs" />
     <Compile Include="Models\Enums\MtgPlayModes.cs" />
     <Compile Include="Models\SfCardInfo\SfIdentifier.cs" />
     <Compile Include="Models\SfCardInfo\SfCardFace.cs" />

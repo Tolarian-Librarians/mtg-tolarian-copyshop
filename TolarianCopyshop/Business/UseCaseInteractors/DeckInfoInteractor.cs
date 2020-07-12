@@ -34,6 +34,9 @@ namespace Tolarian.Copyshop.Business.UseCaseInteractors
 
             foreach (var card in GetOnlyPlayables(deck, true))
             {
+                if (card.ProducedMana == null)
+                    continue;
+
                 if (card.ProducedMana.Contains(MtgColor.B))
                     result[MtgColor.B]++;                
                 if (card.ProducedMana.Contains(MtgColor.U))
@@ -75,7 +78,7 @@ namespace Tolarian.Copyshop.Business.UseCaseInteractors
         public Dictionary<float, int> GetManaCurve(List<DeckInfoCard> deck)
         {
             var playables = GetOnlyPlayables(deck, false);
-            var grouped = deck.GroupBy(c => c.ConvertedManaCost, c => c.ConvertedManaCost, (cmc, countOfCards) => new
+            var grouped = playables.GroupBy(c => c.ConvertedManaCost, c => c.ConvertedManaCost, (cmc, countOfCards) => new
             {
                 Cmc = cmc,
                 CountOfCards = countOfCards.Count()
