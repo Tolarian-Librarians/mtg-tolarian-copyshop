@@ -15,10 +15,6 @@
              DataContext="{Binding Path=DeckStatisticsViewModel, Source={StaticResource ServiceLocator}}"
              Loaded="DeckStatisticsView_Loaded"
              mc:Ignorable="d">
-    <UserControl.Resources>
-        <converter:DataLabelVisibleConverter x:Key="DataLabelVisibleConverter" />
-    </UserControl.Resources>
-
     <Grid Margin="5">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />

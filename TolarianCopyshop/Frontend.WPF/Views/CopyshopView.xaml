@@ -110,11 +110,11 @@
             <TabItem Header="Build Deck">
                 <local:DeckBuilderView x:Name="_DeckBuilderView" />
             </TabItem>
-            <TabItem Header="View Deck">
-                <local:DeckViewerView x:Name="_DeckViewerView" />
-            </TabItem>
             <TabItem Header="Deck Statistics">
                 <local:DeckStatisticsView x:Name="_DeckStatisticsView" />
+            </TabItem>
+            <TabItem Header="View Deck">
+                <local:DeckViewerView x:Name="_DeckViewerView" />
             </TabItem>
         </TabControl>
         <StatusBar Grid.Row="2">

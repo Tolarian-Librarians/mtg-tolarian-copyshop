@@ -106,7 +106,6 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Communication\Notifications.cs" />
-    <Compile Include="Converter\DataLabelVisibleConverter.cs" />
     <Compile Include="Converter\LeftMarginPercentageConverter.cs" />
     <Compile Include="Converter\NumericMultiplicationConverter.cs" />
     <Compile Include="Helper\CollectionExtension.cs" />
