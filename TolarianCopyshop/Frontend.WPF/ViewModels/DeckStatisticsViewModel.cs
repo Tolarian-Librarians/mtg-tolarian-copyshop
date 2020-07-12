@@ -161,23 +161,28 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
 
             this.BlackManaCollection = new ChartValues<float>
             {
-                result.ColorSymbolCounts[Controller.ResponseObjects.Enums.MtgColor.B]
+                result.ManaSourcesCounts[Controller.ResponseObjects.Enums.MtgColor.B],
+                result.ColorSymbolCounts[Controller.ResponseObjects.Enums.MtgColor.B],
             };
             this.BlueManaCollection = new ChartValues<float>
             {
-                result.ColorSymbolCounts[Controller.ResponseObjects.Enums.MtgColor.U]
+                result.ManaSourcesCounts[Controller.ResponseObjects.Enums.MtgColor.U],
+                result.ColorSymbolCounts[Controller.ResponseObjects.Enums.MtgColor.U],
             };
             this.GreenManaCollection = new ChartValues<float>
             {
-                result.ColorSymbolCounts[Controller.ResponseObjects.Enums.MtgColor.G]
+                result.ManaSourcesCounts[Controller.ResponseObjects.Enums.MtgColor.G],
+                result.ColorSymbolCounts[Controller.ResponseObjects.Enums.MtgColor.G],
             };
             this.RedManaCollection = new ChartValues<float>
             {
-                result.ColorSymbolCounts[Controller.ResponseObjects.Enums.MtgColor.R]
+                result.ManaSourcesCounts[Controller.ResponseObjects.Enums.MtgColor.R],
+                result.ColorSymbolCounts[Controller.ResponseObjects.Enums.MtgColor.R],
             };
             this.WhiteManaCollection = new ChartValues<float>
             {
-                result.ColorSymbolCounts[Controller.ResponseObjects.Enums.MtgColor.W]
+                result.ManaSourcesCounts[Controller.ResponseObjects.Enums.MtgColor.W],
+                result.ColorSymbolCounts[Controller.ResponseObjects.Enums.MtgColor.W],
             };
         }
 
