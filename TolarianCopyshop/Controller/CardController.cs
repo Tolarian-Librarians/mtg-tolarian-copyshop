@@ -6,6 +6,7 @@ using Tolarian.Copyshop.Business.Interfaces;
 using Tolarian.Copyshop.Business.Models.SfCardInfo;
 using Tolarian.Copyshop.Controller.ResponseObjects;
 using Tolarian.Copyshop.Controller.Mappers;
+using Tolarian.Copyshop.Controller.Interfaces;
 
 namespace Tolarian.Copyshop.Controller
 {
@@ -97,6 +98,54 @@ namespace Tolarian.Copyshop.Controller
                 (List<SfCard> Cards, string NotFound) = _importInteractor.GetCardsForImport(lines);
                 response.Cards = CardMapper.MapToCardDto(Cards);
                 response.NotFound = NotFound;
+            }
+            catch (HttpException ex)
+            {
+                SetErrorMessage(ex);
+            }
+            catch (AggregateException ex)
+            {
+                SetErrorMessage(ex);
+            }
+
+            return response;
+        }
+        
+        public CardSearchResponse GetTokenSearchResults(string query)
+        {
+            CardSearchResponse response = new CardSearchResponse();
+
+            try
+            {
+                (List<SfCard> Cards, string amountFound) businessResponse = _requester.GetTokensByQuery(query);
+                response = CardMapper.MapToSearchResultDto(businessResponse.Cards, businessResponse.amountFound);
+            }
+            catch (HttpException ex)
+            {
+                SetErrorMessage(ex);
+            }
+            catch (AggregateException ex)
+            {
+                SetErrorMessage(ex);
+            }
+
+            return response;
+        }
+
+        public AddTokensToDeckResponse AddTokensToDeck(List<IFullCard> deckCards, bool overwriteTokens)
+        {
+            AddTokensToDeckResponse response = new AddTokensToDeckResponse();
+
+            try
+            {
+                if(overwriteTokens)
+                {
+                    deckCards.RemoveAll(c => c.CardFaces.Any(cf => cf.PrimaryCardType == ResponseObjects.Enums.CardType.Token));
+                }
+
+                var businessResponse = _requester.GetCardsByIds(CardMapper.GetTokenGuidsOfDeck(deckCards));
+                deckCards.AddRange(CardMapper.MapToCardDto(businessResponse));
+                response.Deck = deckCards;
             }
             catch (HttpException ex)
             {

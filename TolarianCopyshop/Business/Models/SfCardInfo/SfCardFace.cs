@@ -16,6 +16,9 @@ namespace Tolarian.Copyshop.Business.Models.SfCardInfo
         [JsonProperty(PropertyName = "type_line")]
         public string TypeLine { get; set; }
 
+        [JsonProperty(PropertyName = "mana_cost")]
+        public string ManaCostLine { get; set; }
+
         [JsonProperty(PropertyName = "image_uris")]
         public Dictionary<CardImageTypes, Uri> ImageUris { get; set; }
 

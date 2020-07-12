@@ -1,4 +1,4 @@
-﻿namespace Tolarian.Copyshop.Controller.ResponseObjects.Enums
+﻿namespace Tolarian.Copyshop.Business.Models.Enums
 {
     public enum CardType
     {

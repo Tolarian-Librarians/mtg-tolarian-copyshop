@@ -1,0 +1,263 @@
+﻿<UserControl x:Class="Tolarian.Copyshop.ScreenPresenter.Views.DeckStatisticsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:converter="clr-namespace:Tolarian.Copyshop.ScreenPresenter.Converter"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:Tolarian.Copyshop.ScreenPresenter.Views"
+             xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:Tolarian.Copyshop.ScreenPresenter.ViewModels"
+             d:DataContext="{d:DesignInstance Type=vm:DeckStatisticsDesignViewModel,
+                                              IsDesignTimeCreatable=True}"
+             d:DesignHeight="600"
+             d:DesignWidth="1200"
+             Background="{StaticResource MahApps.Brushes.Window.Background}"
+             DataContext="{Binding Path=DeckStatisticsViewModel, Source={StaticResource ServiceLocator}}"
+             Loaded="DeckStatisticsView_Loaded"
+             mc:Ignorable="d">
+    <Grid Margin="5">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="5" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="40" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0"
+                   Grid.Column="0"
+                   HorizontalAlignment="Center"
+                   FontSize="26"
+                   Foreground="{StaticResource MahApps.Brushes.Accent}"
+                   Text="Overview" />
+        <Grid Grid.Row="1" Grid.Column="0" Margin="10,0,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="40" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="0" Orientation="Vertical">
+                <StackPanel.Resources>
+                    <Style TargetType="{x:Type Ellipse}">
+                        <Setter Property="Margin" Value="0,26,0,0" />
+                    </Style>
+                </StackPanel.Resources>
+                <Ellipse Width="20"
+                         Height="20"
+                         Fill="Transparent"
+                         Stroke="Transparent" />
+                <Ellipse Width="20"
+                         Height="20"
+                         Fill="Green"
+                         Stroke="DarkGreen" />
+                <Ellipse Width="20"
+                         Height="20"
+                         Fill="MediumPurple"
+                         Stroke="BlueViolet" />
+            </StackPanel>
+
+            <StackPanel Grid.Column="1" Margin="0,0,110,0" Orientation="Vertical">
+                <StackPanel.Resources>
+                    <Style TargetType="{x:Type TextBlock}">
+                        <Setter Property="Margin" Value="0,20,0,0" />
+                    </Style>
+                </StackPanel.Resources>
+                <TextBlock HorizontalAlignment="Left"
+                           VerticalAlignment="Center"
+                           FontSize="20"
+                           FontWeight="DemiBold"
+                           Foreground="Black"
+                           Text="Total Cards" />
+
+                <TextBlock HorizontalAlignment="Left"
+                           VerticalAlignment="Center"
+                           FontSize="20"
+                           FontWeight="DemiBold"
+                           Foreground="Black"
+                           Text="Creatures" />
+
+                <TextBlock HorizontalAlignment="Left"
+                           VerticalAlignment="Center"
+                           FontSize="20"
+                           FontWeight="DemiBold"
+                           Foreground="Black"
+                           Text="Non-Creatures" />
+
+                <TextBlock HorizontalAlignment="Left"
+                           VerticalAlignment="Center"
+                           FontSize="20"
+                           FontWeight="DemiBold"
+                           Foreground="Black"
+                           Text="Average CMC" />
+            </StackPanel>
+
+            <StackPanel Grid.Column="2">
+                <StackPanel.Resources>
+                    <Style TargetType="{x:Type TextBlock}">
+                        <Setter Property="Margin" Value="0,20,0,0" />
+                    </Style>
+                </StackPanel.Resources>
+                <TextBlock HorizontalAlignment="Left"
+                           VerticalAlignment="Center"
+                           FontSize="20"
+                           Foreground="Black"
+                           Text="{Binding TotalCards}" />
+
+                <TextBlock HorizontalAlignment="Left"
+                           VerticalAlignment="Center"
+                           FontSize="20"
+                           Foreground="Black"
+                           Text="{Binding CreatureCount}" />
+
+                <TextBlock HorizontalAlignment="Left"
+                           VerticalAlignment="Center"
+                           FontSize="20"
+                           Foreground="Black"
+                           Text="{Binding NonCreatureCount}" />
+
+                <TextBlock HorizontalAlignment="Left"
+                           VerticalAlignment="Center"
+                           FontSize="20"
+                           Foreground="Black"
+                           Text="{Binding AverageCmc}" />
+            </StackPanel>
+        </Grid>
+
+        <TextBlock Grid.Row="0"
+                   Grid.Column="3"
+                   HorizontalAlignment="Center"
+                   FontSize="26"
+                   Foreground="{StaticResource MahApps.Brushes.Accent}"
+                   Text="Card Types" />
+        <lvc:PieChart Grid.Row="1" Grid.Column="2" LegendLocation="Right">
+            <lvc:PieChart.Series>
+                <lvc:PieSeries Title="Land"
+                               DataLabels="True"
+                               Fill="Brown"
+                               LabelPoint="{Binding PieChartPointLabel}"
+                               Values="{Binding LandCardTypCount}" />
+                <lvc:PieSeries Title="Creature"
+                               DataLabels="True"
+                               Fill="Green"
+                               LabelPoint="{Binding PieChartPointLabel}"
+                               Values="{Binding CreatureCardTypCount}" />
+                <lvc:PieSeries Title="Instant"
+                               DataLabels="True"
+                               Fill="MediumPurple"
+                               LabelPoint="{Binding PieChartPointLabel}"
+                               Values="{Binding InstantCardTypCount}" />
+                <lvc:PieSeries Title="Sorcery"
+                               DataLabels="True"
+                               Fill="Purple"
+                               LabelPoint="{Binding PieChartPointLabel}"
+                               Values="{Binding SorceryCardTypCount}" />
+                <lvc:PieSeries Title="Enchantment"
+                               DataLabels="True"
+                               Fill="LightBlue"
+                               LabelPoint="{Binding PieChartPointLabel}"
+                               Values="{Binding EnchantmentCardTypCount}" />
+                <lvc:PieSeries Title="Artifact"
+                               DataLabels="True"
+                               Fill="Gray"
+                               LabelPoint="{Binding PieChartPointLabel}"
+                               Values="{Binding ArtifactCardTypCount}" />
+                <lvc:PieSeries Title="Planeswalker    "
+                               DataLabels="True"
+                               Fill="Gold"
+                               LabelPoint="{Binding PieChartPointLabel}"
+                               Values="{Binding PlaneswalkerCardTypCount}" />
+            </lvc:PieChart.Series>
+            <lvc:PieChart.DataTooltip>
+                <lvc:DefaultTooltip BulletSize="20" />
+            </lvc:PieChart.DataTooltip>
+            <lvc:PieChart.ChartLegend>
+                <lvc:DefaultLegend BulletSize="30" />
+            </lvc:PieChart.ChartLegend>
+        </lvc:PieChart>
+
+        <TextBlock Grid.Row="2"
+                   Grid.Column="0"
+                   HorizontalAlignment="Center"
+                   FontSize="26"
+                   Foreground="{StaticResource MahApps.Brushes.Accent}"
+                   Text="Mana Curve" />
+        <lvc:CartesianChart Grid.Row="3" Grid.Column="0" DataTooltip="{x:Null}">
+            <lvc:CartesianChart.Series>
+                <lvc:StackedColumnSeries Title="Creatures"
+                                         DataLabels="True"
+                                         Fill="Green"
+                                         LabelPoint="{Binding BarChartPointLabel}"
+                                         StackMode="Values"
+                                         Stroke="DarkGreen"
+                                         Values="{Binding ManaCurveCreatureCollection}" />
+                <lvc:StackedColumnSeries Title="Non-Creatures"
+                                         DataLabels="True"
+                                         Fill="MediumPurple"
+                                         LabelPoint="{Binding BarChartPointLabel}"
+                                         StackMode="Values"
+                                         Stroke="BlueViolet"
+                                         Values="{Binding ManaCurveNonCreatureCollection}" />
+            </lvc:CartesianChart.Series>
+            <lvc:CartesianChart.AxisX>
+                <lvc:Axis Title="Converted mana costs" LabelFormatter="{Binding XAxisLabelFormatter}">
+                    <lvc:Axis.Separator>
+                        <lvc:Separator IsEnabled="False" Step="1" />
+                    </lvc:Axis.Separator>
+                </lvc:Axis>
+            </lvc:CartesianChart.AxisX>
+            <lvc:CartesianChart.AxisY>
+                <lvc:Axis Title="Amout of cards" LabelFormatter="{Binding YAxisLabelFormatter}" />
+            </lvc:CartesianChart.AxisY>
+        </lvc:CartesianChart>
+
+        <TextBlock Grid.Row="2"
+                   Grid.Column="3"
+                   HorizontalAlignment="Center"
+                   FontSize="26"
+                   Foreground="{StaticResource MahApps.Brushes.Accent}"
+                   Text="Mana Source (inner) - Card Cost (outer)" />
+        <lvc:PieChart Grid.Row="3" Grid.Column="2" LegendLocation="Right">
+            <lvc:PieChart.Series>
+                <lvc:PieSeries Title="Green                "
+                               DataLabels="True"
+                               Fill="#11A263"
+                               LabelPoint="{Binding PieChartPointLabel}"
+                               Values="{Binding GreenManaCollection}" />
+                <lvc:PieSeries Title="Blue"
+                               DataLabels="True"
+                               Fill="#6BBFFF"
+                               LabelPoint="{Binding PieChartPointLabel}"
+                               Values="{Binding BlueManaCollection}" />
+                <lvc:PieSeries Title="Black"
+                               DataLabels="True"
+                               Fill="#332D2C"
+                               LabelPoint="{Binding PieChartPointLabel}"
+                               Values="{Binding BlackManaCollection}" />
+                <lvc:PieSeries Title="Red"
+                               DataLabels="True"
+                               Fill="#FF634E"
+                               LabelPoint="{Binding PieChartPointLabel}"
+                               Values="{Binding RedManaCollection}" />
+                <lvc:PieSeries Title="White"
+                               DataLabels="True"
+                               Fill="#FEFDC9"
+                               Foreground="Black"
+                               LabelPoint="{Binding PieChartPointLabel}"
+                               Values="{Binding WhiteManaCollection}" />
+            </lvc:PieChart.Series>
+            <lvc:PieChart.DataTooltip>
+                <lvc:DefaultTooltip BulletSize="20" />
+            </lvc:PieChart.DataTooltip>
+            <lvc:PieChart.ChartLegend>
+                <lvc:DefaultLegend BulletSize="30" />
+            </lvc:PieChart.ChartLegend>
+        </lvc:PieChart>
+
+
+    </Grid>
+</UserControl>

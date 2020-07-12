@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net.Cache;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -76,14 +78,19 @@ namespace Tolarian.Copyshop.Business.UseCaseInteractors
 
         private UIElement GetImageForSlotFromUri(Uri source, int xPos, int yPos)
         {
-            BitmapImage bitmap = new BitmapImage(source);
+            BitmapImage bitmap = new BitmapImage();
+            bitmap.BeginInit();
+            bitmap.CacheOption = BitmapCacheOption.OnLoad;
+            bitmap.UriSource = source;
+            bitmap.EndInit();
 
             var img = new Image();
             img.Source = bitmap;
             img.Width = _cardWidth;
             img.Height = _cardHeight;
 
-            img.RenderTransform = new TranslateTransform((_cardWidth * xPos) + (1 * xPos), (_cardHeight * yPos) + (1 * yPos));
+            img.RenderTransform = new TranslateTransform((_cardWidth * xPos) + xPos, (_cardHeight * yPos) + yPos);
+
             return img;
         }
     }

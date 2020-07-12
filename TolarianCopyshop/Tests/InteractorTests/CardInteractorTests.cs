@@ -60,6 +60,21 @@ namespace Tests.InteractorTests
             Assert.AreEqual(maxCountOfItems, result.Item1.Count);
             Assert.AreEqual(dummyList.Data.Length.ToString(), result.Item2);
         }
+        
+        [TestMethod]
+        public void GetTokensBySearchQuery_Test()
+        {
+            var dummyList = new List<SfCard> { TestUtils.GetDummyCard(), TestUtils.GetDummyCard() };
+
+            _gatewayMock.Setup(m => m.GetTokensByQuery(It.IsAny<string>())).Returns(dummyList);
+            CardInteractor unitUnderTest = GetInteractor();
+
+            var response = unitUnderTest.GetTokensByQuery("aaaa");
+
+            Assert.IsNotNull(response);
+            Assert.AreEqual(response.Item1, dummyList);
+            Assert.AreEqual(response.Item2, dummyList.Count.ToString());
+        }
 
         [TestMethod]
         public void GetPrintsOfCard_Test()

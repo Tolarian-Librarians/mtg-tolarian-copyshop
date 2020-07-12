@@ -67,6 +67,22 @@ namespace Tests.ScryfallDataAccessTests
             Assert.AreEqual("Dusk // Dawn", result.Name);
             Assert.IsTrue(result.CardFaces.All(c => c.ImageUris == null));
         }
+        
+        [TestMethod]
+        public void GetCardByExactName_RelatedCards_Test()
+        {
+            //Arrange
+            Guid id = new Guid("ebdf2f50-f69a-47c4-a75f-ff55781bb0c8");
+            CardDataMapper mapper = GetMapper();
+
+            //Act
+            SfCard result = mapper.GetCardByPrintId(id);
+
+            //Assert
+            Assert.IsTrue(result != null);
+            Assert.AreEqual("Toothy, Imaginary Friend", result.Name);
+            Assert.IsNotNull(result.RelatedCards);
+        }
 
         [TestMethod]
         public void GetPrintsOfCard_Test()
@@ -100,10 +116,24 @@ namespace Tests.ScryfallDataAccessTests
             Assert.AreEqual(2, result.Data.Length);
         }
 
+        [TestMethod]
+        public void GetTokensByQuery_Test()
+        {
+            //Arrange
+            const string query = "Gobl";
+            CardDataMapper mapper = GetMapper();
+
+            //Act
+            var result = mapper.GetTokensByQuery(query);
+
+            //Assert
+            Assert.AreEqual(result.Count, 8);
+            Assert.IsTrue(!result.Any(c => !c.Name.Contains(query) && !c.TypeLine.Contains("Token")));
+        }
+
         private CardDataMapper GetMapper()
         {
             return new CardDataMapper();
         }
-
     }
 }

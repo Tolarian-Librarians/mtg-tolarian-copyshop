@@ -11,6 +11,16 @@ namespace Tolarian.Copyshop.Controller.Mappers
 {
     internal abstract class CardMapper
     {
+        internal static List<Guid> GetTokenGuidsOfDeck(List<IFullCard> deck)
+        {
+            var nontokenCards = deck.Where(dc => !dc.CardFaces.Any(cf => cf.PrimaryCardType == ResponseObjects.Enums.CardType.Token));
+                
+            var tokenGuids = nontokenCards.SelectMany(dc => dc?.RelatedCards?.Where(rc => rc?.Type == RelatedCardType.token)?.Select(rc => rc.Id)
+            ?? new List<Guid>())?.ToList();
+
+            return tokenGuids; 
+        }
+
         internal static List<string> PrepareImportStringForBusiness(string source)
         {
             List<string> result = source.Split(
@@ -40,7 +50,7 @@ namespace Tolarian.Copyshop.Controller.Mappers
         private static string TruncateSetname(string setName)
         {
             const int maxLength = 20;
-            if(setName.Length <= maxLength)
+            if (setName.Length <= maxLength)
             {
                 return setName;
             }
@@ -53,9 +63,10 @@ namespace Tolarian.Copyshop.Controller.Mappers
             var result = new SearchCard
             {
                 Name = source.Name,
-                CardType = GetBaseCardTypeFromTypeLine(source.TypeLine),
+                PrimaryCardType = GetPrimaryCardType(GetBaseCardTypesFromTypeLine(source.TypeLine)),
                 PrintId = source.PrintId,
                 Image = source.IsTransformable ? source.CardFaces[0].ImageUris[CardImageTypes.Border_Crop] : source.ImageUris[CardImageTypes.Border_Crop],
+                PowerToughness = string.IsNullOrWhiteSpace(source.Power) && string.IsNullOrWhiteSpace(source.Toughness) ? "" : $"{source.Power,-2}/{source.Toughness,2}",
             };
 
             return result;
@@ -89,7 +100,12 @@ namespace Tolarian.Copyshop.Controller.Mappers
                 Legalities2 = GetSecondHalfOfLegalities(source),
                 CardCount = 1,
                 CardFaces = MapCardFacesOf(source),
+                RelatedCards = MapRelatedCardsOf(source),
                 IsTransformable = source.IsTransformable,
+                ConvertedManaCost = source.ConvertedManaCost,
+                ColorIdentity = source.ColorIdentity.Select(c => (ResponseObjects.Enums.MtgColor)((int)c)).ToList(),
+                ManaCostLine = source.ManaCostLine ?? source.CardFaces?.FirstOrDefault()?.ManaCostLine,
+                ProducedMana = source.ProducedMana?.Select(c => (ResponseObjects.Enums.MtgColor)((int)c)).ToList(),
             };
 
             return result;
@@ -99,19 +115,27 @@ namespace Tolarian.Copyshop.Controller.Mappers
         {
             var result = new List<CardFace>();
             if (source.IsTransformable)
-            {
-                result = source.CardFaces.Select(cf => new CardFace
+            { 
+                result = source.CardFaces.Select(cf =>
                 {
-                    LargeImage = cf.ImageUris.ContainsKey(CardImageTypes.Large) ? cf.ImageUris[CardImageTypes.Large] : null,
-                    SmallImage = cf.ImageUris.ContainsKey(CardImageTypes.Small) ? cf.ImageUris[CardImageTypes.Small] : null,
-                    CroppedImage = cf.ImageUris.ContainsKey(CardImageTypes.Border_Crop) ? cf.ImageUris[CardImageTypes.Border_Crop] : null,
-                    Name = cf.Name,
-                    Text = cf.Text,
-                    CardType = GetBaseCardTypeFromTypeLine(cf.TypeLine),
-                }).ToList();
+                    var typesOfCard = GetBaseCardTypesFromTypeLine(cf.TypeLine);
+
+                    return new CardFace
+                    {
+                        LargeImage = cf.ImageUris.ContainsKey(CardImageTypes.Large) ? cf.ImageUris[CardImageTypes.Large] : null,
+                        SmallImage = cf.ImageUris.ContainsKey(CardImageTypes.Small) ? cf.ImageUris[CardImageTypes.Small] : null,
+                        CroppedImage = cf.ImageUris.ContainsKey(CardImageTypes.Border_Crop) ? cf.ImageUris[CardImageTypes.Border_Crop] : null,
+                        Name = cf.Name,
+                        Text = cf.Text,
+                        CardTypes = typesOfCard,
+                        PrimaryCardType = GetPrimaryCardType(typesOfCard),
+                    };
+                }
+                ).ToList();
             }
             else
             {
+                var typesOfCard = GetBaseCardTypesFromTypeLine(source.TypeLine);
                 result.Add(new CardFace
                 {
                     LargeImage = source.ImageUris.ContainsKey(CardImageTypes.Large) ? source.ImageUris[CardImageTypes.Large] : null,
@@ -119,8 +143,25 @@ namespace Tolarian.Copyshop.Controller.Mappers
                     CroppedImage = source.ImageUris.ContainsKey(CardImageTypes.Border_Crop) ? source.ImageUris[CardImageTypes.Border_Crop] : null,
                     Name = source.Name,
                     Text = GetTextOfCard(source),
-                    CardType = GetBaseCardTypeFromTypeLine(source.TypeLine),
+                    CardTypes = typesOfCard,
+                    PrimaryCardType = GetPrimaryCardType(typesOfCard),
                 });
+            }
+
+            return result;
+        }
+
+        private static ICollection<RelatedCard> MapRelatedCardsOf(SfCard source)
+        {
+            var result = new List<RelatedCard>();
+
+            if (source.RelatedCards != null)
+            {
+                result = source.RelatedCards.Select(rc => new RelatedCard
+                {
+                    Id = rc.Id,
+                    Type = (RelatedCardType)(int)rc.Type
+                }).ToList();
             }
 
             return result;
@@ -169,38 +210,59 @@ namespace Tolarian.Copyshop.Controller.Mappers
             }
         }
 
-        private static CardType GetBaseCardTypeFromTypeLine(string cardType)
+        private static List<ResponseObjects.Enums.CardType> GetBaseCardTypesFromTypeLine(string cardType)
         {
             List<string> typesOfCard = cardType.Split(' ').ToList();
 
             typesOfCard = typesOfCard.Select(str => str.ToLower().Trim()).ToList();
-            typesOfCard.RemoveAll(str => string.IsNullOrWhiteSpace(str) || str == "-");
+            typesOfCard.RemoveAll(str => string.IsNullOrWhiteSpace(str) || str == "-" || str == "—");
 
-            if (typesOfCard.Contains("token"))
-                return CardType.Token;
+            var result = new List<ResponseObjects.Enums.CardType>();
 
-            if (typesOfCard.Contains("creature"))
-                return CardType.Creature;
+            foreach (var type in typesOfCard)
+            {
+                if (Enum.TryParse(type, true, out ResponseObjects.Enums.CardType parsed))
+                    result.Add(parsed);
+            }
 
-            if (typesOfCard.Contains("enchantment"))
-                return CardType.Enchantment;
+            if (!result.Any())
+                result.Add(ResponseObjects.Enums.CardType.Unknown);
 
-            if (typesOfCard.Contains("sorcery"))
-                return CardType.Sorcery;
+            return result;
 
-            if (typesOfCard.Contains("instant"))
-                return CardType.Instant;
+        }
+        
+        private static ResponseObjects.Enums.CardType GetPrimaryCardType(List<ResponseObjects.Enums.CardType> cardTypes)
+        {
 
-            if (typesOfCard.Contains("land"))
-                return CardType.Land;
+            if (cardTypes.Contains(ResponseObjects.Enums.CardType.Token))
+                return ResponseObjects.Enums.CardType.Token;
+            
+            if (cardTypes.Contains(ResponseObjects.Enums.CardType.Emblem))
+                return ResponseObjects.Enums.CardType.Emblem;
 
-            if (typesOfCard.Contains("artifact"))
-                return CardType.Artifact;
+            if (cardTypes.Contains(ResponseObjects.Enums.CardType.Creature))
+                return ResponseObjects.Enums.CardType.Creature;
 
-            if (typesOfCard.Contains("planeswalker"))
-                return CardType.Planeswalker;
+            if (cardTypes.Contains(ResponseObjects.Enums.CardType.Enchantment))
+                return ResponseObjects.Enums.CardType.Enchantment;
 
-            return CardType.Unknown;
+            if (cardTypes.Contains(ResponseObjects.Enums.CardType.Sorcery))
+                return ResponseObjects.Enums.CardType.Sorcery;
+
+            if (cardTypes.Contains(ResponseObjects.Enums.CardType.Instant))
+                return ResponseObjects.Enums.CardType.Instant;
+
+            if (cardTypes.Contains(ResponseObjects.Enums.CardType.Land))
+                return ResponseObjects.Enums.CardType.Land;
+
+            if (cardTypes.Contains(ResponseObjects.Enums.CardType.Artifact))
+                return ResponseObjects.Enums.CardType.Artifact;
+
+            if (cardTypes.Contains(ResponseObjects.Enums.CardType.Planeswalker))
+                return ResponseObjects.Enums.CardType.Planeswalker;
+
+            return ResponseObjects.Enums.CardType.Unknown;
         }
     }
 }

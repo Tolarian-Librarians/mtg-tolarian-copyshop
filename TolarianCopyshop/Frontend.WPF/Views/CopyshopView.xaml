@@ -37,23 +37,17 @@
                         <iconPacks:PackIconFontAwesome Height="16" Margin="4,0,0,0" Kind="FileAltSolid" />
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Command="{Binding OpenCommand}" Header="Open" IsEnabled="False">
+                <MenuItem Command="{Binding OpenCommand}" Header="Open">
                     <MenuItem.Icon>
                         <iconPacks:PackIconFontAwesome Height="16" Margin="4,0,0,0" Kind="FolderOpenSolid" />
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Command="{Binding SaveCommand}"
-                          CommandParameter="{StaticResource FalseValue}"
-                          Header="Save"
-                          IsEnabled="False">
+                <MenuItem Command="{Binding SaveCommand}" CommandParameter="{StaticResource FalseValue}" Header="Save">
                     <MenuItem.Icon>
                         <iconPacks:PackIconFontAwesome Height="16" Margin="4,0,0,0" Kind="SaveSolid" />
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Command="{Binding SaveCommand}"
-                          CommandParameter="{StaticResource TrueValue}"
-                          Header="Save to"
-                          IsEnabled="False">
+                <MenuItem Command="{Binding SaveCommand}" CommandParameter="{StaticResource TrueValue}" Header="Save to">
                     <MenuItem.Icon>
                         <iconPacks:PackIconFontAwesome Height="16" Margin="4,0,0,0" Kind="HddSolid" />
                     </MenuItem.Icon>
@@ -88,6 +82,11 @@
                 </MenuItem>
             </MenuItem>
             <MenuItem Header="ACTION">
+                <MenuItem Command="{Binding ImportTokenCommand}" Header="Import Tokens">
+                    <MenuItem.Icon>
+                        <iconPacks:PackIconFontAwesome Height="16" Margin="4,0,0,0" Kind="ChessSolid" />
+                    </MenuItem.Icon>
+                </MenuItem>
                 <MenuItem Command="{Binding PrintCommand}" Header="Print Deck">
                     <MenuItem.Icon>
                         <iconPacks:PackIconFontAwesome Height="16" Margin="4,0,0,0" Kind="PrintSolid" />
@@ -110,6 +109,9 @@
         <TabControl Grid.Row="1">
             <TabItem Header="Build Deck">
                 <local:DeckBuilderView x:Name="_DeckBuilderView" />
+            </TabItem>
+            <TabItem Header="Deck Statistics">
+                <local:DeckStatisticsView x:Name="_DeckStatisticsView" />
             </TabItem>
             <TabItem Header="View Deck">
                 <local:DeckViewerView x:Name="_DeckViewerView" />

@@ -42,6 +42,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             this.SaveCommand = new Command(this.SaveDeck);
             this.ImportCommand = new Command(this.ImportDeck);
             this.ClearCommand = new Command(this.ClearDeck);
+            this.ImportTokenCommand = new Command(this.ImportToken);
             this.PrintCommand = new Command(this.PrintDeck);
             this.OpenLinkCommand = new Command(this.OpenLink);
         }
@@ -57,6 +58,8 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
         public Command SaveCommand { get; }
 
         public Command ImportCommand { get; }
+
+        public Command ImportTokenCommand { get; }
 
         public Command PrintCommand { get; }
 
@@ -98,14 +101,14 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
                 OpenFileDialog openFileDialog = new OpenFileDialog()
                 {
                     AddExtension = true,
-                    DefaultExt = ".xml",
-                    Filter = "XML-files (*.xml)|*.xml|All files (*.*)|*.*",
+                    DefaultExt = ".tcd",
+                    Filter = "Tolarian Copyshop Deck (*.tcd)|*.tcd|All files (*.*)|*.*",
                     InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
 
                 };
                 if (openFileDialog.ShowDialog() == true)
                 {
-                    DeckBuilderViewModel.GetInstance().AddCards(this._deckController.LoadDeckFromFile(openFileDialog.FileName).Cast<FullCardModel>(), true);
+                    this._dialogs.ShowProgressOnUIThread("Loading Deck", "Please wait while your deck is loaded...", new Action(() => DeckBuilderViewModel.GetInstance().AddCards(this._deckController.LoadDeckFromFile(openFileDialog.FileName).ConvertAll(FullCardModel.Create), true)));
                     this.SaveFile = openFileDialog.FileName;
                 }
             }
@@ -113,8 +116,6 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
 
         private bool HandleRequestSave()
         {
-            // Till save is implemented...
-            return true;
 
             if (DeckBuilderViewModel.GetInstance().DeckCards.Count == 0)
             {
@@ -144,8 +145,8 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             SaveFileDialog saveFileDialog = new SaveFileDialog()
             {
                 AddExtension = true,
-                DefaultExt = ".xml",
-                Filter = "XML-files (*.xml)|*.xml|All files (*.*)|*.*",
+                DefaultExt = ".tcd",
+                Filter = "Tolarian Copyshop Deck (*.tcd)|*.tcd|All files (*.*)|*.*",
                 InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
 
             };
@@ -163,6 +164,39 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             if (commandParameter is bool saveAs)
             {
                 this.HandleSave(saveAs);
+            }
+        }
+
+        private void ImportToken(object _)
+        {
+            bool replaceTokens = false;
+            if (DeckBuilderViewModel.GetInstance().DeckCards.Count > 0)
+            {
+                switch (this._dialogs.ShowQuestionOnUIThread("Import Tokens", "Do you want to remove exiting tokens in your deck?", MessageDialogStyle.AffirmativeAndNegativeAndSingleAuxiliary))
+                {
+                    case MessageDialogResult.FirstAuxiliary:
+                    case MessageDialogResult.SecondAuxiliary:
+                    case MessageDialogResult.Canceled:
+                        return;
+                    case MessageDialogResult.Negative:
+                        replaceTokens = false;
+                        break;
+                    case MessageDialogResult.Affirmative:
+                        replaceTokens = true;
+                        break;
+                }
+            }
+
+            this._dialogs.ShowProgressOnUIThread("IMPORT TOKEN", "Please wait while your tokens are imported...", new Action(() => this.ImportTokenCards(replaceTokens)));
+        }
+
+        private void ImportTokenCards(bool replaceTokens)
+        {
+            var response = this._cardController.AddTokensToDeck(DeckBuilderViewModel.GetInstance().DeckCards.Cast<IFullCard>().ToList(), replaceTokens);
+            this._dialogs.SendErrorMessage(this._cardController.GetErrorMessage());
+            if (response.Deck.Count > 0)
+            {
+                DeckBuilderViewModel.GetInstance().AddCards(response.Deck.ConvertAll(FullCardModel.Create), true);
             }
         }
 

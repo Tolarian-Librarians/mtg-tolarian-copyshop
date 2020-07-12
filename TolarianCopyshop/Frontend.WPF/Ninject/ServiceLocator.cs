@@ -8,9 +8,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.Ninject
         private readonly IKernel kernel;
 
         public ServiceLocator()
-        {
-            this.kernel = new StandardKernel(new ServiceModule());
-        }
+            => this.kernel = new StandardKernel(new ServiceModule());
 
         public CopyShopViewModel CopyShopViewModel
             => this.kernel.Get<CopyShopViewModel>();
@@ -20,5 +18,8 @@ namespace Tolarian.Copyshop.ScreenPresenter.Ninject
 
         public DeckViewerViewModel DeckViewerViewModel
             => this.kernel.Get<DeckViewerViewModel>();
+
+        public DeckStatisticsViewModel DeckStatisticsViewModel
+            => this.kernel.Get<DeckStatisticsViewModel>();
     }
 }
