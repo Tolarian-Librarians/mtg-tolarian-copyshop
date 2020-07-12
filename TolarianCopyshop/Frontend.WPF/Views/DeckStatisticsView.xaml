@@ -12,6 +12,7 @@
              d:DesignWidth="1200"
              Background="{DynamicResource MahApps.Brushes.White}"
              DataContext="{Binding Path=DeckStatisticsViewModel, Source={StaticResource ServiceLocator}}"
+             Loaded="DeckStatisticsView_Loaded"
              mc:Ignorable="d">
 
     <Grid Margin="5">
@@ -65,11 +66,6 @@
                                Fill="LightGoldenrodYellow"
                                LabelPoint="{Binding ChartPointLabel}"
                                Values="{Binding WhiteManaCollection}" />
-                <lvc:PieSeries Title="Colorless"
-                               DataLabels="True"
-                               Fill="Gray"
-                               LabelPoint="{Binding ChartPointLabel}"
-                               Values="{Binding ColorlessManaCollection}" />
             </lvc:PieChart.Series>
         </lvc:PieChart>
         <lvc:PieChart Grid.Row="2" Grid.Column="2" LegendLocation="Right">

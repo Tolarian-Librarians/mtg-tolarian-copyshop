@@ -42,16 +42,12 @@
                         <iconPacks:PackIconFontAwesome Height="16" Margin="4,0,0,0" Kind="FolderOpenSolid" />
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Command="{Binding SaveCommand}"
-                          CommandParameter="{StaticResource FalseValue}"
-                          Header="Save">
+                <MenuItem Command="{Binding SaveCommand}" CommandParameter="{StaticResource FalseValue}" Header="Save">
                     <MenuItem.Icon>
                         <iconPacks:PackIconFontAwesome Height="16" Margin="4,0,0,0" Kind="SaveSolid" />
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Command="{Binding SaveCommand}"
-                          CommandParameter="{StaticResource TrueValue}"
-                          Header="Save to">
+                <MenuItem Command="{Binding SaveCommand}" CommandParameter="{StaticResource TrueValue}" Header="Save to">
                     <MenuItem.Icon>
                         <iconPacks:PackIconFontAwesome Height="16" Margin="4,0,0,0" Kind="HddSolid" />
                     </MenuItem.Icon>

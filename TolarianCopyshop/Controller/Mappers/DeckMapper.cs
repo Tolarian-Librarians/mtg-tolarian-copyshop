@@ -26,8 +26,8 @@ namespace Tolarian.Copyshop.Controller.Mappers
                     Copies = fullCard.CardCount,
                     ConvertedManaCost = fullCard.ConvertedManaCost,
                     ManaCostLine = fullCard.ManaCostLine,
-                    ProducedMana = fullCard.ProducedMana.Select(pm => (MtgColor)((int)pm)).ToList(),
-                    cardFaces = fullCard.CardFaces.Select(cf => new DeckInfoCardFace 
+                    ProducedMana = fullCard.ProducedMana?.Select(pm => (MtgColor)((int)pm)).ToList(),
+                    cardFaces = fullCard.CardFaces.Select(cf => new DeckInfoCardFace
                     {
                         CardType = cf.CardType.ToString(),
                     }).ToList(),

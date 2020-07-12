@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Tolarian.Copyshop.ScreenPresenter.ViewModels;
 
 namespace Tolarian.Copyshop.ScreenPresenter.Views
 {
@@ -23,6 +24,14 @@ namespace Tolarian.Copyshop.ScreenPresenter.Views
         public DeckStatisticsView()
         {
             InitializeComponent();
+        }
+
+        private void DeckStatisticsView_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (this.DataContext is DeckStatisticsViewModel viewModel)
+            {
+                viewModel.LoadChartData();
+            }
         }
     }
 }

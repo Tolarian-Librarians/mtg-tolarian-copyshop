@@ -7,7 +7,7 @@
         R,
         G,
         W,
-        Colorless
+        C,
     }
 }
 
