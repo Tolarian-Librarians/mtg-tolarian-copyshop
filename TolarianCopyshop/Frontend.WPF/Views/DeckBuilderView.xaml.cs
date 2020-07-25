@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Input;
+using Tolarian.Copyshop.Controller.ResponseObjects;
 using Tolarian.Copyshop.ScreenPresenter.ViewModels;
 
 namespace Tolarian.Copyshop.ScreenPresenter.Views
@@ -10,8 +11,16 @@ namespace Tolarian.Copyshop.ScreenPresenter.Views
     /// </summary>
     public partial class DeckBuilderView : UserControl
     {
+        private static DeckBuilderView _deckBuilderView;
+
         public DeckBuilderView()
-            => this.InitializeComponent();
+        {
+            _deckBuilderView = this;
+            this.InitializeComponent();
+        }
+
+        internal static DeckBuilderView GetInstance()
+            => _deckBuilderView;
 
         private void SearchTextBox_PreviewKeyDown(object sender, KeyEventArgs e)
             => this.HandleSearchUpDown(e);
@@ -108,9 +117,19 @@ namespace Tolarian.Copyshop.ScreenPresenter.Views
 
         private void SearchResultBox_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            if (e.LeftButton == MouseButtonState.Released && this.DataContext is DeckBuilderViewModel oModel)
+            if (e.LeftButton == MouseButtonState.Released && this.DataContext is DeckBuilderViewModel oModel && this._previewMouseDownSelectedCard == oModel.SelectedSearchItem)
             {
                 oModel.ApplySelectedSearchItemCommand.Execute(new object());
+            }
+        }
+
+        private SearchCard _previewMouseDownSelectedCard = null;
+
+        private void _SearchResultBox_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Pressed && this.DataContext is DeckBuilderViewModel oModel)
+            {
+                this._previewMouseDownSelectedCard = oModel.SelectedSearchItem;
             }
         }
     }

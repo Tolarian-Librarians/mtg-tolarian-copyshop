@@ -86,10 +86,17 @@ namespace Tolarian.Copyshop.Business.UseCaseInteractors
         public float GetAverageCmc(List<DeckInfoCard> deck)
         {
             var playables = GetOnlyPlayables(deck, false);
-
+            var totalCards = GetTotalCardCountOfDeck(playables);
             var summedUpCmcs = playables.Sum(c => c.ConvertedManaCost * c.Copies);
 
-            return (float)Math.Round(summedUpCmcs / GetTotalCardCountOfDeck(playables), 2);
+            if (totalCards == 0)
+            {
+                return 0;
+            }
+            else
+            {
+                return (float)Math.Round(summedUpCmcs / totalCards, 2);
+            }
         }
 
         public int GetCreatureCount(List<DeckInfoCard> deck)

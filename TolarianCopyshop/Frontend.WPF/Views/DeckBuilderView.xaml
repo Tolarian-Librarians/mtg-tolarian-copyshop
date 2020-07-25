@@ -131,6 +131,7 @@
                              ItemsSource="{Binding SearchResults}"
                              MouseUp="SearchResultBox_MouseUp"
                              PreviewKeyDown="SearchResultBox_PreviewKeyDown"
+                             PreviewMouseDown="_SearchResultBox_PreviewMouseDown"
                              SelectedIndex="{Binding SelectedSearchIndex, Mode=TwoWay}"
                              SelectedItem="{Binding SelectedSearchItem, Mode=TwoWay}">
                         <ListBox.ItemTemplate>
