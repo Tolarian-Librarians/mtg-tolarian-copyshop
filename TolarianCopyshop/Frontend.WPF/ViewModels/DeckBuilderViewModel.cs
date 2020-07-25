@@ -415,6 +415,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
 
             this.SearchText = string.Empty;
             this.ResetSearchedItems();
+            DeckBuilderView.GetInstance()._SearchTextBox.Focus();
         }
 
         private void ResetSearchedItems()
