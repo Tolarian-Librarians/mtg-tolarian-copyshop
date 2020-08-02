@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Data;
 using System.Windows.Threading;
 using Tolarian.Copyshop.Controller;
 using Tolarian.Copyshop.Controller.Interfaces;
@@ -33,12 +35,14 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
         private bool _isSearchResultVisible;
         private bool _isSearchProgressVisible;
         private string _searchText;
+        private string _searchDeckText;
         private string _searchResultCount;
         private bool _hasSearchText;
         private ObservableCollection<SearchCard> _searchResults;
         private SearchCard _selectedSearchItem;
         private int _selectedSearchIndex;
         private SearchCardType _searchType = SearchCardType.Normal;
+        private string _searchTextBoxPlaceHolder = "Search for cards on Scryfall ...";
 
         private Task task;
         private CancellationTokenSource tokenSource;
@@ -180,7 +184,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
 
         public enum SearchCardType
         {
-            Normal,Token
+            Normal, Token
         }
 
         public SearchCardType SearchType
@@ -363,11 +367,13 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             {
                 //checked
                 this.SearchType = SearchCardType.Token;
+                this.SearchTextBoxPlaceHolder = "Search for tokens on Scryfall ...";
             }
             else
             {
                 //unchecked
                 this.SearchType = SearchCardType.Normal;
+                this.SearchTextBoxPlaceHolder = "Search for cards on Scryfall ...";
             }
         }
 
