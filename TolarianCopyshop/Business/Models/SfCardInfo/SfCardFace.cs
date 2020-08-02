@@ -22,6 +22,9 @@ namespace Tolarian.Copyshop.Business.Models.SfCardInfo
         [JsonProperty(PropertyName = "image_uris")]
         public Dictionary<CardImageTypes, Uri> ImageUris { get; set; }
 
+        [JsonProperty(PropertyName = "colors")]
+        public List<MtgColor> Colors { get; set; }
+
         public override string ToString()
         {
             return $"{Name}";

@@ -14,11 +14,11 @@ namespace Tolarian.Copyshop.Controller.Mappers
         internal static List<Guid> GetTokenGuidsOfDeck(List<IFullCard> deck)
         {
             var nontokenCards = deck.Where(dc => !dc.CardFaces.Any(cf => cf.PrimaryCardType == ResponseObjects.Enums.CardType.Token));
-                
+
             var tokenGuids = nontokenCards.SelectMany(dc => dc?.RelatedCards?.Where(rc => rc?.Type == RelatedCardType.token)?.Select(rc => rc.Id)
             ?? new List<Guid>())?.ToList();
 
-            return tokenGuids; 
+            return tokenGuids;
         }
 
         internal static List<string> PrepareImportStringForBusiness(string source)
@@ -104,6 +104,7 @@ namespace Tolarian.Copyshop.Controller.Mappers
                 IsTransformable = source.IsTransformable,
                 ConvertedManaCost = source.ConvertedManaCost,
                 ColorIdentity = source.ColorIdentity.Select(c => (ResponseObjects.Enums.MtgColor)((int)c)).ToList(),
+                Colors = source.Colors.Select(c => (ResponseObjects.Enums.MtgColor)((int)c)).ToList(),
                 ManaCostLine = source.ManaCostLine ?? source.CardFaces?.FirstOrDefault()?.ManaCostLine,
                 ProducedMana = source.ProducedMana?.Select(c => (ResponseObjects.Enums.MtgColor)((int)c)).ToList(),
             };
@@ -115,7 +116,7 @@ namespace Tolarian.Copyshop.Controller.Mappers
         {
             var result = new List<CardFace>();
             if (source.IsTransformable)
-            { 
+            {
                 result = source.CardFaces.Select(cf =>
                 {
                     var typesOfCard = GetBaseCardTypesFromTypeLine(cf.TypeLine);
@@ -125,6 +126,7 @@ namespace Tolarian.Copyshop.Controller.Mappers
                         LargeImage = cf.ImageUris.ContainsKey(CardImageTypes.Large) ? cf.ImageUris[CardImageTypes.Large] : null,
                         SmallImage = cf.ImageUris.ContainsKey(CardImageTypes.Small) ? cf.ImageUris[CardImageTypes.Small] : null,
                         CroppedImage = cf.ImageUris.ContainsKey(CardImageTypes.Border_Crop) ? cf.ImageUris[CardImageTypes.Border_Crop] : null,
+                        Colors = cf.Colors.Select(c => (ResponseObjects.Enums.MtgColor)((int)c)).ToList(),
                         Name = cf.Name,
                         Text = cf.Text,
                         CardTypes = typesOfCard,
@@ -141,6 +143,7 @@ namespace Tolarian.Copyshop.Controller.Mappers
                     LargeImage = source.ImageUris.ContainsKey(CardImageTypes.Large) ? source.ImageUris[CardImageTypes.Large] : null,
                     SmallImage = source.ImageUris.ContainsKey(CardImageTypes.Small) ? source.ImageUris[CardImageTypes.Small] : null,
                     CroppedImage = source.ImageUris.ContainsKey(CardImageTypes.Border_Crop) ? source.ImageUris[CardImageTypes.Border_Crop] : null,
+                    Colors = source.Colors.Select(c => (ResponseObjects.Enums.MtgColor)((int)c)).ToList(),
                     Name = source.Name,
                     Text = GetTextOfCard(source),
                     CardTypes = typesOfCard,
@@ -231,12 +234,12 @@ namespace Tolarian.Copyshop.Controller.Mappers
             return result;
 
         }
-        
+
         private static ResponseObjects.Enums.CardType GetPrimaryCardType(List<ResponseObjects.Enums.CardType> cardTypes)
         {
             if (cardTypes.Contains(ResponseObjects.Enums.CardType.Token))
                 return ResponseObjects.Enums.CardType.Token;
-            
+
             if (cardTypes.Contains(ResponseObjects.Enums.CardType.Emblem))
                 return ResponseObjects.Enums.CardType.Emblem;
 

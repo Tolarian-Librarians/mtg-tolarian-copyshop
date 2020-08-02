@@ -13,5 +13,6 @@ namespace Tolarian.Copyshop.Controller.ResponseObjects
         public Uri SmallImage { get; set; }
         public Uri CroppedImage { get; set; }
         public string Text { get; set; }
+        public List<MtgColor> Colors { get; set; }
     }
 }

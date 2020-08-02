@@ -28,10 +28,11 @@ namespace Tolarian.Copyshop.Controller.Mappers
                     ManaCostLine = fullCard.ManaCostLine,
                     ProducedMana = fullCard.ProducedMana?.Select(pm => (MtgColor)((int)pm)).ToList(),
                     ColorIdentity = fullCard.ColorIdentity?.Select(pm => (MtgColor)((int)pm)).ToList(),
+                    Colors = fullCard.Colors?.Select(pm => (MtgColor)((int)pm)).ToList(),
                     cardFaces = fullCard.CardFaces.Select(cf => new DeckInfoCardFace
                     {
                         PrimaryCardType = (CardType)((int)cf.PrimaryCardType),
-
+                        Colors = fullCard.Colors?.Select(pm => (MtgColor)((int)pm)).ToList(),
                     }).ToList(),
                 };
             }

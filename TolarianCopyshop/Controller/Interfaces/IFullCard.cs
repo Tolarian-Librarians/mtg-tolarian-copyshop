@@ -17,6 +17,7 @@ namespace Tolarian.Copyshop.Controller.Interfaces
         string ManaCostLine { get; set; }
         float ConvertedManaCost { get; set; }
         List<MtgColor> ColorIdentity { get; set; }
+        List<MtgColor> Colors { get; set; }
         List<MtgColor> ProducedMana { get; set; }
         ICollection<CardFace> CardFaces { get; set; }
         ICollection<RelatedCard> RelatedCards { get; set; }

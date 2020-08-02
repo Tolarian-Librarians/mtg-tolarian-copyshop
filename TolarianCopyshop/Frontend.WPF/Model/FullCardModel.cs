@@ -26,6 +26,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.Model
         private Uri _selectedCardFace;
         private float _convertedManaCost;
         private List<MtgColor> _colorIdentity;
+        private List<MtgColor> _colors;
         private List<MtgColor> _producedMana;
 
         #endregion
@@ -54,6 +55,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.Model
                 HasArtworks = true,
                 ConvertedManaCost = card.ConvertedManaCost,
                 ColorIdentity = card.ColorIdentity,
+                Colors = card.Colors,
                 ManaCostLine = card.ManaCostLine,
                 ProducedMana = card.ProducedMana,
             };
@@ -68,19 +70,25 @@ namespace Tolarian.Copyshop.ScreenPresenter.Model
             get => this._cardId;
             set => this.SetProperty(ref this._cardId, value);
         }
-        
+
         public float ConvertedManaCost
         {
             get => this._convertedManaCost;
             set => this.SetProperty(ref this._convertedManaCost, value);
         }
-        
+
         public List<MtgColor> ColorIdentity
         {
             get => this._colorIdentity;
             set => this.SetProperty(ref this._colorIdentity, value);
         }
-        
+
+        public List<MtgColor> Colors
+        {
+            get => this._colors;
+            set => this.SetProperty(ref this._colors, value);
+        }
+
         public List<MtgColor> ProducedMana
         {
             get => this._producedMana;
@@ -98,7 +106,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.Model
             get => this._formattedCardName;
             set => this.SetProperty(ref this._formattedCardName, value);
         }
-        
+
         public string ManaCostLine
         {
             get => this._manaCostLine;
@@ -134,7 +142,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.Model
             get => this._cardFaces;
             set => this.SetProperty(ref this._cardFaces, value);
         }
-        
+
         public ICollection<RelatedCard> RelatedCards
         {
             get => this._relatedCards;
