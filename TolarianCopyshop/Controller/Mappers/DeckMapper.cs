@@ -32,7 +32,7 @@ namespace Tolarian.Copyshop.Controller.Mappers
                     cardFaces = fullCard.CardFaces.Select(cf => new DeckInfoCardFace
                     {
                         PrimaryCardType = (CardType)((int)cf.PrimaryCardType),
-                        Colors = fullCard.Colors?.Select(pm => (MtgColor)((int)pm)).ToList(),
+                        Colors = cf.Colors?.Select(pm => (MtgColor)((int)pm)).ToList(),
                     }).ToList(),
                 };
             }

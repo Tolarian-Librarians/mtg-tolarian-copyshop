@@ -63,7 +63,7 @@ namespace Tolarian.Copyshop.Business.UseCaseInteractors
         {
             var result = new Dictionary<MtgColor, int>();
 
-            foreach (var color in Enum.GetValues(typeof(MtgColor)).Cast<MtgColor>())
+            foreach (MtgColor color in Enum.GetValues(typeof(MtgColor)).Cast<MtgColor>())
             {
                 result.Add(color, 0);
             }
@@ -72,21 +72,40 @@ namespace Tolarian.Copyshop.Business.UseCaseInteractors
 
             foreach (var card in playables)
             {
-                if (card.Colors is null || card.Colors.Count == 0)
+                if (card.Colors is null)
                 {
-                    result[MtgColor.C] += card.Copies;
-                }
-                else if (card.Colors.Count > 1)
-                {
-                    result[MtgColor.M] += card.Copies;
+                    if (card.cardFaces is null || card.cardFaces[0].Colors is null)
+                    {
+                        result[MtgColor.C] += card.Copies;
+                    }
+                    else
+                    {
+                        result[GetColorFromCardData(card.cardFaces[0].Colors)] += card.Copies;
+                    }
                 }
                 else
                 {
-                    result[card.Colors[0]] += card.Copies;
+                    result[GetColorFromCardData(card.Colors)] += card.Copies;
                 }
             }
 
             return result;
+        }
+
+        private MtgColor GetColorFromCardData(List<MtgColor> color)
+        {
+            if (color is null || color.Count == 0)
+            {
+                return MtgColor.C;
+            }
+            else if (color.Count > 1)
+            {
+                return MtgColor.M;
+            }
+            else
+            {
+                return color[0];
+            }
         }
 
         public Dictionary<float, int> GetCreatureManaCurve(List<DeckInfoCard> deck)
