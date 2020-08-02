@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Threading;
 using Tolarian.Copyshop.Business.DbRequestModels;
 using Tolarian.Copyshop.Business.Interfaces;
 using Tolarian.Copyshop.Business.Models.SfCardInfo;
@@ -98,12 +99,12 @@ namespace Tolarian.Copyshop.ScryfallDataAccess
             //List needs to be chunked into lists of max 75 items because SF will return a maximum of 75 cards
             List<List<GetCardCollectionRequest>> chunkedRequests = ChunkListBySize(request, _scryfallApiReturnCountMaximum);
 
-            var container = chunkedRequests.Select(cr => new SfIdentifierContainer
+            var containers = chunkedRequests.Select(cr => new SfIdentifierContainer
             {
                 Identifiers = cr.Select(r => new SfIdentifier { Name = r.Name, SetCode = r.SetCode, Id = r.Id }).ToList()
             });
 
-            var response = container.Select(c => IssueGetCardCollectionRequest(c));
+            var response = containers.Select(c => IssueGetCardCollectionRequest(c)).ToList();
             SfCardCollection result = MergeCardCollections(response);
 
             return result;
@@ -112,6 +113,9 @@ namespace Tolarian.Copyshop.ScryfallDataAccess
         private SfCardCollection IssueGetCardCollectionRequest(SfIdentifierContainer container)
         {
             ApiResponse<SfCardCollection> response = _service.GetCardsByCollection(container).Result;
+
+            // Give Scryfall time to breath
+            Thread.Sleep(100);
 
             switch (response.StatusCode)
             {
