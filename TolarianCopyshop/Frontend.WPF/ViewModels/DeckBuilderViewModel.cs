@@ -217,7 +217,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
                     {
                         if (!string.IsNullOrWhiteSpace(this.SearchDeckText) && obj is FullCardModel CardModel)
                         {
-                            return CardModel.FormattedCardName.ToLower().Contains(this.SearchDeckText.Trim().ToLower());
+                            return CardModel.FormattedCardName.IndexOf(this.SearchDeckText.Trim(), StringComparison.OrdinalIgnoreCase) >= 0;
                         }
                         return true;
                     };

@@ -7,6 +7,7 @@ namespace Tolarian.Copyshop.Controller.ResponseObjects
     public class GetDeckStatisticsResponse
     {
         public Dictionary<MtgColor, int> ColorSymbolCounts { get; set; }
+        public Dictionary<MtgColor, int> ColorCardsCounts { get; set; }
         public Dictionary<MtgColor, int> ManaSourcesCounts { get; set; }
         public Dictionary<CardType, int> CardTypeCounts { get; set; }
         public Dictionary<float, int> ManaCurveCreatures { get; set; }
@@ -21,6 +22,7 @@ namespace Tolarian.Copyshop.Controller.ResponseObjects
             => new GetDeckStatisticsResponse()
             {
                 ColorSymbolCounts = new Dictionary<MtgColor, int>(),
+                ColorCardsCounts = new Dictionary<MtgColor, int>(),
                 ManaSourcesCounts = new Dictionary<MtgColor, int>(),
                 CardTypeCounts = new Dictionary<CardType, int>(),
                 ManaCurveNonCreatures = new Dictionary<float, int>(),
