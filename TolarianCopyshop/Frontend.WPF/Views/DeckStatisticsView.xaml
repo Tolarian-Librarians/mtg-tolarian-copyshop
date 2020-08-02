@@ -33,7 +33,7 @@
                    HorizontalAlignment="Center"
                    FontSize="26"
                    Foreground="{StaticResource MahApps.Brushes.Accent}"
-                   Text="Overview" />
+                   Text="Overview | Cards per Color" />
         <Grid Grid.Row="1" Grid.Column="0" Margin="10,0,0,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
@@ -276,7 +276,7 @@
                    HorizontalAlignment="Center"
                    FontSize="26"
                    Foreground="{StaticResource MahApps.Brushes.Accent}"
-                   Text="Mana Source (inner) - Card Cost (outer)" />
+                   Text="Mana Symbols (inner) - Card Cost (outer)" />
         <lvc:PieChart Grid.Row="3" Grid.Column="2" LegendLocation="Right">
             <lvc:PieChart.Series>
                 <lvc:PieSeries Title="Green                "

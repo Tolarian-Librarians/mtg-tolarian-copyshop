@@ -234,7 +234,6 @@ namespace Tolarian.Copyshop.Controller.Mappers
         
         private static ResponseObjects.Enums.CardType GetPrimaryCardType(List<ResponseObjects.Enums.CardType> cardTypes)
         {
-
             if (cardTypes.Contains(ResponseObjects.Enums.CardType.Token))
                 return ResponseObjects.Enums.CardType.Token;
             

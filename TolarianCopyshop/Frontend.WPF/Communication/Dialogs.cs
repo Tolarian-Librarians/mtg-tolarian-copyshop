@@ -39,7 +39,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.Communication
 
         #region Child Window
 
-        internal async Task<T> ShowChildWindowOnUIThread<T>(ChildWindow childWindow) 
+        internal async Task<T> ShowChildWindowOnUIThread<T>(ChildWindow childWindow)
             => await Application.Current.Dispatcher.Invoke(() => CopyShopView.GetInstance().ShowChildWindowAsync<T>(childWindow).ConfigureAwait(false));
 
         #endregion
@@ -67,10 +67,10 @@ namespace Tolarian.Copyshop.ScreenPresenter.Communication
                      DefaultButtonFocus = MessageDialogResult.Affirmative
                  });
 
-        internal void ShowProgressOnUIThread(string header, string message, Action FunctionWhileProgress)
-            => Application.Current.Dispatcher.Invoke(() => this.ShowProgress(header, message, FunctionWhileProgress));
+        internal void ShowProgressOnUIThread(string header, string message, Action FunctionWhileProgress, Action FunctionAfterProgress = null)
+            => Application.Current.Dispatcher.Invoke(() => this.ShowProgress(header, message, FunctionWhileProgress, FunctionAfterProgress));
 
-        private async void ShowProgress(string header, string message, Action FunctionWhileProgress)
+        private async void ShowProgress(string header, string message, Action FunctionWhileProgress, Action FunctionAfterProgress)
         {
             // Show...
             ProgressDialogController controller = await CopyShopView.GetInstance().ShowProgressAsync(header, message).ConfigureAwait(true);
@@ -81,6 +81,11 @@ namespace Tolarian.Copyshop.ScreenPresenter.Communication
 
             // Close...
             await controller.CloseAsync().ConfigureAwait(true);
+
+            if (FunctionAfterProgress != null)
+            {
+                await Task.Run(FunctionAfterProgress).ConfigureAwait(true);
+            }
         }
 
         #endregion

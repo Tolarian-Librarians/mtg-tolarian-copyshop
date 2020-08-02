@@ -15,7 +15,7 @@
              mc:Ignorable="d">
     <Grid>
         <ScrollViewer VerticalScrollBarVisibility="Auto">
-            <ItemsControl ItemsSource="{Binding DeckCards}">
+            <ItemsControl ItemsSource="{Binding DeckCards}" VirtualizingPanel.IsVirtualizing="true" VirtualizingPanel.VirtualizationMode="Recycling">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <WrapPanel />

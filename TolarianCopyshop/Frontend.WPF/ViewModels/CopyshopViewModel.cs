@@ -157,7 +157,6 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
                 DefaultExt = ".tcd",
                 Filter = "Tolarian Copyshop Deck (*.tcd)|*.tcd|All files (*.*)|*.*",
                 InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
-
             };
             if (saveFileDialog.ShowDialog() == true)
             {
@@ -251,12 +250,15 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
 
                 if (!string.IsNullOrWhiteSpace(importCards))
                 {
-                    this._dialogs.ShowProgressOnUIThread("IMPORT", "Please wait while your deck is imported...", new Action(() => this.ImportDeckCards(importCards, overrideDeck)));
+                    string notFoundCards = string.Empty;
+                    this._dialogs.ShowProgressOnUIThread("IMPORT", "Please wait while your deck is imported...",
+                        new Action(() => this.ImportDeckCards(importCards, overrideDeck, ref notFoundCards)),
+                        new Action(() => this.Post_ImportDeckCards(ref notFoundCards)));
                 }
             }
         }
 
-        private void ImportDeckCards(string cards, bool overrideDeck)
+        private void ImportDeckCards(string cards, bool overrideDeck, ref string notFoundCards)
         {
             var response = this._cardController.GetCardsByImportString(cards ?? "");
             this._dialogs.SendErrorMessage(this._cardController.GetErrorMessage());
@@ -264,10 +266,14 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             {
                 DeckBuilderViewModel.GetInstance().AddCards(response.Cards.ConvertAll(FullCardModel.Create), overrideDeck);
             }
+            notFoundCards = response.NotFound;
+        }
 
-            if (!string.IsNullOrWhiteSpace(response.NotFound))
+        private void Post_ImportDeckCards(ref string notFoundCards)
+        {
+            if (!string.IsNullOrWhiteSpace(notFoundCards))
             {
-                this._dialogs.ShowMessageOnUIThread("Missing Cards", "The following cards could not be found:" + Environment.NewLine + response.NotFound);
+                this._dialogs.ShowMessageOnUIThread("Missing Cards", "The following cards could not be found:" + Environment.NewLine + notFoundCards);
             }
         }
 
