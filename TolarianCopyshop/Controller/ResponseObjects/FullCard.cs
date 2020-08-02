@@ -28,6 +28,7 @@ namespace Tolarian.Copyshop.Controller.ResponseObjects
                 RelatedCards = card.RelatedCards,
                 ConvertedManaCost = card.ConvertedManaCost,
                 ColorIdentity = card.ColorIdentity,
+                Colors = card.Colors,
                 ManaCostLine = card.ManaCostLine,
                 ProducedMana = card.ProducedMana,
             };
@@ -46,6 +47,7 @@ namespace Tolarian.Copyshop.Controller.ResponseObjects
         public string FormattedCardName { get; set; }
         public float ConvertedManaCost { get; set; }
         public List<MtgColor> ColorIdentity { get; set; }
+        public List<MtgColor> Colors { get; set; }
         public List<MtgColor> ProducedMana { get; set; }
     }
 }

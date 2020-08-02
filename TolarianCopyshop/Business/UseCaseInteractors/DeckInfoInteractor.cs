@@ -72,17 +72,17 @@ namespace Tolarian.Copyshop.Business.UseCaseInteractors
 
             foreach (var card in playables)
             {
-                if (card.ColorIdentity is null || card.ColorIdentity.Count == 0)
+                if (card.Colors is null || card.Colors.Count == 0)
                 {
                     result[MtgColor.C] += card.Copies;
                 }
-                else if (card.ColorIdentity.Count > 1)
+                else if (card.Colors.Count > 1)
                 {
                     result[MtgColor.M] += card.Copies;
                 }
                 else
                 {
-                    result[card.ColorIdentity[0]] += card.Copies;
+                    result[card.Colors[0]] += card.Copies;
                 }
             }
 

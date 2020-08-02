@@ -30,19 +30,22 @@ namespace Tolarian.Copyshop.Business.Models.SfCardInfo
 
         [JsonProperty(PropertyName = "type_line")]
         public string TypeLine { get; set; }
-        
+
         [JsonProperty(PropertyName = "cmc")]
         public float ConvertedManaCost { get; set; }
-        
+
         [JsonProperty(PropertyName = "color_identity")]
         public List<MtgColor> ColorIdentity { get; set; }
-        
+
+        [JsonProperty(PropertyName = "colors")]
+        public List<MtgColor> Colors { get; set; }
+
         [JsonProperty(PropertyName = "produced_mana")]
         public List<MtgColor> ProducedMana { get; set; }
-        
+
         [JsonProperty(PropertyName = "mana_cost")]
         public string ManaCostLine { get; set; }
-               
+
         [JsonProperty(PropertyName = "set_name")]
         public string SetName { get; set; }
 
