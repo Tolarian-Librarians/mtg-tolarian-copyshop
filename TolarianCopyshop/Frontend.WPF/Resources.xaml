@@ -54,10 +54,16 @@
                 <ControlTemplate TargetType="{x:Type TextBox}">
                     <Grid>
                         <TextBox x:Name="textSource"
+                                 VerticalAlignment="{TemplateBinding VerticalAlignment}"
                                  Panel.ZIndex="2"
                                  Background="Transparent"
+                                 FontSize="{TemplateBinding FontSize}"
                                  Text="{Binding Path=Text, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                        <TextBox Panel.ZIndex="1" Background="{TemplateBinding Background}" Text="{TemplateBinding Tag}">
+                        <TextBox VerticalAlignment="{TemplateBinding VerticalAlignment}"
+                                 Panel.ZIndex="1"
+                                 Background="{TemplateBinding Background}"
+                                 FontSize="{TemplateBinding FontSize}"
+                                 Text="{TemplateBinding Tag}">
                             <TextBox.Style>
                                 <Style TargetType="{x:Type TextBox}">
                                     <Setter Property="Foreground" Value="Transparent" />

@@ -76,6 +76,7 @@
             <TextBox x:Name="_SearchTextBox"
                      Grid.Row="0"
                      Grid.Column="2"
+                     Height="40"
                      Margin="2"
                      VerticalAlignment="Center"
                      AcceptsReturn="False"
