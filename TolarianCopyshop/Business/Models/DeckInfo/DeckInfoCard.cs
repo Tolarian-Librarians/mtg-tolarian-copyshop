@@ -12,5 +12,6 @@ namespace Tolarian.Copyshop.Business.Models.DeckInfo
         public string ManaCostLine { get; set; }
         public float ConvertedManaCost { get; set; }
         public List<MtgColor> ProducedMana { get; set; }
+        public List<MtgColor> ColorIdentity { get; set; }
     }
 }

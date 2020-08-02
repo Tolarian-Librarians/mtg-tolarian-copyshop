@@ -11,15 +11,18 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
     {
         public DeckStatisticsDesignViewModel()
         {
-            this.ChartPointLabel = chartPoint => $"{chartPoint.Y} ({chartPoint.Participation:P})";
+            this.PieChartPointLabel = chartPoint => chartPoint.Y.ToString();
+            this.BarChartPointLabel = chartPoint => chartPoint.Y.ToString();
             this.XAxisLabelFormatter = val => val.ToString();
             this.YAxisLabelFormatter = val => val.ToString();
         }
 
-        public Func<ChartPoint, string> ChartPointLabel { get; }
+        public Func<ChartPoint, string> BarChartPointLabel { get; }
 
-        public Func<ChartPoint, string> XAxisLabelFormatter { get; set; }
+        public Func<ChartPoint, string> PieChartPointLabel { get; }
 
-        public Func<ChartPoint, string> YAxisLabelFormatter { get; set; }
+        public Func<ChartPoint, string> XAxisLabelFormatter { get; }
+
+        public Func<ChartPoint, string> YAxisLabelFormatter { get; }
     }
 }

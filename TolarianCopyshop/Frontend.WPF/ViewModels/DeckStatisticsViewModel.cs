@@ -1,12 +1,7 @@
 ﻿using LiveCharts;
-using LiveCharts.Defaults;
-using LiveCharts.Wpf;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Tolarian.Copyshop.Controller;
 using Tolarian.Copyshop.Controller.Interfaces;
 using Tolarian.Copyshop.Controller.ResponseObjects;
@@ -23,6 +18,13 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
         private int _nonCreatureCount;
         private int _totalCards;
         private float _averageCmc;
+        private ChartValues<float> _blackCardCollection;
+        private ChartValues<float> _whiteCardCollection;
+        private ChartValues<float> _redCardCollection;
+        private ChartValues<float> _greenCardCollection;
+        private ChartValues<float> _blueCardCollection;
+        private ChartValues<float> _colorlessCardCollection;
+        private ChartValues<float> _multicolorCardCollection;
         private ChartValues<float> _manaCurveCreatureCollection;
         private ChartValues<float> _manaCurveNonCreatureCollection;
         private ChartValues<float> _blackManaCollection;
@@ -47,18 +49,28 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
         {
             this._deckController = deckController;
 
-            this.PieChartPointLabel = chartPoint => $"{chartPoint.Y} ({chartPoint.Participation:P})";
+            this.PieChartPointLabel = chartPoint => chartPoint.Y.ToString();
             this.BarChartPointLabel = chartPoint => chartPoint.Y.ToString();
             this.XAxisLabelFormatter = val => val.ToString();
             this.YAxisLabelFormatter = val => val.ToString();
 
             this.ManaCurveCreatureCollection = new ChartValues<float>();
             this.ManaCurveNonCreatureCollection = new ChartValues<float>();
+
+            this.BlackCardCollection = new ChartValues<float>();
+            this.WhiteCardCollection = new ChartValues<float>();
+            this.GreenCardCollection = new ChartValues<float>();
+            this.BlueCardCollection = new ChartValues<float>();
+            this.RedCardCollection = new ChartValues<float>();
+            this.ColorlessCardCollection = new ChartValues<float>();
+            this.MulticolorCardCollection = new ChartValues<float>();
+
             this.BlackManaCollection = new ChartValues<float>();
             this.WhiteManaCollection = new ChartValues<float>();
             this.RedManaCollection = new ChartValues<float>();
             this.BlueManaCollection = new ChartValues<float>();
             this.GreenManaCollection = new ChartValues<float>();
+
             this.LandCardTypCount = new ChartValues<float>();
             this.CreatureCardTypCount = new ChartValues<float>();
             this.InstantCardTypCount = new ChartValues<float>();
@@ -82,6 +94,48 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
         {
             get => this._manaCurveNonCreatureCollection;
             set => this.SetProperty(ref this._manaCurveNonCreatureCollection, value);
+        }
+
+        public ChartValues<float> BlackCardCollection
+        {
+            get => this._blackCardCollection;
+            set => this.SetProperty(ref this._blackCardCollection, value);
+        }
+
+        public ChartValues<float> WhiteCardCollection
+        {
+            get => this._whiteCardCollection;
+            set => this.SetProperty(ref this._whiteCardCollection, value);
+        }
+
+        public ChartValues<float> RedCardCollection
+        {
+            get => this._redCardCollection;
+            set => this.SetProperty(ref this._redCardCollection, value);
+        }
+
+        public ChartValues<float> GreenCardCollection
+        {
+            get => this._greenCardCollection;
+            set => this.SetProperty(ref this._greenCardCollection, value);
+        }
+
+        public ChartValues<float> BlueCardCollection
+        {
+            get => this._blueCardCollection;
+            set => this.SetProperty(ref this._blueCardCollection, value);
+        }
+
+        public ChartValues<float> ColorlessCardCollection
+        {
+            get => this._colorlessCardCollection;
+            set => this.SetProperty(ref this._colorlessCardCollection, value);
+        }
+
+        public ChartValues<float> MulticolorCardCollection
+        {
+            get => this._multicolorCardCollection;
+            set => this.SetProperty(ref this._multicolorCardCollection, value);
         }
 
         public ChartValues<float> BlackManaCollection
@@ -200,6 +254,35 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
 
             this.ManaCurveCreatureCollection = this.AddValuesToBarChart(result.ManaCurveCreatures);
             this.ManaCurveNonCreatureCollection = this.AddValuesToBarChart(result.ManaCurveNonCreatures);
+
+            this.BlackCardCollection = new ChartValues<float>
+            {
+                result.ColorCardsCounts[MtgColor.B],
+            };
+            this.WhiteCardCollection = new ChartValues<float>
+            {
+                result.ColorCardsCounts[MtgColor.W],
+            };
+            this.BlueCardCollection = new ChartValues<float>
+            {
+                result.ColorCardsCounts[MtgColor.U],
+            };
+            this.RedCardCollection = new ChartValues<float>
+            {
+                result.ColorCardsCounts[MtgColor.R],
+            };
+            this.GreenCardCollection = new ChartValues<float>
+            {
+                result.ColorCardsCounts[MtgColor.G],
+            };
+            this.ColorlessCardCollection = new ChartValues<float>
+            {
+                result.ColorCardsCounts[MtgColor.C],
+            };
+            this.MulticolorCardCollection = new ChartValues<float>
+            {
+                result.ColorCardsCounts[MtgColor.M],
+            };
 
             this.BlackManaCollection = new ChartValues<float>
             {

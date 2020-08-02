@@ -59,12 +59,42 @@ namespace Tolarian.Copyshop.Business.UseCaseInteractors
             return result;
         }
 
+        public Dictionary<MtgColor, int> GetColorCardCounts(List<DeckInfoCard> deck)
+        {
+            var result = new Dictionary<MtgColor, int>();
+
+            foreach (var color in Enum.GetValues(typeof(MtgColor)).Cast<MtgColor>())
+            {
+                result.Add(color, 0);
+            }
+
+            var playables = GetOnlyPlayables(deck, false);
+
+            foreach (var card in playables)
+            {
+                if (card.ColorIdentity is null || card.ColorIdentity.Count == 0)
+                {
+                    result[MtgColor.C] += card.Copies;
+                }
+                else if (card.ColorIdentity.Count > 1)
+                {
+                    result[MtgColor.M] += card.Copies;
+                }
+                else
+                {
+                    result[card.ColorIdentity[0]] += card.Copies;
+                }
+            }
+
+            return result;
+        }
+
         public Dictionary<float, int> GetCreatureManaCurve(List<DeckInfoCard> deck)
         {
             var creatures = GetOnlyPlayables(deck, false).Where(c => c.cardFaces[0].PrimaryCardType == CardType.Creature);
             return GetManaCurve(creatures);
         }
-        
+
         public Dictionary<float, int> GetNonCreatureManaCurve(List<DeckInfoCard> deck)
         {
             var nonCreatures = GetOnlyPlayables(deck, false).Where(c => c.cardFaces[0].PrimaryCardType != CardType.Creature);
@@ -115,9 +145,9 @@ namespace Tolarian.Copyshop.Business.UseCaseInteractors
 
         private List<DeckInfoCard> GetOnlyPlayables(List<DeckInfoCard> deck, bool includeLands)
         {
-            return deck.Where(dc => dc.cardFaces.Any(cf => cf.PrimaryCardType != CardType.Token && 
-                                                    cf.PrimaryCardType != CardType.Emblem && 
-                                                    cf.PrimaryCardType != CardType.Unknown && 
+            return deck.Where(dc => dc.cardFaces.Any(cf => cf.PrimaryCardType != CardType.Token &&
+                                                    cf.PrimaryCardType != CardType.Emblem &&
+                                                    cf.PrimaryCardType != CardType.Unknown &&
                                                     (includeLands || cf.PrimaryCardType != CardType.Land)
             )).ToList();
         }

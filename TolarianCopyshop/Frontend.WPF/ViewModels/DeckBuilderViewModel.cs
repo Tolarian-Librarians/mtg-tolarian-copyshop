@@ -189,6 +189,38 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             set => this.SetProperty(ref this._searchType, value);
         }
 
+        public string SearchTextBoxPlaceHolder
+        {
+            get => this._searchTextBoxPlaceHolder;
+            set => this.SetProperty(ref this._searchTextBoxPlaceHolder, value);
+        }
+
+        public string SearchDeckText
+        {
+            get => this._searchDeckText;
+            set
+            {
+                this.SetProperty(ref this._searchDeckText, value);
+                ICollectionView deckListView = CollectionViewSource.GetDefaultView(DeckBuilderView.GetInstance()._DeckListView.Items);
+
+                if (string.IsNullOrWhiteSpace(this.SearchDeckText))
+                {
+                    deckListView.Filter = null;
+                }
+                else
+                {
+                    deckListView.Filter = (obj) =>
+                    {
+                        if (!string.IsNullOrWhiteSpace(this.SearchDeckText) && obj is FullCardModel CardModel)
+                        {
+                            return CardModel.FormattedCardName.IndexOf(this.SearchDeckText.Trim(), StringComparison.OrdinalIgnoreCase) >= 0;
+                        }
+                        return true;
+                    };
+                }
+            }
+        }
+
         public Command IncreaseCardAmountCommand { get; set; }
 
         public Command ReduceCardAmountCommand { get; set; }

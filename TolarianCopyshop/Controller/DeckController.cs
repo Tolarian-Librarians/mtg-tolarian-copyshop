@@ -67,6 +67,7 @@ namespace Tolarian.Copyshop.Controller
             var result = new GetDeckStatisticsResponse
             {
                 CardTypeCounts = _deckInfoInteractor.GetCardTypeCounts(businessModel).ToDictionary(x => (CardType)((int)x.Key), x => x.Value),
+                ColorCardsCounts = _deckInfoInteractor.GetColorCardCounts(businessModel).ToDictionary(x => (MtgColor)((int)x.Key), x => x.Value),
                 ColorSymbolCounts = _deckInfoInteractor.GetColorSymbolCounts(businessModel).ToDictionary(x => (MtgColor)((int)x.Key), x => x.Value),
                 ManaSourcesCounts = _deckInfoInteractor.GetManaSourcesCounts(businessModel).ToDictionary(x => (MtgColor)((int)x.Key), x => x.Value),
                 ManaCurveCreatures = _deckInfoInteractor.GetCreatureManaCurve(businessModel),
