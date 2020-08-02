@@ -17,7 +17,7 @@
              DataContext="{Binding Path=DeckBuilderViewModel, Source={StaticResource ServiceLocator}}"
              mc:Ignorable="d">
     <UserControl.Resources>
-        <CollectionViewSource x:Key="_deckCardCollection" x:Name="_deckCardCollection" Source="{Binding DeckCards}">
+        <CollectionViewSource x:Key="_deckCardCollection" x:Name="_deckCardCollectionView" Source="{Binding DeckCards}">
             <CollectionViewSource.GroupDescriptions>
                 <PropertyGroupDescription PropertyName="CardFaces[0].PrimaryCardType" StringComparison="OrdinalIgnoreCase" />
             </CollectionViewSource.GroupDescriptions>
@@ -81,6 +81,8 @@
                      AcceptsReturn="False"
                      FontSize="16"
                      PreviewKeyDown="SearchTextBox_PreviewKeyDown"
+                     Style="{StaticResource placeHolderTextbox}"
+                     Tag="{Binding SearchTextBoxPlaceHolder}"
                      Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged, Delay=200}">
                 <TextBox.InputBindings>
                     <KeyBinding Key="Enter" Command="{Binding ApplySelectedSearchItemCommand}" />
@@ -199,7 +201,10 @@
                       Grid.Column="0"
                       Grid.ColumnSpan="3"
                       ItemsSource="{Binding Source={StaticResource _deckCardCollection}}"
-                      SelectedItem="{Binding SelectedCard}">
+                      SelectedItem="{Binding SelectedCard}"
+                      VirtualizingPanel.IsVirtualizing="True"
+                      VirtualizingPanel.IsVirtualizingWhenGrouping="True"
+                      VirtualizingPanel.VirtualizationMode="Recycling">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <Grid Width="{Binding ElementName=_DeckListView, Path=ActualWidth, Converter={StaticResource SubstractionConverter}, ConverterParameter=30}" Height="{Binding Path=CardFaces.Count, Converter={StaticResource MultiplicationConverter}, ConverterParameter=100}">
@@ -208,10 +213,10 @@
                                 <ColumnDefinition Width="80" />
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
-                            <StackPanel Grid.Column="0"
-                                        Margin="2"
-                                        VerticalAlignment="Center"
-                                        Orientation="Vertical">
+                            <VirtualizingStackPanel Grid.Column="0"
+                                                    Margin="2"
+                                                    VerticalAlignment="Center"
+                                                    Orientation="Vertical">
                                 <Button Width="30"
                                         Height="30"
                                         Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.IncreaseCardAmountCommand}"
@@ -236,31 +241,31 @@
                                                                    Foreground="Black"
                                                                    Kind="MinusSolid" />
                                 </Button>
-                            </StackPanel>
+                            </VirtualizingStackPanel>
 
-                            <StackPanel Grid.Column="1" Orientation="Vertical">
+                            <VirtualizingStackPanel Grid.Column="1" Orientation="Vertical">
                                 <Image Height="98" Source="{Binding CardFaces[0].SmallImage}" />
                                 <Image Height="98" Margin="0,4,0,0" Source="{Binding CardFaces[1].SmallImage}" />
-                            </StackPanel>
+                            </VirtualizingStackPanel>
 
-                            <StackPanel Grid.Column="2" Margin="5,0,55,0" Orientation="Vertical">
-                                <StackPanel Height="92" Margin="0,0,0,8" Orientation="Vertical">
+                            <VirtualizingStackPanel Grid.Column="2" Margin="5,0,55,0" Orientation="Vertical">
+                                <VirtualizingStackPanel Height="92" Margin="0,0,0,8" Orientation="Vertical">
                                     <TextBlock HorizontalAlignment="Left"
                                                VerticalAlignment="Top"
                                                FontSize="20"
                                                FontWeight="Bold"
                                                Text="{Binding FormattedCardName}" />
                                     <TextBlock Text="{Binding CardFaces[0].Text}" TextWrapping="Wrap" />
-                                </StackPanel>
-                                <StackPanel Height="100" Orientation="Vertical">
+                                </VirtualizingStackPanel>
+                                <VirtualizingStackPanel Height="100" Orientation="Vertical">
                                     <TextBlock HorizontalAlignment="Left"
                                                VerticalAlignment="Top"
                                                FontSize="14"
                                                FontWeight="Bold"
                                                Text="{Binding CardFaces[1].Name}" />
                                     <TextBlock Text="{Binding CardFaces[1].Text}" TextWrapping="Wrap" />
-                                </StackPanel>
-                            </StackPanel>
+                                </VirtualizingStackPanel>
+                            </VirtualizingStackPanel>
                             <Button Grid.Column="2"
                                     Margin="10,10,20,10"
                                     HorizontalAlignment="Right"
@@ -295,7 +300,7 @@
                                 <Setter Property="Template">
                                     <Setter.Value>
                                         <ControlTemplate TargetType="{x:Type GroupItem}">
-                                            <Expander Background="{DynamicResource MahApps.Brushes.White}" BorderThickness="0" IsExpanded="True">
+                                            <Expander Background="{DynamicResource MahApps.Brushes.ThemeBackground}" BorderThickness="0" IsExpanded="True">
                                                 <Expander.Header>
                                                     <Grid Width="{Binding ElementName=_DeckListView, Path=ActualWidth, Converter={StaticResource SubstractionConverter}, ConverterParameter=30}">
                                                         <Grid.ColumnDefinitions>
@@ -337,6 +342,30 @@
                 </ListView.GroupStyle>
             </ListView>
         </Grid>
+
+        <Border Grid.Row="1"
+                Margin="0,0,0,25"
+                Padding="5"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Bottom"
+                Background="White"
+                BorderBrush="{StaticResource MahApps.Brushes.Border.NonActive}"
+                BorderThickness="3"
+                CornerRadius="3">
+            <StackPanel Background="White" Orientation="Horizontal">
+                <iconPacks:PackIconFontAwesome Width="24"
+                                               Height="24"
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center"
+                                               Kind="SearchenginBrands" />
+                <TextBox Width="300"
+                         Margin="5,0,0,0"
+                         VerticalAlignment="Center"
+                         Style="{StaticResource placeHolderTextbox}"
+                         Tag="Search in Deck..."
+                         Text="{Binding SearchDeckText, UpdateSourceTrigger=PropertyChanged, Delay=200}" />
+            </StackPanel>
+        </Border>
 
         <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" />
 

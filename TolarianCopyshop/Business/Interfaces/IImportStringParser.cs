@@ -5,6 +5,6 @@ namespace Tolarian.Copyshop.Business.Interfaces
 {
     public interface IImportStringParser
     {
-        Dictionary<PreImportCard, int> ResolvePreImportCardsFromImportString(List<string> importLines);
+        List<KeyValuePair<PreImportCard, int>> ResolvePreImportCardsFromImportString(List<string> importLines);
     }
 }

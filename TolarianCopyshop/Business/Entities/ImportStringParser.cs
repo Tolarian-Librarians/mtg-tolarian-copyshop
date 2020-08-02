@@ -7,13 +7,13 @@ namespace Tolarian.Copyshop.Business.Entities
 {
     public class ImportStringParser : IImportStringParser
     {
-        public Dictionary<PreImportCard, int> ResolvePreImportCardsFromImportString(List<string> importLines)
+        public List<KeyValuePair<PreImportCard, int>> ResolvePreImportCardsFromImportString(List<string> importLines)
         {
-            var result = new Dictionary<PreImportCard, int>();
+            var result = new List<KeyValuePair<PreImportCard, int>>();
             foreach (string line in importLines.Where(e => !string.IsNullOrWhiteSpace(e)))
             {
                 var resolved = ResolveCardName(line);
-                result.Add(resolved.Key, resolved.Value);
+                result.Add(new KeyValuePair<PreImportCard, int>(resolved.Key, resolved.Value));
             }
 
             return result;
