@@ -23,25 +23,34 @@ namespace Tolarian.Copyshop.Business.UseCaseInteractors
 
         public (List<SfCard> Cards, string NotFound) GetCardsForImport(List<string> importLines)
         {
-            Dictionary<PreImportCard, int> cardsToCopiesMap
+            List<KeyValuePair<PreImportCard, int>> cardsToCopiesMap
                 = _importStringParser.ResolvePreImportCardsFromImportString(importLines);
 
-            var requests = cardsToCopiesMap.Keys.Select(key => new GetCardCollectionRequest { Name = key.CardName, SetCode = key.SetCode }).ToList();
+            var requests = cardsToCopiesMap.Select(pair => new GetCardCollectionRequest { Name = pair.Key.CardName, SetCode = pair.Key.SetCode }).ToList();
 
             TranslateSetCodesToScryfall(requests);
 
             SfCardCollection firstTryResponse = _cardGateway.GetCardCollectionByIdentifiers(requests);
-            SfCard[] foundOnFirstTry = firstTryResponse.Data;
+            var foundOnFirstTry = firstTryResponse.Data.ToList();
             SfIdentifier[] missedIdentifiers = firstTryResponse.NotFound;
+            var cardsToCopiesMapWithoutMissed = GetMapWithoutMissedCards(cardsToCopiesMap, missedIdentifiers);
+            List<SfCard> importedDeck = AddCardsInCorrectAmount(cardsToCopiesMapWithoutMissed, foundOnFirstTry);
+            cardsToCopiesMap.RemoveAll(x => cardsToCopiesMapWithoutMissed.Contains(x));
+
             SfCardCollection secondTryResponse = SfCardCollection.GetEmpty();
 
             if (missedIdentifiers.Any())
+            {
                 secondTryResponse = _cardGateway.GetCardCollectionByIdentifiers(missedIdentifiers.Select(i => new GetCardCollectionRequest { Name = i.Name, SetCode = null }).ToList());
-
-            List<SfCard> importedCards = foundOnFirstTry.Concat(secondTryResponse.Data).ToList();
-            List<SfCard> importedDeck = AddCardsInCorrectAmount(cardsToCopiesMap, importedCards);
+                importedDeck.AddRange(AddCardsInCorrectAmount(GetMapWithoutMissedCards(cardsToCopiesMap, secondTryResponse.NotFound), secondTryResponse.Data.ToList()));
+            }
 
             return (importedDeck, FormatNotFoundListIn(secondTryResponse));
+        }
+
+        private static List<KeyValuePair<PreImportCard, int>> GetMapWithoutMissedCards(List<KeyValuePair<PreImportCard, int>> cardsToCopiesMap, SfIdentifier[] missedIdentifiers)
+        {
+            return cardsToCopiesMap.Where(x => !missedIdentifiers.Select(mi => mi.Name).Contains(x.Key.CardName)).ToList();
         }
 
         private void TranslateSetCodesToScryfall(List<GetCardCollectionRequest> requests)
@@ -49,15 +58,15 @@ namespace Tolarian.Copyshop.Business.UseCaseInteractors
             requests.ForEach(request => request.SetCode = _setCodeTranslator.TranslateArenaCodeToScryfallCode(request.SetCode));
         }
 
-        List<SfCard> AddCardsInCorrectAmount(Dictionary<PreImportCard, int> cardsToCopiesMap, List<SfCard> importedCards)
+        List<SfCard> AddCardsInCorrectAmount(List<KeyValuePair<PreImportCard, int>> cardsToCopiesMap, List<SfCard> importedCards)
         {
             List<SfCard> result = new List<SfCard>();
 
-            foreach (var card in importedCards)
+            for (int i = 0; i < importedCards.Count; i++)
             {
-                PreImportCard preImportCard = FindPreImportCard(card, cardsToCopiesMap.Keys.ToList());
+                int amountOfCopies = cardsToCopiesMap[i].Value;
+                SfCard card = importedCards[i];
 
-                int amountOfCopies = cardsToCopiesMap[preImportCard];
                 result.AddRange(Enumerable.Repeat(card, amountOfCopies));
             }
 

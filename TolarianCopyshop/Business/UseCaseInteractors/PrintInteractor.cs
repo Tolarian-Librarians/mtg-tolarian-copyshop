@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net.Cache;
-using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
