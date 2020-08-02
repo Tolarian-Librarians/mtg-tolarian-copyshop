@@ -47,7 +47,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.Communication
         #region Base Dialogs
 
         internal async void ShowMessageOnUIThread(string header, string message)
-            => await Application.Current.Dispatcher.Invoke(() => this._DialogWindow.ShowMessageAsync(header, message).ConfigureAwait(false));
+            => await Application.Current.Dispatcher.Invoke(() => this._DialogWindow.ShowMessageAsync(header, message).ConfigureAwait(true));
 
         internal MessageDialogResult ShowQuestionOnUIThread(string header, string message, MessageDialogStyle style,
             string affirmativeButtonText = "YES", string negativeButtonText = "NO", string firstAuxiliaryButtonText = "CANCEL", string secondAuxiliaryButtonText = "")
@@ -72,14 +72,11 @@ namespace Tolarian.Copyshop.ScreenPresenter.Communication
 
         private async void ShowProgress(string header, string message, Action FunctionWhileProgress)
         {
-            // Show...
             ProgressDialogController controller = await CopyShopView.GetInstance().ShowProgressAsync(header, message).ConfigureAwait(true);
             controller.SetIndeterminate();
 
-            // Do your work...
-            await Task.Run(FunctionWhileProgress).ConfigureAwait(true);
+            await Task.Run(FunctionWhileProgress).ConfigureAwait(false);
 
-            // Close...
             await controller.CloseAsync().ConfigureAwait(true);
         }
 
