@@ -36,96 +36,152 @@
                    Text="Overview" />
         <Grid Grid.Row="1" Grid.Column="0" Margin="10,0,0,0">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="40" />
-                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
+            <Grid Grid.Column="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="40" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
 
-            <StackPanel Grid.Column="0" Orientation="Vertical">
-                <StackPanel.Resources>
-                    <Style TargetType="{x:Type Ellipse}">
-                        <Setter Property="Margin" Value="0,26,0,0" />
-                    </Style>
-                </StackPanel.Resources>
-                <Ellipse Width="20"
-                         Height="20"
-                         Fill="Transparent"
-                         Stroke="Transparent" />
-                <Ellipse Width="20"
-                         Height="20"
-                         Fill="Green"
-                         Stroke="DarkGreen" />
-                <Ellipse Width="20"
-                         Height="20"
-                         Fill="MediumPurple"
-                         Stroke="BlueViolet" />
-            </StackPanel>
+                <StackPanel Grid.Column="0" Orientation="Vertical">
+                    <StackPanel.Resources>
+                        <Style TargetType="{x:Type Ellipse}">
+                            <Setter Property="Margin" Value="0,26,0,0" />
+                        </Style>
+                    </StackPanel.Resources>
+                    <Ellipse Width="20"
+                             Height="20"
+                             Fill="Transparent"
+                             Stroke="Transparent" />
+                    <Ellipse Width="20"
+                             Height="20"
+                             Fill="Green"
+                             Stroke="DarkGreen" />
+                    <Ellipse Width="20"
+                             Height="20"
+                             Fill="MediumPurple"
+                             Stroke="BlueViolet" />
+                </StackPanel>
 
-            <StackPanel Grid.Column="1" Margin="0,0,110,0" Orientation="Vertical">
-                <StackPanel.Resources>
-                    <Style TargetType="{x:Type TextBlock}">
-                        <Setter Property="Margin" Value="0,20,0,0" />
-                    </Style>
-                </StackPanel.Resources>
-                <TextBlock HorizontalAlignment="Left"
-                           VerticalAlignment="Center"
-                           FontSize="20"
-                           FontWeight="DemiBold"
-                           Foreground="Black"
-                           Text="Total Cards" />
+                <StackPanel Grid.Column="1" Margin="0,0,110,0" Orientation="Vertical">
+                    <StackPanel.Resources>
+                        <Style TargetType="{x:Type TextBlock}">
+                            <Setter Property="Margin" Value="0,20,0,0" />
+                        </Style>
+                    </StackPanel.Resources>
+                    <TextBlock HorizontalAlignment="Left"
+                               VerticalAlignment="Center"
+                               FontSize="20"
+                               FontWeight="DemiBold"
+                               Foreground="Black"
+                               Text="Total Cards" />
 
-                <TextBlock HorizontalAlignment="Left"
-                           VerticalAlignment="Center"
-                           FontSize="20"
-                           FontWeight="DemiBold"
-                           Foreground="Black"
-                           Text="Creatures" />
+                    <TextBlock HorizontalAlignment="Left"
+                               VerticalAlignment="Center"
+                               FontSize="20"
+                               FontWeight="DemiBold"
+                               Foreground="Black"
+                               Text="Creatures" />
 
-                <TextBlock HorizontalAlignment="Left"
-                           VerticalAlignment="Center"
-                           FontSize="20"
-                           FontWeight="DemiBold"
-                           Foreground="Black"
-                           Text="Non-Creatures" />
+                    <TextBlock HorizontalAlignment="Left"
+                               VerticalAlignment="Center"
+                               FontSize="20"
+                               FontWeight="DemiBold"
+                               Foreground="Black"
+                               Text="Non-Creatures" />
 
-                <TextBlock HorizontalAlignment="Left"
-                           VerticalAlignment="Center"
-                           FontSize="20"
-                           FontWeight="DemiBold"
-                           Foreground="Black"
-                           Text="Average CMC" />
-            </StackPanel>
+                    <TextBlock HorizontalAlignment="Left"
+                               VerticalAlignment="Center"
+                               FontSize="20"
+                               FontWeight="DemiBold"
+                               Foreground="Black"
+                               Text="Average CMC" />
+                </StackPanel>
 
-            <StackPanel Grid.Column="2">
-                <StackPanel.Resources>
-                    <Style TargetType="{x:Type TextBlock}">
-                        <Setter Property="Margin" Value="0,20,0,0" />
-                    </Style>
-                </StackPanel.Resources>
-                <TextBlock HorizontalAlignment="Left"
-                           VerticalAlignment="Center"
-                           FontSize="20"
-                           Foreground="Black"
-                           Text="{Binding TotalCards}" />
+                <StackPanel Grid.Column="2">
+                    <StackPanel.Resources>
+                        <Style TargetType="{x:Type TextBlock}">
+                            <Setter Property="Margin" Value="0,20,0,0" />
+                        </Style>
+                    </StackPanel.Resources>
+                    <TextBlock HorizontalAlignment="Left"
+                               VerticalAlignment="Center"
+                               FontSize="20"
+                               Foreground="Black"
+                               Text="{Binding TotalCards}" />
 
-                <TextBlock HorizontalAlignment="Left"
-                           VerticalAlignment="Center"
-                           FontSize="20"
-                           Foreground="Black"
-                           Text="{Binding CreatureCount}" />
+                    <TextBlock HorizontalAlignment="Left"
+                               VerticalAlignment="Center"
+                               FontSize="20"
+                               Foreground="Black"
+                               Text="{Binding CreatureCount}" />
 
-                <TextBlock HorizontalAlignment="Left"
-                           VerticalAlignment="Center"
-                           FontSize="20"
-                           Foreground="Black"
-                           Text="{Binding NonCreatureCount}" />
+                    <TextBlock HorizontalAlignment="Left"
+                               VerticalAlignment="Center"
+                               FontSize="20"
+                               Foreground="Black"
+                               Text="{Binding NonCreatureCount}" />
 
-                <TextBlock HorizontalAlignment="Left"
-                           VerticalAlignment="Center"
-                           FontSize="20"
-                           Foreground="Black"
-                           Text="{Binding AverageCmc}" />
-            </StackPanel>
+                    <TextBlock HorizontalAlignment="Left"
+                               VerticalAlignment="Center"
+                               FontSize="20"
+                               Foreground="Black"
+                               Text="{Binding AverageCmc}" />
+                </StackPanel>
+            </Grid>
+            <Grid Grid.Column="1">
+                <lvc:PieChart Grid.Row="3" Grid.Column="2" LegendLocation="Right">
+                    <lvc:PieChart.Series>
+                        <lvc:PieSeries Title="Green"
+                                       DataLabels="True"
+                                       Fill="#11A263"
+                                       LabelPoint="{Binding PieChartPointLabel}"
+                                       Values="{Binding GreenCardCollection}" />
+                        <lvc:PieSeries Title="Blue"
+                                       DataLabels="True"
+                                       Fill="#6BBFFF"
+                                       LabelPoint="{Binding PieChartPointLabel}"
+                                       Values="{Binding BlueCardCollection}" />
+                        <lvc:PieSeries Title="Black"
+                                       DataLabels="True"
+                                       Fill="#332D2C"
+                                       LabelPoint="{Binding PieChartPointLabel}"
+                                       Values="{Binding BlackCardCollection}" />
+                        <lvc:PieSeries Title="Red"
+                                       DataLabels="True"
+                                       Fill="#FF634E"
+                                       LabelPoint="{Binding PieChartPointLabel}"
+                                       Values="{Binding RedCardCollection}" />
+                        <lvc:PieSeries Title="White"
+                                       DataLabels="True"
+                                       Fill="#FEFDC9"
+                                       Foreground="Black"
+                                       LabelPoint="{Binding PieChartPointLabel}"
+                                       Values="{Binding WhiteCardCollection}" />
+                        <lvc:PieSeries Title="Colorless"
+                                       DataLabels="True"
+                                       Fill="Gray"
+                                       Foreground="White"
+                                       LabelPoint="{Binding PieChartPointLabel}"
+                                       Values="{Binding ColorlessCardCollection}" />
+                        <lvc:PieSeries Title="Multicolor"
+                                       DataLabels="True"
+                                       Fill="Gold"
+                                       Foreground="Black"
+                                       LabelPoint="{Binding PieChartPointLabel}"
+                                       Values="{Binding MulticolorCardCollection}" />
+                    </lvc:PieChart.Series>
+                    <lvc:PieChart.DataTooltip>
+                        <lvc:DefaultTooltip BulletSize="20" />
+                    </lvc:PieChart.DataTooltip>
+                    <lvc:PieChart.ChartLegend>
+                        <lvc:DefaultLegend BulletSize="30" />
+                    </lvc:PieChart.ChartLegend>
+                </lvc:PieChart>
+            </Grid>
         </Grid>
 
         <TextBlock Grid.Row="0"

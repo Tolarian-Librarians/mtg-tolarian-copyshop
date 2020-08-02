@@ -17,7 +17,7 @@
              DataContext="{Binding Path=DeckBuilderViewModel, Source={StaticResource ServiceLocator}}"
              mc:Ignorable="d">
     <UserControl.Resources>
-        <CollectionViewSource x:Key="_deckCardCollection" x:Name="_deckCardCollection" Source="{Binding DeckCards}">
+        <CollectionViewSource x:Key="_deckCardCollection" x:Name="_deckCardCollectionView" Source="{Binding DeckCards}">
             <CollectionViewSource.GroupDescriptions>
                 <PropertyGroupDescription PropertyName="CardFaces[0].PrimaryCardType" StringComparison="OrdinalIgnoreCase" />
             </CollectionViewSource.GroupDescriptions>
@@ -81,6 +81,8 @@
                      AcceptsReturn="False"
                      FontSize="16"
                      PreviewKeyDown="SearchTextBox_PreviewKeyDown"
+                     Style="{StaticResource placeHolderTextbox}"
+                     Tag="{Binding SearchTextBoxPlaceHolder}"
                      Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged, Delay=200}">
                 <TextBox.InputBindings>
                     <KeyBinding Key="Enter" Command="{Binding ApplySelectedSearchItemCommand}" />
@@ -295,7 +297,7 @@
                                 <Setter Property="Template">
                                     <Setter.Value>
                                         <ControlTemplate TargetType="{x:Type GroupItem}">
-                                            <Expander Background="{DynamicResource MahApps.Brushes.White}" BorderThickness="0" IsExpanded="True">
+                                            <Expander Background="{DynamicResource MahApps.Brushes.ThemeBackground}" BorderThickness="0" IsExpanded="True">
                                                 <Expander.Header>
                                                     <Grid Width="{Binding ElementName=_DeckListView, Path=ActualWidth, Converter={StaticResource SubstractionConverter}, ConverterParameter=30}">
                                                         <Grid.ColumnDefinitions>
@@ -337,6 +339,30 @@
                 </ListView.GroupStyle>
             </ListView>
         </Grid>
+
+        <Border Grid.Row="1"
+                Margin="0,0,0,25"
+                Padding="5"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Bottom"
+                Background="White"
+                BorderBrush="{StaticResource MahApps.Brushes.Border.NonActive}"
+                BorderThickness="3"
+                CornerRadius="3">
+            <StackPanel Background="White" Orientation="Horizontal">
+                <iconPacks:PackIconFontAwesome Width="24"
+                                               Height="24"
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center"
+                                               Kind="SearchenginBrands" />
+                <TextBox Width="300"
+                         Margin="5,0,0,0"
+                         VerticalAlignment="Center"
+                         Style="{StaticResource placeHolderTextbox}"
+                         Tag="Search in Deck..."
+                         Text="{Binding SearchDeckText, UpdateSourceTrigger=PropertyChanged, Delay=200}" />
+            </StackPanel>
+        </Border>
 
         <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" />
 
