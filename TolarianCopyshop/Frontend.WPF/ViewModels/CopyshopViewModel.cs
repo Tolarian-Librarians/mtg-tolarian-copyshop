@@ -108,7 +108,16 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
                 };
                 if (openFileDialog.ShowDialog() == true)
                 {
-                    this._dialogs.ShowProgressOnUIThread("Loading Deck", "Please wait while your deck is loaded...", new Action(() => DeckBuilderViewModel.GetInstance().AddCards(this._deckController.LoadDeckFromFile(openFileDialog.FileName).ConvertAll(FullCardModel.Create), true)));
+                    this._dialogs.ShowProgressOnUIThread("Loading Deck", "Please wait while your deck is loaded...", new Action(() =>
+                    {
+                        var response = this._deckController.LoadDeckFromFile(openFileDialog.FileName).ConvertAll(FullCardModel.Create);
+                        
+                        this._dialogs.SendErrorMessage(this._cardController.GetErrorMessage());
+                        if (response.Count > 0)
+                        {
+                            DeckBuilderViewModel.GetInstance().AddCards(response, true);
+                        }
+                    }));
                     this.SaveFile = openFileDialog.FileName;
                 }
             }
