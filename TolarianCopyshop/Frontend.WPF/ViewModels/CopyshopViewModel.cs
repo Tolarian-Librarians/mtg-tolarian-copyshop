@@ -245,7 +245,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
                 string importCards = string.Empty;
                 if (importType.Equals("TEXT", StringComparison.OrdinalIgnoreCase))
                 {
-                    importCards = await this._dialogs.ShowChildWindowOnUIThread<string>(new MultiLineInputChildView()).ConfigureAwait(false);
+                    importCards = await this._dialogs.ShowChildWindowOnUIThread<string>(new MultiLineInputChildView("IMPORT DECK", string.Empty)).ConfigureAwait(false);
                 }
                 else if (importType.Equals("CLIPBOARD", StringComparison.OrdinalIgnoreCase))
                 {
@@ -306,14 +306,14 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             notFoundCards = response.NotFound;
         }
 
-        private async void ExportDeck(object commandParameter)
+        private void ExportDeck(object commandParameter)
         {
             if (commandParameter is string importType)
             {
                 string cards = this._exportController.ExportDeck(DeckBuilderViewModel.GetInstance().DeckCards.Cast<IFullCard>().ToList());
                 if (importType.Equals("TEXT", StringComparison.OrdinalIgnoreCase))
                 {
-                    await this._dialogs.ShowChildWindowOnUIThread<string>(new MultiLineInputChildView(cards)).ConfigureAwait(false);
+                    this._dialogs.ShowChildWindowOnUIThread<string>(new MultiLineInputChildView("EXPORT DECK", cards));
                 }
                 else if (importType.Equals("CLIPBOARD", StringComparison.OrdinalIgnoreCase))
                 {
