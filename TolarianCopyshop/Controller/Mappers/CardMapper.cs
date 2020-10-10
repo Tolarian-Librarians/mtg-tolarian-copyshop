@@ -107,6 +107,7 @@ namespace Tolarian.Copyshop.Controller.Mappers
                 Colors = source.Colors?.Select(c => (ResponseObjects.Enums.MtgColor)((int)c)).ToList(),
                 ManaCostLine = source.ManaCostLine ?? source.CardFaces?.FirstOrDefault()?.ManaCostLine,
                 ProducedMana = source.ProducedMana?.Select(c => (ResponseObjects.Enums.MtgColor)((int)c)).ToList(),
+                SetCode = source.SetCode,
             };
 
             return result;

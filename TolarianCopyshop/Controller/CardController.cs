@@ -141,6 +141,10 @@ namespace Tolarian.Copyshop.Controller
             {
                 this.SetErrorMessage(ex);
             }
+            catch (UriFormatException ex)
+            {
+                this.SetErrorMessage(ex);
+            }
 
             return response;
         }

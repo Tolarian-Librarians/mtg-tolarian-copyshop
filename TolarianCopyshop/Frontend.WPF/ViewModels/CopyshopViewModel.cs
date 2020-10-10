@@ -3,9 +3,11 @@ using Microsoft.Win32;
 using System;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using Tolarian.Copyshop.Controller;
 using Tolarian.Copyshop.Controller.Interfaces;
+using Tolarian.Copyshop.Controller.ResponseObjects;
 using Tolarian.Copyshop.ScreenPresenter.Base;
 using Tolarian.Copyshop.ScreenPresenter.Communication;
 using Tolarian.Copyshop.ScreenPresenter.Model;
@@ -20,6 +22,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
         private static CopyShopViewModel _copyshop;
         private readonly CardController _cardController;
         private readonly DeckController _deckController;
+        private readonly ExportController _exportController;
         private readonly PrintController _printController;
         private readonly Dialogs _dialogs;
 
@@ -27,12 +30,17 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
 
         #region Constructor
 
-        public CopyShopViewModel(CardController cardController, PrintController printController, DeckController deckController, Dialogs dialogs)
+        public CopyShopViewModel(CardController cardController,
+                                 PrintController printController,
+                                 DeckController deckController,
+                                 ExportController exportController,
+                                 Dialogs dialogs)
         {
             _copyshop = this;
             this._cardController = cardController;
             this._printController = printController;
             this._deckController = deckController;
+            this._exportController = exportController;
             this._dialogs = dialogs;
 
             // Commands
@@ -40,6 +48,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             this.OpenCommand = new Command(this.OpenDeck);
             this.SaveCommand = new Command(this.SaveDeck);
             this.ImportCommand = new Command(this.ImportDeck);
+            this.ExportCommand = new Command(this.ExportDeck);
             this.ClearCommand = new Command(this.ClearDeck);
             this.ImportTokenCommand = new Command(this.ImportToken);
             this.OpenLinkCommand = new Command(this.OpenLink);
@@ -56,6 +65,8 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
         public Command SaveCommand { get; }
 
         public Command ImportCommand { get; }
+
+        public Command ExportCommand { get; }
 
         public Command ImportTokenCommand { get; }
 
@@ -198,7 +209,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
 
         private void ImportTokenCards(bool replaceTokens)
         {
-            Controller.ResponseObjects.AddTokensToDeckResponse response = this._cardController.AddTokensToDeck(DeckBuilderViewModel.GetInstance().DeckCards.Cast<IFullCard>().ToList(), replaceTokens);
+            AddTokensToDeckResponse response = this._cardController.AddTokensToDeck(DeckBuilderViewModel.GetInstance().DeckCards.Cast<IFullCard>().ToList(), replaceTokens);
             this._dialogs.SendErrorMessage(this._cardController.GetErrorMessage());
             if (response.Deck.Count > 0)
             {
@@ -234,11 +245,16 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
                 string importCards = string.Empty;
                 if (importType.Equals("TEXT", StringComparison.OrdinalIgnoreCase))
                 {
-                    importCards = await this._dialogs.ShowChildWindowOnUIThread<string>(new ImportCardsChildView()).ConfigureAwait(false);
+                    importCards = await this._dialogs.ShowChildWindowOnUIThread<string>(new MultiLineInputChildView()).ConfigureAwait(false);
                 }
                 else if (importType.Equals("CLIPBOARD", StringComparison.OrdinalIgnoreCase))
                 {
                     importCards = Clipboard.GetText();
+                }
+                else if (importType.Equals("URL", StringComparison.OrdinalIgnoreCase))
+                {
+                    await this.ImportDeckByUrl(overrideDeck).ConfigureAwait(false);
+                    return;
                 }
                 else
                 {
@@ -249,21 +265,65 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
                 {
                     string notFoundCards = string.Empty;
                     this._dialogs.ShowProgressOnUIThread("IMPORT", "Please wait while your deck is imported...",
-                        new Action(() => this.ImportDeckCards(importCards, overrideDeck, ref notFoundCards)),
+                        new Action(() => this.ImportDeckCardsByString(importCards, overrideDeck, ref notFoundCards)),
                         new Action(() => this.Post_ImportDeckCards(ref notFoundCards)));
                 }
             }
         }
 
-        private void ImportDeckCards(string cards, bool overrideDeck, ref string notFoundCards)
+        private async Task ImportDeckByUrl(bool overrideDeck)
         {
-            Controller.ResponseObjects.CardImportResponse response = this._cardController.GetCardsByImportString(cards ?? "");
+            string Url = await this._dialogs.ShowInputOnUIThread("IMPORT BY TAPPEDOUT.NET", "Please enter URL...").ConfigureAwait(false);
+
+            if (!string.IsNullOrWhiteSpace(Url))
+            {
+                string notFoundCards = string.Empty;
+                this._dialogs.ShowProgressOnUIThread("IMPORT", "Please wait while your deck is imported...",
+                    new Action(() => this.ImportDeckCardsByUrl(Url, overrideDeck, ref notFoundCards)),
+                    new Action(() => this.Post_ImportDeckCards(ref notFoundCards)));
+            }
+        }
+
+        private void ImportDeckCardsByUrl(string url, bool overrideDeck, ref string notFoundCards)
+        {
+            CardImportResponse response = this._cardController.GetCardsFromUri(url ?? "");
+            this.ImportDeckCards(response, overrideDeck, ref notFoundCards);
+        }
+
+        private void ImportDeckCardsByString(string cards, bool overrideDeck, ref string notFoundCards)
+        {
+            CardImportResponse response = this._cardController.GetCardsByImportString(cards ?? "");
+            this.ImportDeckCards(response, overrideDeck, ref notFoundCards);
+        }
+
+        private void ImportDeckCards(CardImportResponse response, bool overrideDeck, ref string notFoundCards)
+        {
             this._dialogs.SendErrorMessage(this._cardController.GetErrorMessage());
             if (response.Cards.Count > 0)
             {
                 DeckBuilderViewModel.GetInstance().AddCards(response.Cards.ConvertAll(FullCardModel.Create), overrideDeck);
             }
             notFoundCards = response.NotFound;
+        }
+
+        private async void ExportDeck(object commandParameter)
+        {
+            if (commandParameter is string importType)
+            {
+                string cards = this._exportController.ExportDeck(DeckBuilderViewModel.GetInstance().DeckCards.Cast<IFullCard>().ToList());
+                if (importType.Equals("TEXT", StringComparison.OrdinalIgnoreCase))
+                {
+                    await this._dialogs.ShowChildWindowOnUIThread<string>(new MultiLineInputChildView(cards)).ConfigureAwait(false);
+                }
+                else if (importType.Equals("CLIPBOARD", StringComparison.OrdinalIgnoreCase))
+                {
+                    Clipboard.SetText(cards);
+                }
+                else
+                {
+                    return;
+                }
+            }
         }
 
         private void Post_ImportDeckCards(ref string notFoundCards)

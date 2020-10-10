@@ -19,9 +19,6 @@ namespace Tolarian.Copyshop.Business.UseCaseInteractors
             return builder.ToString();
         }
 
-        private string GetExportLine(ExportCard card)
-        {
-            return $"{card.Name} ({card.SetCode})";
-        }
+        private string GetExportLine(ExportCard card) => $"{card.CardCount} {card.Name} ({card.SetCode})";
     }
 }
