@@ -222,8 +222,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
                             overrideDeck = true;
                             break;
                         case MessageDialogResult.Affirmative:
-                            // Till save is implemented...
-                            //this.HandleSave(false);
+                            this.HandleSave(false);
                             overrideDeck = true;
                             break;
                         case MessageDialogResult.FirstAuxiliary:

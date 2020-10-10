@@ -23,7 +23,6 @@
         <s:Boolean x:Key="TrueValue">True</s:Boolean>
     </Controls:MetroWindow.Resources>
 
-
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="35" />

@@ -88,6 +88,26 @@ namespace Tolarian.Copyshop.ScreenPresenter.Communication
             }
         }
 
+
+        private ProgressDialogController progressController;
+        public async void StartProgress(string header, string message)
+        {
+            if (progressController is null)
+            {
+                progressController = await CopyShopView.GetInstance().ShowProgressAsync(header, message).ConfigureAwait(true);
+                progressController.SetIndeterminate();
+            }
+        }
+
+        public async void EndProgress()
+        {
+            if (progressController != null)
+            {
+                await progressController.CloseAsync().ConfigureAwait(true);
+                progressController = null;
+            }
+        }
+
         #endregion
     }
 }

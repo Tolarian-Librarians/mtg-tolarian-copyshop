@@ -1,4 +1,7 @@
-﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:local="clr-namespace:Tolarian.Copyshop.ScreenPresenter">
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+                    xmlns:local="clr-namespace:Tolarian.Copyshop.ScreenPresenter">
 
     <Style x:Key="ImageButton" TargetType="{x:Type Button}">
         <Setter Property="Template">
@@ -79,6 +82,122 @@
                             </TextBox.Style>
                         </TextBox>
                     </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="{x:Type DocumentViewer}" TargetType="{x:Type DocumentViewer}">
+        <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}" />
+        <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" />
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type DocumentViewer}">
+                    <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Focusable="False">
+                        <Grid KeyboardNavigation.TabNavigation="Local">
+                            <Grid.Background>
+                                <SolidColorBrush Color="{DynamicResource ControlLightColor}" />
+                            </Grid.Background>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <ToolBar KeyboardNavigation.TabNavigation="Continue" ToolBarTray.IsLocked="True">
+                                <Button Command="{Binding PrintCommand}" ToolTip="Print">
+                                    <Button.Content>
+                                        <iconPacks:PackIconFontAwesome Height="16" Margin="4,0,0,0" Kind="PrintSolid" />
+                                    </Button.Content>
+                                </Button>
+                                <Separator />
+                                <Button Command="NavigationCommands.IncreaseZoom" CommandTarget="{Binding RelativeSource={RelativeSource TemplatedParent}}" ToolTip="Zoom In">
+                                    <Button.Content>
+                                        <iconPacks:PackIconFontAwesome Height="16" Margin="4,0,0,0" Kind="SearchPlusSolid" />
+                                    </Button.Content>
+                                </Button>
+                                <Button Command="NavigationCommands.DecreaseZoom" CommandTarget="{Binding RelativeSource={RelativeSource TemplatedParent}}" ToolTip="Zoom Out">
+                                    <Button.Content>
+                                        <iconPacks:PackIconFontAwesome Height="16" Margin="4,0,0,0" Kind="SearchMinusSolid" />
+                                    </Button.Content>
+                                </Button>
+                                <Button Command="NavigationCommands.Zoom"
+                                        CommandParameter="100.0"
+                                        CommandTarget="{Binding RelativeSource={RelativeSource TemplatedParent}}"
+                                        ToolTip="Actual Size">
+                                    <Button.Content>
+                                        <iconPacks:PackIconFontAwesome Height="16" Margin="4,0,0,0" Kind="UndoSolid" />
+                                    </Button.Content>
+                                </Button>
+                                <Separator />
+                                <Button Command="DocumentViewer.FitToWidthCommand" CommandTarget="{Binding RelativeSource={RelativeSource TemplatedParent}}" ToolTip="Fit to Width">
+                                    <Button.Content>
+                                        <iconPacks:PackIconFontAwesome Height="16" Margin="4,0,0,0" Kind="ExpandSolid" />
+                                    </Button.Content>
+                                </Button>
+                                <Button Command="DocumentViewer.FitToMaxPagesAcrossCommand"
+                                        CommandParameter="1"
+                                        CommandTarget="{Binding RelativeSource={RelativeSource TemplatedParent}}"
+                                        ToolTip="Whole Page">
+                                    <Button.Content>
+                                        <iconPacks:PackIconFontAwesome Height="16" Margin="4,0,0,0" Kind="FileAltSolid" />
+                                    </Button.Content>
+                                </Button>
+                                <Button Command="DocumentViewer.FitToMaxPagesAcrossCommand"
+                                        CommandParameter="2"
+                                        CommandTarget="{Binding RelativeSource={RelativeSource TemplatedParent}}"
+                                        ToolTip="Two Pages">
+                                    <Button.Content>
+                                        <iconPacks:PackIconFontAwesome Height="16" Margin="4,0,0,0" Kind="ColumnsSolid" />
+                                    </Button.Content>
+                                </Button>
+                                <Button Command="DocumentViewer.FitToMaxPagesAcrossCommand"
+                                        CommandParameter="3"
+                                        CommandTarget="{Binding RelativeSource={RelativeSource TemplatedParent}}"
+                                        ToolTip="Three Pages">
+                                    <Button.Content>
+                                        <iconPacks:PackIconFontAwesome Height="16" Margin="4,0,0,0" Kind="ImagesSolid" />
+                                    </Button.Content>
+                                </Button>
+                                <Separator />
+                                <TextBlock Margin="5,0,0,0"
+                                           VerticalAlignment="Center"
+                                           FontWeight="Bold"
+                                           Text="Cardscale" />
+                                <Slider Width="150"
+                                        Margin="5,0,5,0"
+                                        IsSnapToTickEnabled="True"
+                                        Maximum="115"
+                                        Minimum="90"
+                                        Value="{Binding CardScale}" />
+                                <TextBlock VerticalAlignment="Center">
+                                    <TextBlock.Text>
+                                        <MultiBinding StringFormat="{}{0} %">
+                                            <Binding Path="CardScale" />
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
+                                <Button Command="{Binding ResetCardScaleCommand}" ToolTip="Reset card scale">
+                                    <Button.Content>
+                                        <iconPacks:PackIconFontAwesome Height="16" Margin="4,0,0,0" Kind="UndoSolid" />
+                                    </Button.Content>
+                                </Button>
+                            </ToolBar>
+
+                            <ScrollViewer x:Name="PART_ContentHost"
+                                          Grid.Row="1"
+                                          CanContentScroll="true"
+                                          HorizontalScrollBarVisibility="Auto"
+                                          IsTabStop="true">
+                                <ScrollViewer.Background>
+                                    <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                                        <GradientStop Offset="0" Color="{DynamicResource ControlLightColor}" />
+                                        <GradientStop Offset="1" Color="{DynamicResource ControlMediumColor}" />
+                                    </LinearGradientBrush>
+                                </ScrollViewer.Background>
+                            </ScrollViewer>
+                        </Grid>
+                    </Border>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
