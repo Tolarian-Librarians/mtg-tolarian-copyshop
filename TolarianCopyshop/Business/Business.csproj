@@ -55,17 +55,20 @@
   <ItemGroup>
     <Compile Include="DbRequestModels\GetCardCollectionRequest.cs" />
     <Compile Include="EntitiesModels\PreImportCard.cs" />
+    <Compile Include="Interfaces\IDeckExporter.cs" />
     <Compile Include="Interfaces\IImportStringParser.cs" />
     <Compile Include="Interfaces\ISaveAndLoadInteractor.cs" />
     <Compile Include="Interfaces\ISetCodeTranslator.cs" />
     <Compile Include="Interfaces\ISetDataGateway.cs" />
     <Compile Include="Models\Enums\CardType.cs" />
     <Compile Include="Models\Enums\MtgColor.cs" />
+    <Compile Include="Models\Export\ExportCard.cs" />
     <Compile Include="Models\SaveAndLoad\SaveCard.cs" />
     <Compile Include="Models\SfCardInfo\SfRelatedCard.cs" />
     <Compile Include="Models\SfCardInfo\SfRelatedCardType.cs" />
     <Compile Include="Models\SfSetInfo\SfPaginatedSetList.cs" />
     <Compile Include="Models\SfSetInfo\SfSet.cs" />
+    <Compile Include="UseCaseInteractors\DeckExporter.cs" />
     <Compile Include="UseCaseInteractors\SaveAndLoadInteractor.cs" />
     <Compile Include="UseCaseInteractors\DeckImportInteractor.cs" />
     <Compile Include="Interfaces\IDeckImportInteractor.cs" />
