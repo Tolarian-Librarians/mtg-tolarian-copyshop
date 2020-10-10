@@ -4,27 +4,58 @@ using System.Windows.Documents;
 using Tolarian.Copyshop.Controller;
 using Tolarian.Copyshop.Controller.Interfaces;
 using Tolarian.Copyshop.ScreenPresenter.Base;
+using Tolarian.Copyshop.ScreenPresenter.Communication;
+using Tolarian.Copyshop.ScreenPresenter.Helper;
 using Tolarian.Copyshop.ScreenPresenter.Model;
+using Tolarian.Copyshop.ScreenPresenter.Views;
 
 namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
 {
     public class DeckPrintViewModel : BindableBase
     {
-        private static DeckPrintViewModel _deckViewer;
+        #region fields
+
+        private static DeckPrintViewModel _deckPrintViewModel;
         private readonly CardController _cardController;
         private readonly DeckCardModel _deckCardModel;
         private readonly PrintController _printController;
+        private readonly Dialogs _dialogs;
 
-        public DeckPrintViewModel(CardController cardController, PrintController printController, DeckCardModel deckCardModel)
+        #endregion
+
+        #region ctor
+
+        public DeckPrintViewModel(CardController cardController, PrintController printController, DeckCardModel deckCardModel, Dialogs dialogs)
         {
-            _deckViewer = this;
+            _deckPrintViewModel = this;
             this._cardController = cardController;
             this._deckCardModel = deckCardModel;
             this._printController = printController;
+            this._dialogs = dialogs;
+
+            this.PrintCommand = new Command(this.OnPrintCommand);
+            this.ResetCardScaleCommand = new Command(this.OnResetCardScaleCommand);
         }
 
-        public static DeckPrintViewModel GetInstance()
-            => _deckViewer;
+        #endregion
+
+        #region Properties
+
+        public Command PrintCommand { get; set; }
+
+        public Command ResetCardScaleCommand { get; set; }
+
+        private int _cardScale = 100;
+
+        public int CardScale
+        {
+            get => this._cardScale;
+            set
+            {
+                this.SetProperty(ref this._cardScale, value);
+                DeckPrintView.GetInstance().ReloadDocumentPreview();
+            }
+        }
 
         public ObservableCollection<FullCardModel> DeckCards
         {
@@ -40,10 +71,34 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             }
         }
 
+        #endregion
+
+        #region static methods
+
+        public static DeckPrintViewModel GetInstance()
+            => _deckPrintViewModel;
+
+        #endregion
+
+        #region public methods
+
         public void InvokeDeckCards()
             => this.OnPropertyChanged(nameof(this.DeckCards));
 
         public FixedDocument GetPrintPages(System.Windows.Size pageSize)
-            => this._printController.GetPrintPages(pageSize, this.DeckCards.Cast<IFullCard>().ToList());
+            => this._printController.GetPrintPages(pageSize, this.DeckCards.Cast<IFullCard>().ToList(), (float)this.CardScale / 100);
+
+        #endregion
+
+        #region private methods
+
+        private void OnPrintCommand(object _)
+            => new TolorianDeckPrinterHelper(DeckPrintView.GetInstance().PrintDocumentPreview.Document, this._dialogs).Print();
+
+        private void OnResetCardScaleCommand(object _)
+            => this.CardScale = 100;
+
+        #endregion
+
     }
 }

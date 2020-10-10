@@ -13,10 +13,10 @@ namespace Tolarian.Copyshop.Business.UseCaseInteractors
     {
         private const double _defaultCardWidth = 226.7712;
         private const double _defaultCardHeight = 321.26016;
-
         private const int _cardsPerRowAndCol = 3;
-        private const int _pageMargin = 40;
 
+        private Size _pageSize;
+        private Thickness _pageMargin;
         private double _customCardWidth;
         private double _customCardHeight;
 
@@ -24,6 +24,7 @@ namespace Tolarian.Copyshop.Business.UseCaseInteractors
         {
             FixedDocument doc = new FixedDocument();
             doc.DocumentPaginator.PageSize = pageSize;
+            this._pageSize = pageSize;
 
             if (deckCards is null || deckCards.Count == 0)
             {
@@ -32,8 +33,25 @@ namespace Tolarian.Copyshop.Business.UseCaseInteractors
             }
 
             this.SetScale(scale);
+            this.SetPageMargin();
             this.AddCardImagesToDoc(deckCards, doc);
             return doc;
+        }
+
+        private void SetPageMargin()
+        {
+            // 3 cards seperated by 1 px
+            double totalCardWidth = (this._customCardWidth * 3) + 2;
+            double totalCardHeight = (this._customCardHeight * 3) + 2;
+
+            double horizontalMargin = this._pageSize.Width - totalCardWidth;
+            double vertialMargin = this._pageSize.Height - totalCardHeight;
+
+            this._pageMargin = new Thickness(
+                horizontalMargin / 2,
+                vertialMargin / 2,
+                horizontalMargin / 2,
+                vertialMargin / 2);
         }
 
         private void SetScale(float scale)
@@ -47,7 +65,7 @@ namespace Tolarian.Copyshop.Business.UseCaseInteractors
             while (deckCards.Count > 0)
             {
                 PageContent pageContent = new PageContent();
-                FixedPage page = GetPage(doc);
+                FixedPage page = GetPage(doc, this._pageMargin);
 
                 this.AddCardImagesToPage(deckCards, page);
 
@@ -55,13 +73,13 @@ namespace Tolarian.Copyshop.Business.UseCaseInteractors
                 doc.Pages.Add(pageContent);
             }
         }
-        private static FixedPage GetPage(FixedDocument doc)
+        private static FixedPage GetPage(FixedDocument doc, Thickness pageMargin)
         {
             FixedPage page = new FixedPage
             {
                 Width = doc.DocumentPaginator.PageSize.Width,
                 Height = doc.DocumentPaginator.PageSize.Height,
-                Margin = new Thickness(_pageMargin)
+                Margin = pageMargin,
             };
             return page;
         }
