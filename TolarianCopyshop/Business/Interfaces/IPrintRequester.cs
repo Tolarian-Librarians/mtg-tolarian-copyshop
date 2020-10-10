@@ -6,6 +6,6 @@ namespace Tolarian.Copyshop.Business.Interfaces
 {
     public interface IPrintRequester
     {
-        void PrintDeck(PrintDialog printDlg, Stack<Uri> deckCards);
+        void PrintDeck(PrintDialog printDlg, Stack<Uri> deckCards, float scale);
     }
 }

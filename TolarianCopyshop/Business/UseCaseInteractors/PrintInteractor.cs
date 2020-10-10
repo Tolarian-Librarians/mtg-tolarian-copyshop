@@ -12,17 +12,25 @@ namespace Tolarian.Copyshop.Business.UseCaseInteractors
 {
     public class PrintInteractor : IPrintRequester
     {
-        const double _cardWidth = 226.7712;
-        const double _cardHeight = 321.26016;
-        const int _cardsPerRowAndCol = 3;
+        private const double _defaultCardWidth = 226.7712;
+        private const double _defaultCardHeight = 321.26016;
+
+        private const int _cardsPerRowAndCol = 3;
         private const int _pageMargin = 40;
 
-        public void PrintDeck(PrintDialog printDlg, Stack<Uri> deckCards)
+        private double _customCardWidth;
+        private double _customCardHeight;
+
+
+        public void PrintDeck(PrintDialog printDlg, Stack<Uri> deckCards, float scale)
         {
             if (deckCards is null || deckCards.Count == 0)
             {
                 return;
             }
+
+            _customCardWidth = _defaultCardWidth * scale;
+            _customCardHeight = _defaultCardHeight * scale;
 
             FixedDocument doc = GetDocByDialogueSettings(printDlg);
 
@@ -84,10 +92,10 @@ namespace Tolarian.Copyshop.Business.UseCaseInteractors
 
             var img = new Image();
             img.Source = bitmap;
-            img.Width = _cardWidth;
-            img.Height = _cardHeight;
+            img.Width = _customCardWidth;
+            img.Height = _customCardHeight;
 
-            img.RenderTransform = new TranslateTransform((_cardWidth * xPos) + xPos, (_cardHeight * yPos) + yPos);
+            img.RenderTransform = new TranslateTransform((_customCardWidth * xPos) + xPos, (_customCardHeight * yPos) + yPos);
 
             return img;
         }

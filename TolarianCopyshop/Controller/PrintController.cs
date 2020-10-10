@@ -18,15 +18,18 @@ namespace Tolarian.Copyshop.Controller
 
         public void PrintDeck(PrintDialog printDlg, List<IFullCard> deckCards)
         {
-            _requester.PrintDeck(printDlg, new Stack<Uri>(deckCards.SelectMany(card =>
-            {
-                var cards = new List<Uri>();
-                for(int i = 0; i < card.CardCount; i++)
-                    cards.AddRange(card.CardFaces.Select(cf => cf.CroppedImage));
+            _requester.PrintDeck(
+                printDlg,
+                new Stack<Uri>(deckCards.SelectMany(card =>
+                {
+                    var cards = new List<Uri>();
+                    for(int i = 0; i < card.CardCount; i++)
+                        cards.AddRange(card.CardFaces.Select(cf => cf.CroppedImage));
 
-                return cards;
-            }
-            )));
+                    return cards;
+                })),
+                1.05f
+            );
         }
     }
 }
