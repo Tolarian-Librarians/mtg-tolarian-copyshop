@@ -5,7 +5,6 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Markup;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using Tolarian.Copyshop.Business.Interfaces;
 
 namespace Tolarian.Copyshop.Business.UseCaseInteractors
@@ -21,28 +20,26 @@ namespace Tolarian.Copyshop.Business.UseCaseInteractors
         private double _customCardWidth;
         private double _customCardHeight;
 
-
-        public void PrintDeck(PrintDialog printDlg, Stack<Uri> deckCards, float scale)
-        {
-            if (deckCards is null || deckCards.Count == 0)
-            {
-                return;
-            }
-
-            _customCardWidth = _defaultCardWidth * scale;
-            _customCardHeight = _defaultCardHeight * scale;
-
-            FixedDocument doc = GetDocByDialogueSettings(printDlg);
-
-            AddCardImagesToDoc(deckCards, doc);
-
-            printDlg.PrintDocument(doc.DocumentPaginator, "MtgProxyDeck");
-        }
-        private static FixedDocument GetDocByDialogueSettings(PrintDialog printDlg)
+        public FixedDocument GetPrintPages(Size pageSize, Stack<Uri> deckCards, float scale)
         {
             FixedDocument doc = new FixedDocument();
-            doc.DocumentPaginator.PageSize = new Size(printDlg.PrintableAreaWidth, printDlg.PrintableAreaHeight);
+            doc.DocumentPaginator.PageSize = pageSize;
+
+            if (deckCards is null || deckCards.Count == 0)
+            {
+                doc.Pages.Add(new PageContent());
+                return doc;
+            }
+
+            this.SetScale(scale);
+            this.AddCardImagesToDoc(deckCards, doc);
             return doc;
+        }
+
+        private void SetScale(float scale)
+        {
+            this._customCardWidth = _defaultCardWidth * scale;
+            this._customCardHeight = _defaultCardHeight * scale;
         }
 
         private void AddCardImagesToDoc(Stack<Uri> deckCards, FixedDocument doc)
@@ -52,7 +49,7 @@ namespace Tolarian.Copyshop.Business.UseCaseInteractors
                 PageContent pageContent = new PageContent();
                 FixedPage page = GetPage(doc);
 
-                AddCardImagesToPage(deckCards, page);
+                this.AddCardImagesToPage(deckCards, page);
 
                 ((IAddChild)pageContent).AddChild(page);
                 doc.Pages.Add(pageContent);
@@ -60,10 +57,12 @@ namespace Tolarian.Copyshop.Business.UseCaseInteractors
         }
         private static FixedPage GetPage(FixedDocument doc)
         {
-            FixedPage page = new FixedPage();
-            page.Width = doc.DocumentPaginator.PageSize.Width;
-            page.Height = doc.DocumentPaginator.PageSize.Height;
-            page.Margin = new Thickness(_pageMargin);
+            FixedPage page = new FixedPage
+            {
+                Width = doc.DocumentPaginator.PageSize.Width,
+                Height = doc.DocumentPaginator.PageSize.Height,
+                Margin = new Thickness(_pageMargin)
+            };
             return page;
         }
 
@@ -74,9 +73,11 @@ namespace Tolarian.Copyshop.Business.UseCaseInteractors
                 for (int yPos = 0; yPos < _cardsPerRowAndCol; yPos++)
                 {
                     if (deckCards.Count == 0)
+                    {
                         break;
+                    }
 
-                    UIElement img = GetImageForSlotFromUri(deckCards.Pop(), xPos, yPos);
+                    UIElement img = this.GetImageForSlotFromUri(deckCards.Pop(), xPos, yPos);
                     page.Children.Add(img);
                 }
             }
@@ -84,18 +85,14 @@ namespace Tolarian.Copyshop.Business.UseCaseInteractors
 
         private UIElement GetImageForSlotFromUri(Uri source, int xPos, int yPos)
         {
-            BitmapImage bitmap = new BitmapImage();
-            bitmap.BeginInit();
-            bitmap.CacheOption = BitmapCacheOption.OnLoad;
-            bitmap.UriSource = source;
-            bitmap.EndInit();
+            Image img = new Image
+            {
+                Source = new ImageSourceConverter().ConvertFromString(source.AbsoluteUri) as ImageSource,
+                Width = this._customCardWidth,
+                Height = this._customCardHeight,
 
-            var img = new Image();
-            img.Source = bitmap;
-            img.Width = _customCardWidth;
-            img.Height = _customCardHeight;
-
-            img.RenderTransform = new TranslateTransform((_customCardWidth * xPos) + xPos, (_customCardHeight * yPos) + yPos);
+                RenderTransform = new TranslateTransform((this._customCardWidth * xPos) + xPos, (this._customCardHeight * yPos) + yPos),
+            };
 
             return img;
         }

@@ -85,7 +85,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
                 {
                     this._deckCardModel.DeckCards = value;
                     this.OnPropertyChanged(nameof(this.DeckCards));
-                    DeckViewerViewModel.GetInstance().InvokeDeckCards();
+                    DeckPrintViewModel.GetInstance().InvokeDeckCards();
                     this.CalculateDeckCardCount();
                 }
             }

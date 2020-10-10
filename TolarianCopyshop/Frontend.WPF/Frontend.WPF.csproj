@@ -120,14 +120,14 @@
     <Compile Include="ViewModels\DeckStatisticsDesignViewModel.cs" />
     <Compile Include="ViewModels\DeckStatisticsViewModel.cs" />
     <Compile Include="ViewModels\DeckViewerDesignViewModel.cs" />
-    <Compile Include="ViewModels\DeckViewerViewModel.cs" />
+    <Compile Include="ViewModels\DeckPrintViewModel.cs" />
     <Compile Include="ViewModels\ImportCardViewModel.cs" />
     <Compile Include="ViewModels\SelectArtworkViewModel.cs" />
     <Compile Include="Views\DeckStatisticsView.xaml.cs">
       <DependentUpon>DeckStatisticsView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\DeckViewerView.xaml.cs">
-      <DependentUpon>DeckViewerView.xaml</DependentUpon>
+    <Compile Include="Views\DeckPrintView.xaml.cs">
+      <DependentUpon>DeckPrintView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\SelectArtworkChildView.xaml.cs">
       <DependentUpon>SelectArtworkChildView.xaml</DependentUpon>
@@ -170,7 +170,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\DeckViewerView.xaml">
+    <Page Include="Views\DeckPrintView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -4,7 +4,6 @@ using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows;
-using System.Windows.Controls;
 using Tolarian.Copyshop.Controller;
 using Tolarian.Copyshop.Controller.Interfaces;
 using Tolarian.Copyshop.ScreenPresenter.Base;
@@ -43,7 +42,6 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             this.ImportCommand = new Command(this.ImportDeck);
             this.ClearCommand = new Command(this.ClearDeck);
             this.ImportTokenCommand = new Command(this.ImportToken);
-            this.PrintCommand = new Command(this.PrintDeck);
             this.OpenLinkCommand = new Command(this.OpenLink);
         }
 
@@ -110,8 +108,8 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
                 {
                     this._dialogs.ShowProgressOnUIThread("Loading Deck", "Please wait while your deck is loaded...", new Action(() =>
                     {
-                        var response = this._deckController.LoadDeckFromFile(openFileDialog.FileName).ConvertAll(FullCardModel.Create);
-                        
+                        System.Collections.Generic.List<FullCardModel> response = this._deckController.LoadDeckFromFile(openFileDialog.FileName).ConvertAll(FullCardModel.Create);
+
                         this._dialogs.SendErrorMessage(this._cardController.GetErrorMessage());
                         if (response.Count > 0)
                         {
@@ -200,7 +198,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
 
         private void ImportTokenCards(bool replaceTokens)
         {
-            var response = this._cardController.AddTokensToDeck(DeckBuilderViewModel.GetInstance().DeckCards.Cast<IFullCard>().ToList(), replaceTokens);
+            Controller.ResponseObjects.AddTokensToDeckResponse response = this._cardController.AddTokensToDeck(DeckBuilderViewModel.GetInstance().DeckCards.Cast<IFullCard>().ToList(), replaceTokens);
             this._dialogs.SendErrorMessage(this._cardController.GetErrorMessage());
             if (response.Deck.Count > 0)
             {
@@ -260,7 +258,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
 
         private void ImportDeckCards(string cards, bool overrideDeck, ref string notFoundCards)
         {
-            var response = this._cardController.GetCardsByImportString(cards ?? "");
+            Controller.ResponseObjects.CardImportResponse response = this._cardController.GetCardsByImportString(cards ?? "");
             this._dialogs.SendErrorMessage(this._cardController.GetErrorMessage());
             if (response.Cards.Count > 0)
             {
@@ -274,21 +272,6 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             if (!string.IsNullOrWhiteSpace(notFoundCards))
             {
                 this._dialogs.ShowMessageOnUIThread("Missing Cards", "The following cards could not be found:" + Environment.NewLine + notFoundCards);
-            }
-        }
-
-        private void PrintDeck(object _)
-        {
-            PrintDialog printDlg = new PrintDialog
-            {
-                PageRangeSelection = PageRangeSelection.AllPages,
-                UserPageRangeEnabled = true
-            };
-
-            if (printDlg.ShowDialog() == true)
-            {
-                this._printController.PrintDeck(printDlg, DeckBuilderViewModel.GetInstance().DeckCards.Cast<IFullCard>().ToList());
-                Notifications.SendNotification("Print", "Your deck has been send to your selected Printer. Enjoy!", System.Windows.Forms.ToolTipIcon.Info);
             }
         }
 

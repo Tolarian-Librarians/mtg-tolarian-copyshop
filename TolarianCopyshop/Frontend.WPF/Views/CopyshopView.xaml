@@ -74,22 +74,15 @@
                     </MenuItem.Icon>
                 </MenuItem>
             </MenuItem>
-            <MenuItem Header="EDIT">
+            <MenuItem Header="ACTION">
                 <MenuItem Command="{Binding ClearCommand}" Header="Clear Decklist">
                     <MenuItem.Icon>
                         <iconPacks:PackIconFontAwesome Height="16" Margin="4,0,0,0" Kind="TrashAltSolid" />
                     </MenuItem.Icon>
                 </MenuItem>
-            </MenuItem>
-            <MenuItem Header="ACTION">
                 <MenuItem Command="{Binding ImportTokenCommand}" Header="Import Tokens">
                     <MenuItem.Icon>
                         <iconPacks:PackIconFontAwesome Height="16" Margin="4,0,0,0" Kind="ChessSolid" />
-                    </MenuItem.Icon>
-                </MenuItem>
-                <MenuItem Command="{Binding PrintCommand}" Header="Print Deck">
-                    <MenuItem.Icon>
-                        <iconPacks:PackIconFontAwesome Height="16" Margin="4,0,0,0" Kind="PrintSolid" />
                     </MenuItem.Icon>
                 </MenuItem>
             </MenuItem>
@@ -113,8 +106,8 @@
             <TabItem Header="Deck Statistics">
                 <local:DeckStatisticsView x:Name="_DeckStatisticsView" />
             </TabItem>
-            <TabItem Header="View Deck">
-                <local:DeckViewerView x:Name="_DeckViewerView" />
+            <TabItem Header="Print Deck">
+                <local:DeckPrintView x:Name="_DeckViewerView" />
             </TabItem>
         </TabControl>
         <StatusBar Grid.Row="2">
