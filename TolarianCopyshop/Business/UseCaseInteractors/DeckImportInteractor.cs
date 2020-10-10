@@ -96,13 +96,24 @@ namespace Tolarian.Copyshop.Business.UseCaseInteractors
             }
 
             HtmlNode boardContainer = htmlDoc.DocumentNode.SelectSingleNode("descendant-or-self::div[@class='row board-container']");
-            const string nameAttribute = "data-name";
             List<string> importLines = boardContainer.SelectNodes("descendant::li[@class='member']/a")
-                                                               .Select(node => $"{node.InnerText.TrimEnd('x')} {HttpUtility.HtmlDecode(node.GetAttributeValue(nameAttribute, "Error"))}").ToList();
+                                                               .Select(node => this.GetAsImportString(node, false)).ToList();
+
+            //Commander has a different place inside the dom than the regular cards
+            HtmlNode commanderNode = boardContainer.SelectSingleNode("descendant::img[@class='commander-img']/parent::a");
+            if (commanderNode != null)
+            {
+                importLines.Add(this.GetAsImportString(commanderNode, true));
+            }
 
             (List<SfCard> Cards, string NotFound) result = this.GetCardsForImport(importLines);
             return result;
         }
 
+        private string GetAsImportString(HtmlNode node, bool isCommander)
+        {
+            const string nameAttribute = "data-name";
+            return $"{(isCommander ? "1" : node.InnerText.TrimEnd('x'))} {HttpUtility.HtmlDecode(node.GetAttributeValue(nameAttribute, "Error"))}";
+        }
     }
 }
