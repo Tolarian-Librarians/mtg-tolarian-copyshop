@@ -113,7 +113,7 @@
                 </MenuItem>
             </MenuItem>
         </Menu>
-        <TabControl Grid.Row="1">
+        <TabControl x:Name="PageFrame" Grid.Row="1" SelectedIndex="{Binding SelectedTabIndex}">
             <TabItem Header="Build Deck">
                 <local:DeckBuilderView x:Name="_DeckBuilderView" />
             </TabItem>
