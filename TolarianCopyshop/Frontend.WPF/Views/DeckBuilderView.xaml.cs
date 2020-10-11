@@ -94,9 +94,11 @@ namespace Tolarian.Copyshop.ScreenPresenter.Views
                 case Key.NumPad8:
                 case Key.NumPad9:
                 case Key.Back:
-                    if (!this._SearchTextBox.IsFocused)
+                    if (!this._SearchTextBox.IsKeyboardFocusWithin && !this._SearchTextBox.IsFocused)
                     {
                         this._SearchTextBox.Focus();
+                        this._SearchTextBox.CaretIndex = this._SearchTextBox.Text.Length;
+
                     }
                     break;
             }

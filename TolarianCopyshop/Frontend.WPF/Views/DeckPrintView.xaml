@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:Tolarian.Copyshop.ScreenPresenter.Views"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="clr-namespace:Tolarian.Copyshop.ScreenPresenter.ViewModels"
-             d:DataContext="{d:DesignInstance Type=vm:DeckViewerDesignViewModel,
+             d:DataContext="{d:DesignInstance Type=vm:DeckPrintDesignViewModel,
                                               IsDesignTimeCreatable=True}"
              d:DesignHeight="600"
              d:DesignWidth="800"

@@ -1,7 +1,11 @@
-﻿namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
+﻿using Tolarian.Copyshop.Controller;
+using Tolarian.Copyshop.ScreenPresenter.Communication;
+
+namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
 {
-    public class CopyShopDesignViewModel
+    public class CopyShopDesignViewModel : CopyShopViewModel
     {
-        public string CardCount { get; set; } = "Total Cards: 10";
+        public CopyShopDesignViewModel(CardController cardController, PrintController printController, DeckController deckController, ExportController exportController, Dialogs dialogs)
+            : base(cardController, printController, deckController, exportController, dialogs) { }
     }
 }

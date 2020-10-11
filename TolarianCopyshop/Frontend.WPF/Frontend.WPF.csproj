@@ -122,7 +122,7 @@
     <Compile Include="Model\FullCardModel.cs" />
     <Compile Include="ViewModels\DeckStatisticsDesignViewModel.cs" />
     <Compile Include="ViewModels\DeckStatisticsViewModel.cs" />
-    <Compile Include="ViewModels\DeckViewerDesignViewModel.cs" />
+    <Compile Include="ViewModels\DeckPrintDesignViewModel.cs" />
     <Compile Include="ViewModels\DeckPrintViewModel.cs" />
     <Compile Include="ViewModels\MultiLineInputViewModel.cs" />
     <Compile Include="ViewModels\SelectArtworkViewModel.cs" />

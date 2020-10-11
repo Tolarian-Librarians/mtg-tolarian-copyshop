@@ -1,21 +1,17 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Windows;
+using Tolarian.Copyshop.Controller;
 using Tolarian.Copyshop.Controller.ResponseObjects;
+using Tolarian.Copyshop.ScreenPresenter.Communication;
 using Tolarian.Copyshop.ScreenPresenter.Model;
 
 namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
 {
-    public class DeckBuilderDesignViewModel
+    public class DeckBuilderDesignViewModel : DeckBuilderViewModel
     {
-        public ObservableCollection<FullCardModel> DeckCards { get; set; }
-
-        public FullCardModel SelectedCard { get; set; }
-
-        public Visibility SearchResultVisibility { get; set; } = Visibility.Hidden;
-
-        public DeckBuilderDesignViewModel()
+        public DeckBuilderDesignViewModel(CardController cardController, DeckController deckController, DeckCardModel deckCardModel, Dialogs dialogs)
+            : base(cardController, deckController, deckCardModel, dialogs)
         {
             this.DeckCards = new ObservableCollection<FullCardModel>
             {
@@ -98,6 +94,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
 
             this.SelectedCard = this.DeckCards[0];
             this.SelectedCard.SelectedCardFace = this.SelectedCard.CardFaces.First().LargeImage;
+            this.IsSearchResultVisible = false;
         }
     }
 }
