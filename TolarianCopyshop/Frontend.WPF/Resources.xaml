@@ -3,6 +3,25 @@
                     xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
                     xmlns:local="clr-namespace:Tolarian.Copyshop.ScreenPresenter">
 
+
+    <DoubleAnimationUsingKeyFrames x:Key="FirstFlip" Storyboard.TargetProperty="(FrameworkElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)">
+        <SplineDoubleKeyFrame KeyTime="00:00:00.0" Value="1" />
+        <SplineDoubleKeyFrame KeyTime="00:00:00.05" Value="0.8" />
+        <SplineDoubleKeyFrame KeyTime="00:00:00.10" Value="0.6" />
+        <SplineDoubleKeyFrame KeyTime="00:00:00.15" Value="0.4" />
+        <SplineDoubleKeyFrame KeyTime="00:00:00.20" Value="0.2" />
+        <SplineDoubleKeyFrame KeyTime="00:00:00.25" Value="0" />
+    </DoubleAnimationUsingKeyFrames>
+
+    <DoubleAnimationUsingKeyFrames x:Key="SecondFlip" Storyboard.TargetProperty="(FrameworkElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)">
+        <SplineDoubleKeyFrame KeyTime="00:00:00.0" Value="0" />
+        <SplineDoubleKeyFrame KeyTime="00:00:00.05" Value="0.2" />
+        <SplineDoubleKeyFrame KeyTime="00:00:00.10" Value="0.4" />
+        <SplineDoubleKeyFrame KeyTime="00:00:00.15" Value="0.6" />
+        <SplineDoubleKeyFrame KeyTime="00:00:00.20" Value="0.8" />
+        <SplineDoubleKeyFrame KeyTime="00:00:00.25" Value="1" />
+    </DoubleAnimationUsingKeyFrames>
+
     <Style x:Key="ImageButton" TargetType="{x:Type Button}">
         <Setter Property="Template">
             <Setter.Value>

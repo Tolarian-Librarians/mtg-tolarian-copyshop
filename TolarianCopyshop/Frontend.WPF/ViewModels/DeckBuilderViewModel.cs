@@ -7,13 +7,16 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Media.Animation;
 using System.Windows.Threading;
 using Tolarian.Copyshop.Controller;
 using Tolarian.Copyshop.Controller.Interfaces;
 using Tolarian.Copyshop.Controller.ResponseObjects;
 using Tolarian.Copyshop.ScreenPresenter.Base;
 using Tolarian.Copyshop.ScreenPresenter.Communication;
+using Tolarian.Copyshop.ScreenPresenter.Helper;
 using Tolarian.Copyshop.ScreenPresenter.Model;
 using Tolarian.Copyshop.ScreenPresenter.Views;
 
@@ -104,9 +107,18 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
                 this.SetProperty(ref this._selectedCard, value);
                 if (this.SelectedCard != null)
                 {
-                    this.SelectedCard.SelectedCardFace = this.SelectedCard.CardFaces?.First().LargeImage;
+                    ResetSelectedCardVisibility();
                 }
             }
+        }
+
+        private static void ResetSelectedCardVisibility()
+        {
+            Image front = DeckBuilderView.GetInstance()._SelectedImage;
+            Image back = DeckBuilderView.GetInstance()._SelectedImageSecondFace;
+
+            front.Visibility = Visibility.Visible;
+            back.Visibility = Visibility.Collapsed;
         }
 
         public ObservableCollection<SearchCard> SearchResults
@@ -273,16 +285,32 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             }
         }
 
-        private void TransformCard(object _)
+        private async void TransformCard(object _)
         {
-            if (this.SelectedCard.SelectedCardFace == this.SelectedCard.CardFaces.First().CroppedImage)
-            {
-                this.SelectedCard.SelectedCardFace = this.SelectedCard.CardFaces.Last().CroppedImage;
-            }
-            else
-            {
-                this.SelectedCard.SelectedCardFace = this.SelectedCard.CardFaces.First().CroppedImage;
-            }
+            Image front = DeckBuilderView.GetInstance()._SelectedImage;
+            Image back = DeckBuilderView.GetInstance()._SelectedImageSecondFace;
+            Image visibleImage = front.Visibility == Visibility.Visible ? front : back;
+            Image invisibleImage = front.Visibility != Visibility.Visible ? front : back;
+
+            var firstAnimation = (Application.Current.Resources["FirstFlip"] as DoubleAnimationUsingKeyFrames).Clone();
+            var secondAnimation = (Application.Current.Resources["SecondFlip"] as DoubleAnimationUsingKeyFrames).Clone();
+
+            await DoTransformAnimation(visibleImage, firstAnimation);
+
+            visibleImage.Visibility = Visibility.Collapsed;
+            invisibleImage.Visibility = Visibility.Visible;
+
+            await DoTransformAnimation(invisibleImage, secondAnimation);
+            // Revert invisible image - so it's set korrekt if the user changes the SelectedCard
+            await DoTransformAnimation(visibleImage, secondAnimation);
+        }
+
+        private static async Task DoTransformAnimation(Image image, DoubleAnimationUsingKeyFrames animation)
+        {
+            Storyboard sb = new Storyboard();
+            Storyboard.SetTarget(animation, image);
+            sb.Children.Add(animation);
+            await sb.BeginAsync().ConfigureAwait(false);
         }
 
         public void InvokeDeckCards()

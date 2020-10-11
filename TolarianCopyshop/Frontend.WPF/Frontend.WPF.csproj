@@ -117,6 +117,7 @@
     <Compile Include="Converter\BoolToVisibilityConverter.cs" />
     <Compile Include="Converter\NumericSubstractionConverter.cs" />
     <Compile Include="Converter\InvertedBoolToVisibilityConverter.cs" />
+    <Compile Include="Helper\StoryboardExtension.cs" />
     <Compile Include="Helper\TolorianDeckPrinterHelper.cs" />
     <Compile Include="Model\DeckCardModel.cs" />
     <Compile Include="Model\FullCardModel.cs" />
