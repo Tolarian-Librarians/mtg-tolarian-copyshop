@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -105,7 +104,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
                 this.SetProperty(ref this._selectedCard, value);
                 if (this.SelectedCard != null)
                 {
-                    this.SelectedCard.SelectedCardFace = this.SelectedCard.CardFaces?.First().CroppedImage;
+                    this.SelectedCard.SelectedCardFace = this.SelectedCard.CardFaces?.First().LargeImage;
                 }
             }
         }
@@ -254,8 +253,8 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
 
         private async void SelectArtwork(object _)
         {
-            var view = CopyShopView.GetInstance();
-            var result = await this._dialogs.ShowChildWindowOnUIThread<Guid>(new SelectArtworkChildView(this._cardController, this.SelectedCard.CardId)
+            CopyShopView view = CopyShopView.GetInstance();
+            Guid result = await this._dialogs.ShowChildWindowOnUIThread<Guid>(new SelectArtworkChildView(this._cardController, this.SelectedCard.CardId)
             {
                 ChildWindowWidth = view.ActualWidth - 200d,
                 ChildWindowHeight = view.ActualHeight - 150d,
@@ -293,7 +292,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
         {
             if (clickedCard is FullCardModel card)
             {
-                foreach (var deleteCard in this.DeckCards.Where(o => o.CardId == card.CardId).ToList())
+                foreach (FullCardModel deleteCard in this.DeckCards.Where(o => o.CardId == card.CardId).ToList())
                 {
                     this.DeckCards.Remove(deleteCard);
                 }

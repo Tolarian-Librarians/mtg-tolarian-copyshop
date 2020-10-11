@@ -178,6 +178,7 @@
                     <Image Grid.Row="0"
                            Grid.Column="1"
                            Margin="10,5,10,5"
+                           RenderOptions.BitmapScalingMode="Fant"
                            Source="{Binding SelectedSearchItem.Image}" />
 
                     <TextBlock Grid.Row="2"
@@ -372,14 +373,12 @@
 
         <Grid Grid.Column="2" Margin="20">
             <Grid.RowDefinitions>
-                <RowDefinition Height="4.5*" />
+                <RowDefinition Height="3.5*" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
             <Grid Grid.Row="0" FocusVisualStyle="{x:Null}">
-                <Border Style="{StaticResource CardBorder}">
-                    <Image x:Name="_SelectedImage" FocusVisualStyle="{x:Null}" Source="{Binding SelectedCard.SelectedCardFace}" />
-                </Border>
+                <Image x:Name="_SelectedImage" FocusVisualStyle="{x:Null}" Source="{Binding SelectedCard.SelectedCardFace}" />
 
                 <StackPanel Margin="{Binding ElementName=_SelectedImage, Path=ActualWidth, Converter={StaticResource LeftMarginPercentageConverter}, ConverterParameter=1.2}" Orientation="Vertical">
                     <Button Margin="0,55,0,0"
@@ -404,9 +403,8 @@
                 </StackPanel>
             </Grid>
 
-
             <Grid Grid.Row="1" Margin="50,5,50,0">
-                <ItemsControl HorizontalAlignment="Center" ItemsSource="{Binding SelectedCard.Legalities}">
+                <ItemsControl HorizontalAlignment="Center" VerticalAlignment="Center" ItemsSource="{Binding SelectedCard.Legalities}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
                             <WrapPanel />
