@@ -33,6 +33,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="HtmlAgilityPack, Version=1.11.24.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
+      <HintPath>..\packages\HtmlAgilityPack.1.11.24\lib\Net45\HtmlAgilityPack.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -41,6 +44,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -55,17 +59,20 @@
   <ItemGroup>
     <Compile Include="DbRequestModels\GetCardCollectionRequest.cs" />
     <Compile Include="EntitiesModels\PreImportCard.cs" />
+    <Compile Include="Interfaces\IDeckExporter.cs" />
     <Compile Include="Interfaces\IImportStringParser.cs" />
     <Compile Include="Interfaces\ISaveAndLoadInteractor.cs" />
     <Compile Include="Interfaces\ISetCodeTranslator.cs" />
     <Compile Include="Interfaces\ISetDataGateway.cs" />
     <Compile Include="Models\Enums\CardType.cs" />
     <Compile Include="Models\Enums\MtgColor.cs" />
+    <Compile Include="Models\Export\ExportCard.cs" />
     <Compile Include="Models\SaveAndLoad\SaveCard.cs" />
     <Compile Include="Models\SfCardInfo\SfRelatedCard.cs" />
     <Compile Include="Models\SfCardInfo\SfRelatedCardType.cs" />
     <Compile Include="Models\SfSetInfo\SfPaginatedSetList.cs" />
     <Compile Include="Models\SfSetInfo\SfSet.cs" />
+    <Compile Include="UseCaseInteractors\DeckExporter.cs" />
     <Compile Include="UseCaseInteractors\SaveAndLoadInteractor.cs" />
     <Compile Include="UseCaseInteractors\DeckImportInteractor.cs" />
     <Compile Include="Interfaces\IDeckImportInteractor.cs" />

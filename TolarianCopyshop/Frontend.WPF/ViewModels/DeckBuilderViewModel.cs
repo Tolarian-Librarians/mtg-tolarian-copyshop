@@ -3,18 +3,20 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Media.Animation;
 using System.Windows.Threading;
 using Tolarian.Copyshop.Controller;
 using Tolarian.Copyshop.Controller.Interfaces;
 using Tolarian.Copyshop.Controller.ResponseObjects;
 using Tolarian.Copyshop.ScreenPresenter.Base;
 using Tolarian.Copyshop.ScreenPresenter.Communication;
+using Tolarian.Copyshop.ScreenPresenter.Helper;
 using Tolarian.Copyshop.ScreenPresenter.Model;
 using Tolarian.Copyshop.ScreenPresenter.Views;
 
@@ -41,6 +43,8 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
         private ObservableCollection<SearchCard> _searchResults;
         private SearchCard _selectedSearchItem;
         private int _selectedSearchIndex;
+        private bool _isFirstFaceVisible;
+        private bool _isSecondFaceVisible;
         private SearchCardType _searchType = SearchCardType.Normal;
         private string _searchTextBoxPlaceHolder = "Search for cards on Scryfall ...";
 
@@ -85,7 +89,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
                 {
                     this._deckCardModel.DeckCards = value;
                     this.OnPropertyChanged(nameof(this.DeckCards));
-                    DeckViewerViewModel.GetInstance().InvokeDeckCards();
+                    DeckPrintViewModel.GetInstance().InvokeDeckCards();
                     this.CalculateDeckCardCount();
                 }
             }
@@ -105,9 +109,22 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
                 this.SetProperty(ref this._selectedCard, value);
                 if (this.SelectedCard != null)
                 {
-                    this.SelectedCard.SelectedCardFace = this.SelectedCard.CardFaces?.First().CroppedImage;
+                    this.IsFirstFaceVisible = true;
+                    this.IsSecondFaceVisible = false;
                 }
             }
+        }
+
+        public bool IsFirstFaceVisible
+        {
+            get => this._isFirstFaceVisible;
+            set => this.SetProperty(ref this._isFirstFaceVisible, value);
+        }
+
+        public bool IsSecondFaceVisible
+        {
+            get => this._isSecondFaceVisible;
+            set => this.SetProperty(ref this._isSecondFaceVisible, value);
         }
 
         public ObservableCollection<SearchCard> SearchResults
@@ -254,8 +271,8 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
 
         private async void SelectArtwork(object _)
         {
-            var view = CopyShopView.GetInstance();
-            var result = await this._dialogs.ShowChildWindowOnUIThread<Guid>(new SelectArtworkChildView(this._cardController, this.SelectedCard.CardId)
+            CopyShopView view = CopyShopView.GetInstance();
+            Guid result = await this._dialogs.ShowChildWindowOnUIThread<Guid>(new SelectArtworkChildView(this._cardController, this.SelectedCard.CardId)
             {
                 ChildWindowWidth = view.ActualWidth - 200d,
                 ChildWindowHeight = view.ActualHeight - 150d,
@@ -274,16 +291,32 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             }
         }
 
-        private void TransformCard(object _)
+        private async void TransformCard(object _)
         {
-            if (this.SelectedCard.SelectedCardFace == this.SelectedCard.CardFaces.First().CroppedImage)
-            {
-                this.SelectedCard.SelectedCardFace = this.SelectedCard.CardFaces.Last().CroppedImage;
-            }
-            else
-            {
-                this.SelectedCard.SelectedCardFace = this.SelectedCard.CardFaces.First().CroppedImage;
-            }
+            Image front = DeckBuilderView.GetInstance()._SelectedImage;
+            Image back = DeckBuilderView.GetInstance()._SelectedImageSecondFace;
+            Image visibleImage = front.Visibility == Visibility.Visible ? front : back;
+            Image invisibleImage = front.Visibility != Visibility.Visible ? front : back;
+
+            var firstAnimation = (Application.Current.Resources["FirstFlip"] as DoubleAnimationUsingKeyFrames).Clone();
+            var secondAnimation = (Application.Current.Resources["SecondFlip"] as DoubleAnimationUsingKeyFrames).Clone();
+
+            await DoTransformAnimation(visibleImage, firstAnimation);
+
+            this.IsFirstFaceVisible = !this.IsFirstFaceVisible;
+            this.IsSecondFaceVisible = !this.IsSecondFaceVisible;
+
+            await DoTransformAnimation(invisibleImage, secondAnimation);
+            // Revert invisible image - so it's set korrekt if the user changes the SelectedCard
+            await DoTransformAnimation(visibleImage, secondAnimation);
+        }
+
+        private static async Task DoTransformAnimation(Image image, DoubleAnimationUsingKeyFrames animation)
+        {
+            Storyboard sb = new Storyboard();
+            Storyboard.SetTarget(animation, image);
+            sb.Children.Add(animation);
+            await sb.BeginAsync().ConfigureAwait(false);
         }
 
         public void InvokeDeckCards()
@@ -293,7 +326,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
         {
             if (clickedCard is FullCardModel card)
             {
-                foreach (var deleteCard in this.DeckCards.Where(o => o.CardId == card.CardId).ToList())
+                foreach (FullCardModel deleteCard in this.DeckCards.Where(o => o.CardId == card.CardId).ToList())
                 {
                     this.DeckCards.Remove(deleteCard);
                 }

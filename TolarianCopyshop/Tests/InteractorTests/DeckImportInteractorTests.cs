@@ -21,42 +21,42 @@ namespace Tests.InteractorTests
         [TestInitialize]
         public void Initialize()
         {
-            _rep = new MockRepository(MockBehavior.Strict);
-            _cardGatewayMock = _rep.Create<ICardDataGateway>();
-            _translatorMock = _rep.Create<ISetCodeTranslator>();
-            _parserMock = _rep.Create<IImportStringParser>();
+            this._rep = new MockRepository(MockBehavior.Strict);
+            this._cardGatewayMock = this._rep.Create<ICardDataGateway>();
+            this._translatorMock = this._rep.Create<ISetCodeTranslator>();
+            this._parserMock = this._rep.Create<IImportStringParser>();
         }
 
         [TestCleanup]
         public void Cleanup()
         {
-            _rep.VerifyAll();
+            this._rep.VerifyAll();
         }
 
         [TestMethod]
         public void GetCardsForImport_Test()
         {
             //Arrange
-            var unitUnderTest = GetInteractor();
-            SetupMocks();
+            DeckImportInteractor unitUnderTest = this.GetInteractor();
+            this.SetupMocks();
 
             //Act
-            (List<SfCard> cards, string notFound) = unitUnderTest.GetCardsForImport(dummyImportString);
+            (List<SfCard> cards, string notFound) = unitUnderTest.GetCardsForImport(this.dummyImportString);
 
             //Assert
             Assert.IsTrue(string.IsNullOrEmpty(notFound));
             Assert.IsNotNull(cards);
             Assert.AreEqual(cards.Count, 16);
-            _cardGatewayMock.Verify(m => m.GetCardCollectionByIdentifiers(It.IsAny<List<GetCardCollectionRequest>>()), Times.Once);
-            _translatorMock.Verify(m => m.TranslateArenaCodeToScryfallCode(It.IsAny<string>()), Times.Exactly(3));
+            this._cardGatewayMock.Verify(m => m.GetCardCollectionByIdentifiers(It.IsAny<List<GetCardCollectionRequest>>()), Times.Once);
+            this._translatorMock.Verify(m => m.TranslateArenaCodeToScryfallCode(It.IsAny<string>()), Times.Exactly(3));
         }
 
         [TestMethod]
         public void GetCardsForImport_NothingFound_Test()
         {
             //Arrange
-            var unitUnderTest = GetInteractor();
-            SetupMocks();
+            DeckImportInteractor unitUnderTest = this.GetInteractor();
+            this.SetupMocks();
 
             SfCardCollection notFoundResult = new SfCardCollection
             {
@@ -67,27 +67,34 @@ namespace Tests.InteractorTests
                 },
             };
 
-            _cardGatewayMock.Setup(m => m.GetCardCollectionByIdentifiers(It.IsAny<List<GetCardCollectionRequest>>())).Returns(notFoundResult);
+            this._cardGatewayMock.Setup(m => m.GetCardCollectionByIdentifiers(It.IsAny<List<GetCardCollectionRequest>>())).Returns(notFoundResult);
 
             //Act
-            (List<SfCard> cards, string notFound) = unitUnderTest.GetCardsForImport(dummyImportString);
+            (List<SfCard> cards, string notFound) = unitUnderTest.GetCardsForImport(this.dummyImportString);
 
             //Assert
-            _cardGatewayMock.Verify(m => m.GetCardCollectionByIdentifiers(It.IsAny<List<GetCardCollectionRequest>>()), Times.Exactly(2));
+            this._cardGatewayMock.Verify(m => m.GetCardCollectionByIdentifiers(It.IsAny<List<GetCardCollectionRequest>>()), Times.Exactly(2));
+        }
+
+        [TestMethod]
+        public void ImportFromTappedOut_Test()
+        {
+            Uri uri = new Uri("https://tappedout.net/mtg-decks/your-life-can-depend-on-this-dont-blink/");
+            (List<SfCard>, string notFound) result = this.GetInteractor().ImportFromTappedOut(uri);
         }
 
         private DeckImportInteractor GetInteractor()
         {
-            return new DeckImportInteractor(_cardGatewayMock.Object, _translatorMock.Object, _parserMock.Object);
+            return new DeckImportInteractor(this._cardGatewayMock.Object, this._translatorMock.Object, this._parserMock.Object);
         }
 
         private void SetupMocks()
         {
-            _parserMock.Setup(m => m.ResolvePreImportCardsFromImportString(It.Is<List<string>>(p => p == dummyImportString))).Returns(preImportCards);
-            _translatorMock.Setup(m => m.TranslateArenaCodeToScryfallCode(It.Is<string>(p => p == "CN2"))).Returns("CN2");
-            _translatorMock.Setup(m => m.TranslateArenaCodeToScryfallCode(It.Is<string>(p => p == "RNA"))).Returns("RNA");
-            _translatorMock.Setup(m => m.TranslateArenaCodeToScryfallCode(It.Is<string>(p => p == "DAR"))).Returns("DOM");
-            _cardGatewayMock.Setup(m => m.GetCardCollectionByIdentifiers(It.IsAny<List<GetCardCollectionRequest>>())).Returns(dummyResult);
+            this._parserMock.Setup(m => m.ResolvePreImportCardsFromImportString(It.Is<List<string>>(p => p == this.dummyImportString))).Returns(this.preImportCards);
+            this._translatorMock.Setup(m => m.TranslateArenaCodeToScryfallCode(It.Is<string>(p => p == "CN2"))).Returns("CN2");
+            this._translatorMock.Setup(m => m.TranslateArenaCodeToScryfallCode(It.Is<string>(p => p == "RNA"))).Returns("RNA");
+            this._translatorMock.Setup(m => m.TranslateArenaCodeToScryfallCode(It.Is<string>(p => p == "DAR"))).Returns("DOM");
+            this._cardGatewayMock.Setup(m => m.GetCardCollectionByIdentifiers(It.IsAny<List<GetCardCollectionRequest>>())).Returns(this.dummyResult);
         }
 
         private List<string> dummyImportString = new List<string>
@@ -97,17 +104,17 @@ namespace Tests.InteractorTests
             "8 Forest (DAR) 254",
         };
 
-        private Dictionary<PreImportCard, int> preImportCards = new Dictionary<PreImportCard, int>
+        private List<KeyValuePair<PreImportCard, int>> preImportCards = new List<KeyValuePair<PreImportCard, int>>
         {
-            { new PreImportCard{ CardName = "Birds of Paradise", SetCode = "CN2" }, 4},
-            { new PreImportCard{ CardName = "Collision // Colossus", SetCode = "RNA" }, 4},
-            { new PreImportCard{ CardName = "Forest", SetCode = "DAR" }, 8},
+            new KeyValuePair<PreImportCard, int>(new PreImportCard{ CardName = "Birds of Paradise", SetCode = "CN2" }, 4),
+            new KeyValuePair<PreImportCard, int>(new PreImportCard{ CardName = "Collision // Colossus", SetCode = "RNA" }, 4),
+            new KeyValuePair<PreImportCard, int>(new PreImportCard{ CardName = "Forest", SetCode = "DAR" }, 8),
         };
 
         private SfCardCollection dummyResult = new SfCardCollection
         {
-            Data = new SfCard[] 
-            { 
+            Data = new SfCard[]
+            {
                 new SfCard { Name = "Birds of Paradise" },
                 new SfCard { Name = "Collision // Colossus" },
                 new SfCard { Name = "Forest" },

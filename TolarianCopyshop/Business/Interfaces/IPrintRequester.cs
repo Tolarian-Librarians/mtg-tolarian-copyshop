@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Windows.Controls;
+using System.Windows;
+using System.Windows.Documents;
 
 namespace Tolarian.Copyshop.Business.Interfaces
 {
     public interface IPrintRequester
     {
-        void PrintDeck(PrintDialog printDlg, Stack<Uri> deckCards);
+        FixedDocument GetPrintPages(Size pageSize, Stack<Uri> deckCards, float scale);
     }
 }

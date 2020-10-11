@@ -44,10 +44,12 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CardController.cs" />
     <Compile Include="DeckController.cs" />
+    <Compile Include="ExportController.cs" />
     <Compile Include="Mappers\CardMapper.cs" />
     <Compile Include="Mappers\DeckMapper.cs" />
     <Compile Include="Mappers\SaveAndLoadMapper.cs" />

@@ -23,7 +23,6 @@
         <s:Boolean x:Key="TrueValue">True</s:Boolean>
     </Controls:MetroWindow.Resources>
 
-
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="35" />
@@ -67,29 +66,37 @@
                             <iconPacks:PackIconFontAwesome Height="16" Margin="4,0,0,0" Kind="ClipboardSolid" />
                         </MenuItem.Icon>
                     </MenuItem>
+                    <MenuItem Command="{Binding ImportCommand}" CommandParameter="URL" Header="Import from tappedout.net">
+                        <MenuItem.Icon>
+                            <iconPacks:PackIconFontAwesome Height="16" Margin="4,0,0,0" Kind="LinkSolid" />
+                        </MenuItem.Icon>
+                    </MenuItem>
                 </MenuItem>
-                <MenuItem Header="Export to ..." IsEnabled="False">
+                <MenuItem Header="Export to ...">
                     <MenuItem.Icon>
                         <iconPacks:PackIconFontAwesome Height="16" Margin="4,0,0,0" Kind="ShareSquareSolid" />
                     </MenuItem.Icon>
+                    <MenuItem Command="{Binding ExportCommand}" CommandParameter="Text" Header="Export to Text">
+                        <MenuItem.Icon>
+                            <iconPacks:PackIconFontAwesome Height="16" Margin="4,0,0,0" Kind="EnvelopeOpenTextSolid" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Command="{Binding ExportCommand}" CommandParameter="Clipboard" Header="Export to Clipboard">
+                        <MenuItem.Icon>
+                            <iconPacks:PackIconFontAwesome Height="16" Margin="4,0,0,0" Kind="ClipboardSolid" />
+                        </MenuItem.Icon>
+                    </MenuItem>
                 </MenuItem>
             </MenuItem>
-            <MenuItem Header="EDIT">
+            <MenuItem Header="ACTION">
                 <MenuItem Command="{Binding ClearCommand}" Header="Clear Decklist">
                     <MenuItem.Icon>
                         <iconPacks:PackIconFontAwesome Height="16" Margin="4,0,0,0" Kind="TrashAltSolid" />
                     </MenuItem.Icon>
                 </MenuItem>
-            </MenuItem>
-            <MenuItem Header="ACTION">
                 <MenuItem Command="{Binding ImportTokenCommand}" Header="Import Tokens">
                     <MenuItem.Icon>
                         <iconPacks:PackIconFontAwesome Height="16" Margin="4,0,0,0" Kind="ChessSolid" />
-                    </MenuItem.Icon>
-                </MenuItem>
-                <MenuItem Command="{Binding PrintCommand}" Header="Print Deck">
-                    <MenuItem.Icon>
-                        <iconPacks:PackIconFontAwesome Height="16" Margin="4,0,0,0" Kind="PrintSolid" />
                     </MenuItem.Icon>
                 </MenuItem>
             </MenuItem>
@@ -106,15 +113,15 @@
                 </MenuItem>
             </MenuItem>
         </Menu>
-        <TabControl Grid.Row="1">
+        <TabControl x:Name="PageFrame" Grid.Row="1" SelectedIndex="{Binding SelectedTabIndex}">
             <TabItem Header="Build Deck">
                 <local:DeckBuilderView x:Name="_DeckBuilderView" />
             </TabItem>
             <TabItem Header="Deck Statistics">
                 <local:DeckStatisticsView x:Name="_DeckStatisticsView" />
             </TabItem>
-            <TabItem Header="View Deck">
-                <local:DeckViewerView x:Name="_DeckViewerView" />
+            <TabItem Header="Print Deck">
+                <local:DeckPrintView x:Name="_DeckViewerView" />
             </TabItem>
         </TabControl>
         <StatusBar Grid.Row="2">

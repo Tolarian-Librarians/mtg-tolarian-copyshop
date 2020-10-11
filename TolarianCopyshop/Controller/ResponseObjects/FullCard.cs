@@ -19,8 +19,7 @@ namespace Tolarian.Copyshop.Controller.ResponseObjects
                 CardCount = card.CardCount,
                 CardId = card.CardId,
                 PrintId = card.PrintId,
-                Legalities1 = card.Legalities1,
-                Legalities2 = card.Legalities2,
+                Legalities = card.Legalities,
                 SetCode = card.SetCode,
                 CardFaces = card.CardFaces,
                 IsTransformable = card.IsTransformable,
@@ -37,8 +36,7 @@ namespace Tolarian.Copyshop.Controller.ResponseObjects
         public int CardCount { get; set; }
         public Guid CardId { get; set; }
         public Guid PrintId { get; set; }
-        public Dictionary<string, string> Legalities1 { get; set; }
-        public Dictionary<string, string> Legalities2 { get; set; }
+        public Dictionary<string, string> Legalities { get; set; }
         public string SetCode { get; set; }
         public string ManaCostLine { get; set; }
         public ICollection<CardFace> CardFaces { get; set; }

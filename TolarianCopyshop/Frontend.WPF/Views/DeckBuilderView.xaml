@@ -178,6 +178,7 @@
                     <Image Grid.Row="0"
                            Grid.Column="1"
                            Margin="10,5,10,5"
+                           RenderOptions.BitmapScalingMode="Fant"
                            Source="{Binding SelectedSearchItem.Image}" />
 
                     <TextBlock Grid.Row="2"
@@ -375,14 +376,30 @@
                 <RowDefinition Height="3.5*" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="15" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
 
-            <Grid Grid.Row="0" Grid.ColumnSpan="3" FocusVisualStyle="{x:Null}">
-                <Image x:Name="_SelectedImage" FocusVisualStyle="{x:Null}" Source="{Binding SelectedCard.SelectedCardFace}" />
+            <Grid Grid.Row="0" FocusVisualStyle="{x:Null}">
+                <Image x:Name="_SelectedImage"
+                       FocusVisualStyle="{x:Null}"
+                       RenderTransformOrigin="0.5,0.5"
+                       Source="{Binding SelectedCard.CardFaces[0].LargeImage}"
+                       Visibility="{Binding IsFirstFaceVisible, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue=Visible}">
+                    <Image.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform />
+                        </TransformGroup>
+                    </Image.RenderTransform>
+                </Image>
+                <Image x:Name="_SelectedImageSecondFace"
+                       FocusVisualStyle="{x:Null}"
+                       RenderTransformOrigin="0.5,0.5"
+                       Source="{Binding SelectedCard.CardFaces[1].LargeImage}"
+                       Visibility="{Binding IsSecondFaceVisible, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue=Collapsed}">
+                    <Image.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform />
+                        </TransformGroup>
+                    </Image.RenderTransform>
+                </Image>
                 <StackPanel Margin="{Binding ElementName=_SelectedImage, Path=ActualWidth, Converter={StaticResource LeftMarginPercentageConverter}, ConverterParameter=1.2}" Orientation="Vertical">
                     <Button Margin="0,55,0,0"
                             Command="{Binding SelectArtworkCommand}"
@@ -406,81 +423,51 @@
                 </StackPanel>
             </Grid>
 
-
-            <Grid Grid.Row="1" Grid.Column="0" Margin="0,15,0,0">
-                <DataGrid HorizontalAlignment="Right"
-                          AutoGenerateColumns="False"
-                          HeadersVisibility="None"
-                          ItemsSource="{Binding SelectedCard.Legalities1}">
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Width="80" Binding="{Binding Key}" />
-                        <DataGridTextColumn Width="80" Binding="{Binding Value}">
-                            <DataGridTextColumn.ElementStyle>
-                                <Style TargetType="{x:Type TextBlock}">
-                                    <Setter Property="TextAlignment" Value="Center" />
-                                    <Style.Triggers>
-                                        <Trigger Property="Text" Value="legal">
-                                            <Setter Property="Background" Value="LightGreen" />
-                                        </Trigger>
-                                        <Trigger Property="Text" Value="not legal">
-                                            <Setter Property="Background" Value="LightGray" />
-                                        </Trigger>
-                                        <Trigger Property="Text" Value="banned">
-                                            <Setter Property="Background" Value="Red" />
-                                        </Trigger>
-                                        <Trigger Property="Text" Value="restricted">
-                                            <Setter Property="Background" Value="blue" />
-                                        </Trigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </DataGridTextColumn.ElementStyle>
-                        </DataGridTextColumn>
-                    </DataGrid.Columns>
-                    <DataGrid.RowStyle>
-                        <Style TargetType="DataGridRow">
-                            <Setter Property="IsHitTestVisible" Value="False" />
-                        </Style>
-                    </DataGrid.RowStyle>
-                </DataGrid>
+            <Grid Grid.Row="1" Margin="50,5,50,0">
+                <ItemsControl HorizontalAlignment="Center" VerticalAlignment="Center" ItemsSource="{Binding SelectedCard.Legalities}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Width="75" Height="30" Margin="0,15,15,0">
+                                <Grid>
+                                    <Border CornerRadius="4">
+                                        <TextBlock HorizontalAlignment="Center"
+                                                   VerticalAlignment="Center"
+                                                   FontWeight="DemiBold"
+                                                   Text="{Binding Key}" />
+                                        <Border.Style>
+                                            <Style TargetType="{x:Type Border}">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Value}" Value="legal">
+                                                        <Setter Property="Background" Value="#75986E" />
+                                                        <Setter Property="ToolTip" Value="LEGAL" />
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding Value}" Value="not legal">
+                                                        <Setter Property="Background" Value="#AEAEAE" />
+                                                        <Setter Property="ToolTip" Value="NOT LEGAL" />
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding Value}" Value="banned">
+                                                        <Setter Property="Background" Value="#CC7D83" />
+                                                        <Setter Property="ToolTip" Value="BANNED" />
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding Value}" Value="restricted">
+                                                        <Setter Property="Background" Value="#DDC959" />
+                                                        <Setter Property="ToolTip" Value="RESTRICTED" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Border.Style>
+                                    </Border>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
             </Grid>
-
-            <Grid Grid.Row="1" Grid.Column="3" Margin="0,15,0,0">
-                <DataGrid HorizontalAlignment="Left"
-                          AutoGenerateColumns="False"
-                          HeadersVisibility="None"
-                          ItemsSource="{Binding SelectedCard.Legalities2}">
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Width="80" Binding="{Binding Key}" />
-                        <DataGridTextColumn Width="80" Binding="{Binding Value}">
-                            <DataGridTextColumn.ElementStyle>
-                                <Style TargetType="{x:Type TextBlock}">
-                                    <Setter Property="TextAlignment" Value="Center" />
-                                    <Style.Triggers>
-                                        <Trigger Property="Text" Value="legal">
-                                            <Setter Property="Background" Value="LightGreen" />
-                                        </Trigger>
-                                        <Trigger Property="Text" Value="not legal">
-                                            <Setter Property="Background" Value="LightGray" />
-                                        </Trigger>
-                                        <Trigger Property="Text" Value="banned">
-                                            <Setter Property="Background" Value="Red" />
-                                        </Trigger>
-                                        <Trigger Property="Text" Value="restricted">
-                                            <Setter Property="Background" Value="blue" />
-                                        </Trigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </DataGridTextColumn.ElementStyle>
-                        </DataGridTextColumn>
-                    </DataGrid.Columns>
-                    <DataGrid.RowStyle>
-                        <Style TargetType="DataGridRow">
-                            <Setter Property="IsHitTestVisible" Value="False" />
-                        </Style>
-                    </DataGrid.RowStyle>
-                </DataGrid>
-            </Grid>
-
         </Grid>
     </Grid>
 </UserControl>
