@@ -43,6 +43,8 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
         private ObservableCollection<SearchCard> _searchResults;
         private SearchCard _selectedSearchItem;
         private int _selectedSearchIndex;
+        private bool _isFirstFaceVisible;
+        private bool _isSecondFaceVisible;
         private SearchCardType _searchType = SearchCardType.Normal;
         private string _searchTextBoxPlaceHolder = "Search for cards on Scryfall ...";
 
@@ -107,18 +109,22 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
                 this.SetProperty(ref this._selectedCard, value);
                 if (this.SelectedCard != null)
                 {
-                    ResetSelectedCardVisibility();
+                    this.IsFirstFaceVisible = true;
+                    this.IsSecondFaceVisible = false;
                 }
             }
         }
 
-        private static void ResetSelectedCardVisibility()
+        public bool IsFirstFaceVisible
         {
-            Image front = DeckBuilderView.GetInstance()._SelectedImage;
-            Image back = DeckBuilderView.GetInstance()._SelectedImageSecondFace;
+            get => this._isFirstFaceVisible;
+            set => this.SetProperty(ref this._isFirstFaceVisible, value);
+        }
 
-            front.Visibility = Visibility.Visible;
-            back.Visibility = Visibility.Collapsed;
+        public bool IsSecondFaceVisible
+        {
+            get => this._isSecondFaceVisible;
+            set => this.SetProperty(ref this._isSecondFaceVisible, value);
         }
 
         public ObservableCollection<SearchCard> SearchResults
@@ -297,8 +303,8 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
 
             await DoTransformAnimation(visibleImage, firstAnimation);
 
-            visibleImage.Visibility = Visibility.Collapsed;
-            invisibleImage.Visibility = Visibility.Visible;
+            this.IsFirstFaceVisible = !this.IsFirstFaceVisible;
+            this.IsSecondFaceVisible = !this.IsSecondFaceVisible;
 
             await DoTransformAnimation(invisibleImage, secondAnimation);
             // Revert invisible image - so it's set korrekt if the user changes the SelectedCard
