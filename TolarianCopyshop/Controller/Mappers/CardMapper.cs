@@ -13,9 +13,9 @@ namespace Tolarian.Copyshop.Controller.Mappers
     {
         internal static List<Guid> GetTokenGuidsOfDeck(List<IFullCard> deck)
         {
-            var nontokenCards = deck.Where(dc => !dc.CardFaces.Any(cf => cf.PrimaryCardType == ResponseObjects.Enums.CardType.Token));
+            IEnumerable<IFullCard> nontokenCards = deck.Where(dc => !dc.CardFaces.Any(cf => cf.PrimaryCardType == ResponseObjects.Enums.CardType.Token));
 
-            var tokenGuids = nontokenCards.SelectMany(dc => dc?.RelatedCards?.Where(rc => rc?.Type == RelatedCardType.token)?.Select(rc => rc.Id)
+            List<Guid> tokenGuids = nontokenCards.SelectMany(dc => dc?.RelatedCards?.Where(rc => rc?.Type == RelatedCardType.token)?.Select(rc => rc.Id)
             ?? new List<Guid>())?.ToList();
 
             return tokenGuids;
@@ -60,7 +60,7 @@ namespace Tolarian.Copyshop.Controller.Mappers
 
         internal static SearchCard MapToSearchResultDto(SfCard source)
         {
-            var result = new SearchCard
+            SearchCard result = new SearchCard
             {
                 Name = source.Name,
                 PrimaryCardType = GetPrimaryCardType(GetBaseCardTypesFromTypeLine(source.TypeLine)),
@@ -85,19 +85,18 @@ namespace Tolarian.Copyshop.Controller.Mappers
 
         internal static List<IFullCard> MapToCardDto(List<SfCard> sources)
         {
-            var result = sources.Select(card => MapToCardDto(card)).ToList();
+            List<IFullCard> result = sources.Select(card => MapToCardDto(card)).ToList();
             return result;
         }
 
         internal static IFullCard MapToCardDto(SfCard source)
         {
-            var result = new FullCard
+            FullCard result = new FullCard
             {
                 CardId = source.CardId,
                 PrintId = source.PrintId,
                 FormattedCardName = GetFormattedNameOfCard(source),
-                Legalities1 = GetFirstHalfOfLegalities(source),
-                Legalities2 = GetSecondHalfOfLegalities(source),
+                Legalities = source.Legalities.ToDictionary(k => k.Key.ToString(), e => e.Value.Replace('_', ' ')),
                 CardCount = 1,
                 CardFaces = MapCardFacesOf(source),
                 RelatedCards = MapRelatedCardsOf(source),
@@ -115,12 +114,12 @@ namespace Tolarian.Copyshop.Controller.Mappers
 
         private static ICollection<CardFace> MapCardFacesOf(SfCard source)
         {
-            var result = new List<CardFace>();
+            List<CardFace> result = new List<CardFace>();
             if (source.IsTransformable)
             {
                 result = source.CardFaces.Select(cf =>
                 {
-                    var typesOfCard = GetBaseCardTypesFromTypeLine(cf.TypeLine);
+                    List<ResponseObjects.Enums.CardType> typesOfCard = GetBaseCardTypesFromTypeLine(cf.TypeLine);
 
                     return new CardFace
                     {
@@ -138,7 +137,7 @@ namespace Tolarian.Copyshop.Controller.Mappers
             }
             else
             {
-                var typesOfCard = GetBaseCardTypesFromTypeLine(source.TypeLine);
+                List<ResponseObjects.Enums.CardType> typesOfCard = GetBaseCardTypesFromTypeLine(source.TypeLine);
                 result.Add(new CardFace
                 {
                     LargeImage = source.ImageUris.ContainsKey(CardImageTypes.Large) ? source.ImageUris[CardImageTypes.Large] : null,
@@ -157,7 +156,7 @@ namespace Tolarian.Copyshop.Controller.Mappers
 
         private static ICollection<RelatedCard> MapRelatedCardsOf(SfCard source)
         {
-            var result = new List<RelatedCard>();
+            List<RelatedCard> result = new List<RelatedCard>();
 
             if (source.RelatedCards != null)
             {
@@ -169,25 +168,6 @@ namespace Tolarian.Copyshop.Controller.Mappers
             }
 
             return result;
-        }
-
-        private static Dictionary<string, string> GetFirstHalfOfLegalities(SfCard source)
-        {
-            return source.Legalities.Take(GetHalfIndexOfDictionary(source.Legalities)).ToDictionary(k => k.Key.ToString(), e => e.Value.Replace('_', ' '));
-        }
-
-        private static Dictionary<string, string> GetSecondHalfOfLegalities(SfCard source)
-        {
-            return source.Legalities.Skip(GetHalfIndexOfDictionary(source.Legalities)).Take(source.Legalities.Count - GetHalfIndexOfDictionary(source.Legalities)).ToDictionary(k => k.Key.ToString(), e => e.Value.Replace('_', ' '));
-        }
-
-        private static int GetHalfIndexOfDictionary(Dictionary<MtgPlayModes, string> collection)
-        {
-            int count = collection.Count;
-            if (count % 2 == 0)
-                return count / 2;
-            else
-                return (count / 2) + 1;
         }
 
         private static string GetFormattedNameOfCard(SfCard source)
@@ -221,16 +201,20 @@ namespace Tolarian.Copyshop.Controller.Mappers
             typesOfCard = typesOfCard.Select(str => str.ToLower().Trim()).ToList();
             typesOfCard.RemoveAll(str => string.IsNullOrWhiteSpace(str) || str == "-" || str == "—");
 
-            var result = new List<ResponseObjects.Enums.CardType>();
+            List<ResponseObjects.Enums.CardType> result = new List<ResponseObjects.Enums.CardType>();
 
-            foreach (var type in typesOfCard)
+            foreach (string type in typesOfCard)
             {
                 if (Enum.TryParse(type, true, out ResponseObjects.Enums.CardType parsed))
+                {
                     result.Add(parsed);
+                }
             }
 
             if (!result.Any())
+            {
                 result.Add(ResponseObjects.Enums.CardType.Unknown);
+            }
 
             return result;
 
@@ -239,31 +223,49 @@ namespace Tolarian.Copyshop.Controller.Mappers
         private static ResponseObjects.Enums.CardType GetPrimaryCardType(List<ResponseObjects.Enums.CardType> cardTypes)
         {
             if (cardTypes.Contains(ResponseObjects.Enums.CardType.Token))
+            {
                 return ResponseObjects.Enums.CardType.Token;
+            }
 
             if (cardTypes.Contains(ResponseObjects.Enums.CardType.Emblem))
+            {
                 return ResponseObjects.Enums.CardType.Emblem;
+            }
 
             if (cardTypes.Contains(ResponseObjects.Enums.CardType.Creature))
+            {
                 return ResponseObjects.Enums.CardType.Creature;
+            }
 
             if (cardTypes.Contains(ResponseObjects.Enums.CardType.Enchantment))
+            {
                 return ResponseObjects.Enums.CardType.Enchantment;
+            }
 
             if (cardTypes.Contains(ResponseObjects.Enums.CardType.Sorcery))
+            {
                 return ResponseObjects.Enums.CardType.Sorcery;
+            }
 
             if (cardTypes.Contains(ResponseObjects.Enums.CardType.Instant))
+            {
                 return ResponseObjects.Enums.CardType.Instant;
+            }
 
             if (cardTypes.Contains(ResponseObjects.Enums.CardType.Land))
+            {
                 return ResponseObjects.Enums.CardType.Land;
+            }
 
             if (cardTypes.Contains(ResponseObjects.Enums.CardType.Artifact))
+            {
                 return ResponseObjects.Enums.CardType.Artifact;
+            }
 
             if (cardTypes.Contains(ResponseObjects.Enums.CardType.Planeswalker))
+            {
                 return ResponseObjects.Enums.CardType.Planeswalker;
+            }
 
             return ResponseObjects.Enums.CardType.Unknown;
         }

@@ -11,8 +11,7 @@ namespace Tolarian.Copyshop.Controller.Interfaces
         Guid CardId { get; set; }
         string FormattedCardName { get; set; }
         Guid PrintId { get; set; }
-        Dictionary<string, string> Legalities1 { get; set; }
-        Dictionary<string, string> Legalities2 { get; set; }
+        Dictionary<string, string> Legalities { get; set; }
         string SetCode { get; set; }
         string ManaCostLine { get; set; }
         float ConvertedManaCost { get; set; }

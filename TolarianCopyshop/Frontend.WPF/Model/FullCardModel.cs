@@ -14,8 +14,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.Model
         private Guid _cardId;
         private int _cardCount = 1;
         private string _formattedCardName;
-        private Dictionary<string, string> _legalities1;
-        private Dictionary<string, string> _legalities2;
+        private Dictionary<string, string> _legalities;
         private Guid _printId;
         private string _setCode;
         private string _manaCostLine;
@@ -46,8 +45,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.Model
                 CardId = card.CardId,
                 PrintId = card.PrintId,
                 FormattedCardName = card.FormattedCardName,
-                Legalities1 = card.Legalities1,
-                Legalities2 = card.Legalities2,
+                Legalities = card.Legalities,
                 SetCode = card.SetCode,
                 CardFaces = card.CardFaces,
                 RelatedCards = card.RelatedCards,
@@ -119,16 +117,10 @@ namespace Tolarian.Copyshop.ScreenPresenter.Model
             set => this.SetProperty(ref this._cardCount, value);
         }
 
-        public Dictionary<string, string> Legalities1
+        public Dictionary<string, string> Legalities
         {
-            get => this._legalities1;
-            set => this.SetProperty(ref this._legalities1, value);
-        }
-
-        public Dictionary<string, string> Legalities2
-        {
-            get => this._legalities2;
-            set => this.SetProperty(ref this._legalities2, value);
+            get => this._legalities;
+            set => this.SetProperty(ref this._legalities, value);
         }
 
         public string SetCode
