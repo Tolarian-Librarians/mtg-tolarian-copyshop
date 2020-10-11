@@ -86,33 +86,48 @@ namespace Tolarian.Copyshop.Business.UseCaseInteractors
 
         private void AddCardImagesToPage(Stack<Uri> deckCards, FixedPage page)
         {
+            ImageSource imgSource = null;
+            Uri lastUri = null;
+
             for (int xPos = 0; xPos < _cardsPerRowAndCol; xPos++)
             {
                 for (int yPos = 0; yPos < _cardsPerRowAndCol; yPos++)
                 {
-                    if (deckCards.Count == 0)
+                    if (IsEveryCardAdded(deckCards))
                     {
-                        break;
+                        return;
                     }
 
-                    UIElement img = this.GetImageForSlotFromUri(deckCards.Pop(), xPos, yPos);
-                    page.Children.Add(img);
+                    AddImageToPage(xPos, yPos);
                 }
+            }
+
+            void AddImageToPage(int xPos, int yPos)
+            {
+                Uri uri = deckCards.Pop();
+                if (lastUri != uri)
+                {
+                    imgSource = this.GetImageSourceFromUri(uri);
+                }
+                Image img = this.GetImageFromUri(imgSource, xPos, yPos);
+                lastUri = uri;
+                page.Children.Add(img);
             }
         }
 
-        private UIElement GetImageForSlotFromUri(Uri source, int xPos, int yPos)
-        {
-            Image img = new Image
+        private static bool IsEveryCardAdded(Stack<Uri> deckCards)
+            => deckCards.Count == 0;
+
+        private Image GetImageFromUri(ImageSource source, int xPos, int yPos)
+            => new Image
             {
-                Source = new ImageSourceConverter().ConvertFromString(source.AbsoluteUri) as ImageSource,
+                Source = source,
                 Width = this._customCardWidth,
                 Height = this._customCardHeight,
-
                 RenderTransform = new TranslateTransform((this._customCardWidth * xPos) + xPos, (this._customCardHeight * yPos) + yPos),
             };
 
-            return img;
-        }
+        private ImageSource GetImageSourceFromUri(Uri source)
+            => new ImageSourceConverter().ConvertFromString(source.AbsoluteUri) as ImageSource;
     }
 }

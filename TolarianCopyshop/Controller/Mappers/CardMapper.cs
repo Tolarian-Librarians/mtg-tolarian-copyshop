@@ -65,7 +65,7 @@ namespace Tolarian.Copyshop.Controller.Mappers
                 Name = source.Name,
                 PrimaryCardType = GetPrimaryCardType(GetBaseCardTypesFromTypeLine(source.TypeLine)),
                 PrintId = source.PrintId,
-                Image = source.IsTransformable ? source.CardFaces[0].ImageUris[CardImageTypes.Border_Crop] : source.ImageUris[CardImageTypes.Border_Crop],
+                Image = source.IsTransformable ? source.CardFaces[0].ImageUris[CardImageTypes.Normal] : source.ImageUris[CardImageTypes.Normal],
                 PowerToughness = string.IsNullOrWhiteSpace(source.Power) && string.IsNullOrWhiteSpace(source.Toughness) ? "" : $"{source.Power,-2}/{source.Toughness,2}",
             };
 

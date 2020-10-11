@@ -178,6 +178,7 @@
                     <Image Grid.Row="0"
                            Grid.Column="1"
                            Margin="10,5,10,5"
+                           RenderOptions.BitmapScalingMode="Fant"
                            Source="{Binding SelectedSearchItem.Image}" />
 
                     <TextBlock Grid.Row="2"
@@ -372,84 +373,75 @@
 
         <Grid Grid.Column="2" Margin="20">
             <Grid.RowDefinitions>
-                <RowDefinition Height="4.5*" />
+                <RowDefinition Height="3.5*" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
             <Grid Grid.Row="0" FocusVisualStyle="{x:Null}">
-                <Border HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        BorderBrush="Black"
-                        BorderThickness="5"
-                        CornerRadius="5">
-                    <Grid>
-                        <Image x:Name="_SelectedImage"
-                               FocusVisualStyle="{x:Null}"
-                               RenderTransformOrigin="0.5,0.5"
-                               Source="{Binding SelectedCard.SelectedCardFace}">
-                            <Image.RenderTransform>
-                                <TransformGroup>
-                                    <ScaleTransform />
-                                </TransformGroup>
-                            </Image.RenderTransform>
-                            <Image.Style>
-                                <Style TargetType="{x:Type Image}">
-                                    <Style.Triggers>
-                                        <EventTrigger RoutedEvent="MouseDown">
-                                            <EventTrigger.Actions>
-                                                <BeginStoryboard>
-                                                    <Storyboard x:Name="ImageFlip">
-                                                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)">
-                                                            <SplineDoubleKeyFrame KeyTime="00:00:00.0" Value="1" />
-                                                            <SplineDoubleKeyFrame KeyTime="00:00:00.09" Value="0.8" />
-                                                            <SplineDoubleKeyFrame KeyTime="00:00:00.18" Value="0.6" />
-                                                            <SplineDoubleKeyFrame KeyTime="00:00:00.27" Value="0.4" />
-                                                            <SplineDoubleKeyFrame KeyTime="00:00:00.36" Value="0.2" />
-                                                            <SplineDoubleKeyFrame KeyTime="00:00:00.45" Value="0" />
-                                                        </DoubleAnimationUsingKeyFrames>
-                                                    </Storyboard>
-                                                </BeginStoryboard>
-                                            </EventTrigger.Actions>
-                                        </EventTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Image.Style>
-                        </Image>
-                        <Image x:Name="_SelectedImageSecondFace"
-                               FocusVisualStyle="{x:Null}"
-                               RenderTransformOrigin="0.5,0.5"
-                               Source="{Binding SelectedCard.CardFaces[1].CroppedImage}">
-                            <Image.RenderTransform>
-                                <TransformGroup>
-                                    <ScaleTransform />
-                                </TransformGroup>
-                            </Image.RenderTransform>
-                            <Image.Style>
-                                <Style TargetType="{x:Type Image}">
-                                    <Style.Triggers>
-                                        <EventTrigger RoutedEvent="MouseDown">
-                                            <EventTrigger.Actions>
-                                                <BeginStoryboard>
-                                                    <Storyboard x:Name="ImageFlip">
-                                                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)">
-                                                            <SplineDoubleKeyFrame KeyTime="00:00:00.0" Value="1" />
-                                                            <SplineDoubleKeyFrame KeyTime="00:00:00.09" Value="0.8" />
-                                                            <SplineDoubleKeyFrame KeyTime="00:00:00.18" Value="0.6" />
-                                                            <SplineDoubleKeyFrame KeyTime="00:00:00.27" Value="0.4" />
-                                                            <SplineDoubleKeyFrame KeyTime="00:00:00.36" Value="0.2" />
-                                                            <SplineDoubleKeyFrame KeyTime="00:00:00.45" Value="0" />
-                                                        </DoubleAnimationUsingKeyFrames>
-                                                    </Storyboard>
-                                                </BeginStoryboard>
-                                            </EventTrigger.Actions>
-                                        </EventTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Image.Style>
-                        </Image>
-                    </Grid>
-                </Border>
-
+                <Image x:Name="_SelectedImage"
+                       FocusVisualStyle="{x:Null}"
+                       RenderTransformOrigin="0.5,0.5"
+                       Source="{Binding SelectedCard.SelectedCardFace}">
+                    <Image.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform />
+                        </TransformGroup>
+                    </Image.RenderTransform>
+                    <Image.Style>
+                        <Style TargetType="{x:Type Image}">
+                            <Style.Triggers>
+                                <EventTrigger RoutedEvent="MouseDown">
+                                    <EventTrigger.Actions>
+                                        <BeginStoryboard>
+                                            <Storyboard x:Name="ImageFlip">
+                                                <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)">
+                                                    <SplineDoubleKeyFrame KeyTime="00:00:00.0" Value="1" />
+                                                    <SplineDoubleKeyFrame KeyTime="00:00:00.09" Value="0.8" />
+                                                    <SplineDoubleKeyFrame KeyTime="00:00:00.18" Value="0.6" />
+                                                    <SplineDoubleKeyFrame KeyTime="00:00:00.27" Value="0.4" />
+                                                    <SplineDoubleKeyFrame KeyTime="00:00:00.36" Value="0.2" />
+                                                    <SplineDoubleKeyFrame KeyTime="00:00:00.45" Value="0" />
+                                                </DoubleAnimationUsingKeyFrames>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </EventTrigger.Actions>
+                                </EventTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Image.Style>
+                </Image>
+                <Image x:Name="_SelectedImageSecondFace"
+                       FocusVisualStyle="{x:Null}"
+                       RenderTransformOrigin="0.5,0.5"
+                       Source="{Binding SelectedCard.CardFaces[1].CroppedImage}">
+                    <Image.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform />
+                        </TransformGroup>
+                    </Image.RenderTransform>
+                    <Image.Style>
+                        <Style TargetType="{x:Type Image}">
+                            <Style.Triggers>
+                                <EventTrigger RoutedEvent="MouseDown">
+                                    <EventTrigger.Actions>
+                                        <BeginStoryboard>
+                                            <Storyboard x:Name="ImageFlip">
+                                                <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)">
+                                                    <SplineDoubleKeyFrame KeyTime="00:00:00.0" Value="1" />
+                                                    <SplineDoubleKeyFrame KeyTime="00:00:00.09" Value="0.8" />
+                                                    <SplineDoubleKeyFrame KeyTime="00:00:00.18" Value="0.6" />
+                                                    <SplineDoubleKeyFrame KeyTime="00:00:00.27" Value="0.4" />
+                                                    <SplineDoubleKeyFrame KeyTime="00:00:00.36" Value="0.2" />
+                                                    <SplineDoubleKeyFrame KeyTime="00:00:00.45" Value="0" />
+                                                </DoubleAnimationUsingKeyFrames>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </EventTrigger.Actions>
+                                </EventTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Image.Style>
+                </Image>
                 <StackPanel Margin="{Binding ElementName=_SelectedImage, Path=ActualWidth, Converter={StaticResource LeftMarginPercentageConverter}, ConverterParameter=1.2}" Orientation="Vertical">
                     <Button Margin="0,55,0,0"
                             Command="{Binding SelectArtworkCommand}"
@@ -473,9 +465,8 @@
                 </StackPanel>
             </Grid>
 
-
-            <Grid Grid.Row="1" Margin="0,15,0,0">
-                <ItemsControl HorizontalAlignment="Center" ItemsSource="{Binding SelectedCard.Legalities1}">
+            <Grid Grid.Row="1" Margin="50,5,50,0">
+                <ItemsControl HorizontalAlignment="Center" VerticalAlignment="Center" ItemsSource="{Binding SelectedCard.Legalities}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
                             <WrapPanel />
@@ -495,15 +486,19 @@
                                                 <Style.Triggers>
                                                     <DataTrigger Binding="{Binding Value}" Value="legal">
                                                         <Setter Property="Background" Value="#75986E" />
+                                                        <Setter Property="ToolTip" Value="LEGAL" />
                                                     </DataTrigger>
                                                     <DataTrigger Binding="{Binding Value}" Value="not legal">
                                                         <Setter Property="Background" Value="#AEAEAE" />
+                                                        <Setter Property="ToolTip" Value="NOT LEGAL" />
                                                     </DataTrigger>
                                                     <DataTrigger Binding="{Binding Value}" Value="banned">
                                                         <Setter Property="Background" Value="#CC7D83" />
+                                                        <Setter Property="ToolTip" Value="BANNED" />
                                                     </DataTrigger>
                                                     <DataTrigger Binding="{Binding Value}" Value="restricted">
-                                                        <Setter Property="Background" Value="Yellow" />
+                                                        <Setter Property="Background" Value="#DDC959" />
+                                                        <Setter Property="ToolTip" Value="RESTRICTED" />
                                                     </DataTrigger>
                                                 </Style.Triggers>
                                             </Style>

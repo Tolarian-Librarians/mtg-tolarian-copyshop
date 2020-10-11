@@ -20,7 +20,7 @@ namespace Tolarian.Copyshop.Controller
         public FixedDocument GetPrintPages(Size pageSize, List<IFullCard> deckCards, float scale = 1.05f)
             => this._requester.GetPrintPages(
                 pageSize,
-                new Stack<Uri>(deckCards.SelectMany(card =>
+                new Stack<Uri>(deckCards.OrderByDescending(card => card.FormattedCardName).SelectMany(card =>
                 {
                     List<Uri> cards = new List<Uri>();
                     for (int i = 0; i < card.CardCount; i++)
