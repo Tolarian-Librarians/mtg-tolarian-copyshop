@@ -201,6 +201,8 @@
                                         <iconPacks:PackIconFontAwesome Height="16" Margin="4,0,0,0" Kind="UndoSolid" />
                                     </Button.Content>
                                 </Button>
+                                <Separator />
+                                <TextBlock VerticalAlignment="Center" Text="  Hint: Please make sure that all cards are loaded before printing!" />
                             </ToolBar>
 
                             <ScrollViewer x:Name="PART_ContentHost"
