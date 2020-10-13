@@ -127,6 +127,7 @@
         <StatusBar Grid.Row="2">
             <StatusBarItem Content="Total Cards:" />
             <StatusBarItem Content="{Binding ElementName=_DeckBuilderView, Path=DataContext.DeckCardCount}" />
+            <StatusBarItem Content="All data provided by lovely Scryfall.com. Thank you!" HorizontalAlignment="Right"/>
         </StatusBar>
     </Grid>
 </Controls:MetroWindow>
