@@ -6,12 +6,12 @@ namespace Tolarian.Copyshop.Fontend.WPF.ViewModels
 {
     public class DeckPrintDesignViewModel : DeckPrintViewModel
     {
-        public DeckPrintDesignViewModel() : this(null, null, null, null) { }
+        public DeckPrintDesignViewModel() : this(null, null, new DeckCardModel(), null) { }
 
         public DeckPrintDesignViewModel(CardController cardController, PrintController printController, DeckCardModel deckCardModel, Dialogs dialogs)
             : base(cardController, printController, deckCardModel, dialogs)
         {
-            this.DeckCards = new DeckBuilderDesignViewModel(cardController, null, deckCardModel, dialogs).DeckCards;
+            this.DeckCards = new DeckBuilderDesignViewModel().DeckCards;
         }
     }
 }

@@ -89,7 +89,7 @@ namespace Tolarian.Copyshop.Fontend.WPF.ViewModels
                 {
                     this._deckCardModel.DeckCards = value;
                     this.OnPropertyChanged(nameof(this.DeckCards));
-                    DeckPrintViewModel.GetInstance().InvokeDeckCards();
+                    DeckPrintViewModel.GetInstance()?.InvokeDeckCards();
                     this.CalculateDeckCardCount();
                 }
             }
@@ -337,7 +337,7 @@ namespace Tolarian.Copyshop.Fontend.WPF.ViewModels
             => this.CalculateDeckCardCount();
 
         private void CalculateDeckCardCount()
-            => this.DeckCardCount = this._deckController.GetTotalCardCountOfDeck(this.DeckCards.Cast<IFullCard>().ToList());
+            => this.DeckCardCount = this._deckController?.GetTotalCardCountOfDeck(this.DeckCards.Cast<IFullCard>().ToList()) ?? 0;
 
         private void IncreaseAmountSelectedCard(object clickedCard)
         {
