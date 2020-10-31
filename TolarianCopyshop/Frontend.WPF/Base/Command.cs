@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Input;
 
-namespace Tolarian.Copyshop.ScreenPresenter.Base
+namespace Tolarian.Copyshop.Fontend.WPF.Base
 {
     public class Command : ICommand
     {
@@ -39,10 +39,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.Base
             remove { CommandManager.RequerySuggested -= value; }
         }
 
-        public void Execute(object parameter)
-        {
-            this._execute(parameter);
-        }
+        public void Execute(object parameter) => this._execute(parameter);
 
         #endregion
     }

@@ -3,13 +3,13 @@ using System.Linq;
 using System.Windows.Documents;
 using Tolarian.Copyshop.Controller;
 using Tolarian.Copyshop.Controller.Interfaces;
-using Tolarian.Copyshop.ScreenPresenter.Base;
-using Tolarian.Copyshop.ScreenPresenter.Communication;
-using Tolarian.Copyshop.ScreenPresenter.Helper;
-using Tolarian.Copyshop.ScreenPresenter.Model;
-using Tolarian.Copyshop.ScreenPresenter.Views;
+using Tolarian.Copyshop.Fontend.WPF.Base;
+using Tolarian.Copyshop.Fontend.WPF.Communication;
+using Tolarian.Copyshop.Fontend.WPF.Helper;
+using Tolarian.Copyshop.Fontend.WPF.Model;
+using Tolarian.Copyshop.Fontend.WPF.Views;
 
-namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
+namespace Tolarian.Copyshop.Fontend.WPF.ViewModels
 {
     public class DeckPrintViewModel : BindableBase
     {

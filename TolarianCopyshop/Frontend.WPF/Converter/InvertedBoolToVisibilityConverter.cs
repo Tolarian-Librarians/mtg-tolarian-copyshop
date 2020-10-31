@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
 
-namespace Tolarian.Copyshop.ScreenPresenter.Converter
+namespace Tolarian.Copyshop.Fontend.WPF.Converter
 {
     class InvertedBoolToVisibilityConverter : IValueConverter
     {

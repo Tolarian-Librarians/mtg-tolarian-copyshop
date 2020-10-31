@@ -3,10 +3,10 @@ using MahApps.Metro.SimpleChildWindow;
 using System;
 using System.Threading.Tasks;
 using System.Windows;
-using Tolarian.Copyshop.ScreenPresenter.Views;
+using Tolarian.Copyshop.Fontend.WPF.Views;
 using static MahApps.Metro.SimpleChildWindow.ChildWindowManager;
 
-namespace Tolarian.Copyshop.ScreenPresenter.Communication
+namespace Tolarian.Copyshop.Fontend.WPF.Communication
 {
     public class Dialogs
     {

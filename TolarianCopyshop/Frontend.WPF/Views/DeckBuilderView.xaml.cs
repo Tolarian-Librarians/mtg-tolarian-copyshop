@@ -2,9 +2,9 @@
 using System.Windows.Controls;
 using System.Windows.Input;
 using Tolarian.Copyshop.Controller.ResponseObjects;
-using Tolarian.Copyshop.ScreenPresenter.ViewModels;
+using Tolarian.Copyshop.Fontend.WPF.ViewModels;
 
-namespace Tolarian.Copyshop.ScreenPresenter.Views
+namespace Tolarian.Copyshop.Fontend.WPF.Views
 {
     /// <summary>
     /// Interaktionslogik für DeckBuilder.xaml

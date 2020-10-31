@@ -1,8 +1,8 @@
 ﻿using Tolarian.Copyshop.Controller;
-using Tolarian.Copyshop.ScreenPresenter.Communication;
-using Tolarian.Copyshop.ScreenPresenter.Model;
+using Tolarian.Copyshop.Fontend.WPF.Communication;
+using Tolarian.Copyshop.Fontend.WPF.Model;
 
-namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
+namespace Tolarian.Copyshop.Fontend.WPF.ViewModels
 {
     public class DeckPrintDesignViewModel : DeckPrintViewModel
     {

@@ -1,8 +1,8 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
-using Tolarian.Copyshop.ScreenPresenter.ViewModels;
+using Tolarian.Copyshop.Fontend.WPF.ViewModels;
 
-namespace Tolarian.Copyshop.ScreenPresenter.Views
+namespace Tolarian.Copyshop.Fontend.WPF.Views
 {
     /// <summary>
     /// Interaktionslogik für DeckViewerView.xaml

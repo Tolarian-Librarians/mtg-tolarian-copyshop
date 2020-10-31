@@ -14,13 +14,13 @@ using System.Windows.Threading;
 using Tolarian.Copyshop.Controller;
 using Tolarian.Copyshop.Controller.Interfaces;
 using Tolarian.Copyshop.Controller.ResponseObjects;
-using Tolarian.Copyshop.ScreenPresenter.Base;
-using Tolarian.Copyshop.ScreenPresenter.Communication;
-using Tolarian.Copyshop.ScreenPresenter.Helper;
-using Tolarian.Copyshop.ScreenPresenter.Model;
-using Tolarian.Copyshop.ScreenPresenter.Views;
+using Tolarian.Copyshop.Fontend.WPF.Base;
+using Tolarian.Copyshop.Fontend.WPF.Communication;
+using Tolarian.Copyshop.Fontend.WPF.Helper;
+using Tolarian.Copyshop.Fontend.WPF.Model;
+using Tolarian.Copyshop.Fontend.WPF.Views;
 
-namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
+namespace Tolarian.Copyshop.Fontend.WPF.ViewModels
 {
     public class DeckBuilderViewModel : BindableBase
     {
@@ -298,8 +298,8 @@ namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
             Image visibleImage = front.Visibility == Visibility.Visible ? front : back;
             Image invisibleImage = front.Visibility != Visibility.Visible ? front : back;
 
-            var firstAnimation = (Application.Current.Resources["FirstFlip"] as DoubleAnimationUsingKeyFrames).Clone();
-            var secondAnimation = (Application.Current.Resources["SecondFlip"] as DoubleAnimationUsingKeyFrames).Clone();
+            DoubleAnimationUsingKeyFrames firstAnimation = (Application.Current.Resources["FirstFlip"] as DoubleAnimationUsingKeyFrames).Clone();
+            DoubleAnimationUsingKeyFrames secondAnimation = (Application.Current.Resources["SecondFlip"] as DoubleAnimationUsingKeyFrames).Clone();
 
             await DoTransformAnimation(visibleImage, firstAnimation);
 

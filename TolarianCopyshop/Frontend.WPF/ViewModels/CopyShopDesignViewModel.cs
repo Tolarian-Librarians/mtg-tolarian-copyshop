@@ -1,7 +1,7 @@
 ﻿using Tolarian.Copyshop.Controller;
-using Tolarian.Copyshop.ScreenPresenter.Communication;
+using Tolarian.Copyshop.Fontend.WPF.Communication;
 
-namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
+namespace Tolarian.Copyshop.Fontend.WPF.ViewModels
 {
     public class CopyShopDesignViewModel : CopyShopViewModel
     {

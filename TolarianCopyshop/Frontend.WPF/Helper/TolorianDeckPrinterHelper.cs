@@ -2,9 +2,9 @@
 using System.Windows.Documents;
 using System.Windows.Documents.Serialization;
 using System.Windows.Xps;
-using Tolarian.Copyshop.ScreenPresenter.Communication;
+using Tolarian.Copyshop.Fontend.WPF.Communication;
 
-namespace Tolarian.Copyshop.ScreenPresenter.Helper
+namespace Tolarian.Copyshop.Fontend.WPF.Helper
 {
     public class TolorianDeckPrinterHelper
     {

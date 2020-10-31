@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using System.Windows.Media.Animation;
 
-namespace Tolarian.Copyshop.ScreenPresenter.Helper
+namespace Tolarian.Copyshop.Fontend.WPF.Helper
 {
     public static class StoryboardExtension
     {

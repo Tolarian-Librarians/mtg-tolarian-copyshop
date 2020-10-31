@@ -2,7 +2,7 @@
 using System.Reflection;
 using System.Windows.Forms;
 
-namespace Tolarian.Copyshop.ScreenPresenter.Communication
+namespace Tolarian.Copyshop.Fontend.WPF.Communication
 {
     public static class Notifications
     {

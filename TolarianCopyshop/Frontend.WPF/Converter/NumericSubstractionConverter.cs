@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Windows.Data;
 
-namespace Tolarian.Copyshop.ScreenPresenter.Converter
+namespace Tolarian.Copyshop.Fontend.WPF.Converter
 {
     public class NumericSubstractionConverter : IValueConverter
     {

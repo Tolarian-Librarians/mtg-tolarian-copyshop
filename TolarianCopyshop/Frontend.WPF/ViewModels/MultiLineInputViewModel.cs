@@ -1,6 +1,6 @@
-﻿using Tolarian.Copyshop.ScreenPresenter.Base;
+﻿using Tolarian.Copyshop.Fontend.WPF.Base;
 
-namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
+namespace Tolarian.Copyshop.Fontend.WPF.ViewModels
 {
     public class MultiLineInputViewModel : BindableBase
     {

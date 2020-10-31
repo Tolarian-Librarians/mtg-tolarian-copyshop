@@ -2,9 +2,9 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using Tolarian.Copyshop.Controller.Interfaces;
-using Tolarian.Copyshop.ScreenPresenter.Model;
+using Tolarian.Copyshop.Fontend.WPF.Model;
 
-namespace Tolarian.Copyshop.ScreenPresenter.Helper
+namespace Tolarian.Copyshop.Fontend.WPF.Helper
 {
     internal static class CollectionExtension
     {

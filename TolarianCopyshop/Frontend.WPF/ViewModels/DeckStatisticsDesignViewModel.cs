@@ -1,6 +1,6 @@
 ﻿using Tolarian.Copyshop.Controller;
 
-namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
+namespace Tolarian.Copyshop.Fontend.WPF.ViewModels
 {
     public class DeckStatisticsDesignViewModel : DeckStatisticsViewModel
     {

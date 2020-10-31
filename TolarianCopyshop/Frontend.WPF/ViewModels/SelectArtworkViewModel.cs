@@ -2,9 +2,9 @@
 using System.Collections.ObjectModel;
 using Tolarian.Copyshop.Controller;
 using Tolarian.Copyshop.Controller.ResponseObjects;
-using Tolarian.Copyshop.ScreenPresenter.Base;
+using Tolarian.Copyshop.Fontend.WPF.Base;
 
-namespace Tolarian.Copyshop.ScreenPresenter.ViewModels
+namespace Tolarian.Copyshop.Fontend.WPF.ViewModels
 {
     public class SelectArtworkViewModel : BindableBase
     {
