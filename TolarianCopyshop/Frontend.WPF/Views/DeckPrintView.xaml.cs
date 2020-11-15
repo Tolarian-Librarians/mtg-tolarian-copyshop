@@ -28,9 +28,8 @@ namespace Tolarian.Copyshop.Fontend.WPF.Views
         {
             if (this.DataContext is DeckPrintViewModel viewModel)
             {
-                this.PrintDocumentPreview.Document = viewModel.GetPrintPages(new Size(793.70078740157476, 1122.5196850393702));
+                this.PrintDocumentPreview.Document = viewModel.GetPrintPages();
             }
         }
-
     }
 }
