@@ -12,7 +12,7 @@
     <converter:NumericSubstractionConverter x:Key="SubstractionConverter" />
     <converter:NumericMultiplicationConverter x:Key="MultiplicationConverter" />
     <converter:LeftMarginPercentageConverter x:Key="LeftMarginPercentageConverter" />
-    <converter:EnumToStringConverter x:Key="EnumToStringConverter" />
+
 
     <DoubleAnimationUsingKeyFrames x:Key="FirstFlip" Storyboard.TargetProperty="(FrameworkElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)">
         <SplineDoubleKeyFrame KeyTime="00:00:00.0" Value="1" />
