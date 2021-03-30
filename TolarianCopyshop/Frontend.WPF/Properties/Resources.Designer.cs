@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Tolarian.Copyshop.ScreenPresenter.Properties {
+namespace Tolarian.Copyshop.Fontend.WPF.Properties {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace Tolarian.Copyshop.ScreenPresenter.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Tolarian.Copyshop.ScreenPresenter.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Tolarian.Copyshop.Fontend.WPF.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

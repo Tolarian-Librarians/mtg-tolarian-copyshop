@@ -1,8 +1,8 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
-using Tolarian.Copyshop.ScreenPresenter.ViewModels;
+using Tolarian.Copyshop.Fontend.WPF.ViewModels;
 
-namespace Tolarian.Copyshop.ScreenPresenter.Views
+namespace Tolarian.Copyshop.Fontend.WPF.Views
 {
     /// <summary>
     /// Interaktionslogik für DeckViewerView.xaml
@@ -28,9 +28,8 @@ namespace Tolarian.Copyshop.ScreenPresenter.Views
         {
             if (this.DataContext is DeckPrintViewModel viewModel)
             {
-                this.PrintDocumentPreview.Document = viewModel.GetPrintPages(new Size(793.70078740157476, 1122.5196850393702));
+                this.PrintDocumentPreview.Document = viewModel.GetPrintPages();
             }
         }
-
     }
 }

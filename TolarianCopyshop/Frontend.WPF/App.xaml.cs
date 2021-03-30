@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace Tolarian.Copyshop.ScreenPresenter
+namespace Tolarian.Copyshop.Fontend.WPF
 {
     /// <summary>
     /// Interaction logic for App.xaml

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using Tolarian.Copyshop.Controller.Interfaces;
 using Tolarian.Copyshop.Controller.ResponseObjects;
 using Tolarian.Copyshop.Controller.ResponseObjects.Enums;
-using Tolarian.Copyshop.ScreenPresenter.Base;
+using Tolarian.Copyshop.Fontend.WPF.Base;
 
-namespace Tolarian.Copyshop.ScreenPresenter.Model
+namespace Tolarian.Copyshop.Fontend.WPF.Model
 {
     public class FullCardModel : BindableBase, IFullCard
     {

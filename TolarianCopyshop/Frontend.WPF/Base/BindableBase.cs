@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace Tolarian.Copyshop.ScreenPresenter.Base
+namespace Tolarian.Copyshop.Fontend.WPF.Base
 {
     public class BindableBase : INotifyPropertyChanged
     {

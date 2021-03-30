@@ -3,11 +3,11 @@ using Ninject.Modules;
 using Tolarian.Copyshop.Business.Entities;
 using Tolarian.Copyshop.Business.Interfaces;
 using Tolarian.Copyshop.Business.UseCaseInteractors;
-using Tolarian.Copyshop.ScreenPresenter.Communication;
-using Tolarian.Copyshop.ScreenPresenter.Model;
+using Tolarian.Copyshop.Fontend.WPF.Communication;
+using Tolarian.Copyshop.Fontend.WPF.Model;
 using Tolarian.Copyshop.ScryfallDataAccess;
 
-namespace Tolarian.Copyshop.ScreenPresenter.Ninject
+namespace Tolarian.Copyshop.Fontend.WPF.Ninject
 {
     public class ServiceModule : NinjectModule
     {

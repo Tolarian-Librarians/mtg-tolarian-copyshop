@@ -1,6 +1,6 @@
 ﻿using MahApps.Metro.Controls;
 
-namespace Tolarian.Copyshop.ScreenPresenter.Views
+namespace Tolarian.Copyshop.Fontend.WPF.Views
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

@@ -1,235 +1,43 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{975C396E-40E5-4818-A781-2A8AFBA99B26}</ProjectGuid>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>Tolarian.Copyshop.ScreenPresenter</RootNamespace>
+    <RootNamespace>Tolarian.Copyshop.Fontend.WPF</RootNamespace>
     <AssemblyName>Tolarian.CopyShop</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <LangVersion>8.0</LangVersion>
-    <FileAlignment>512</FileAlignment>
-    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <WarningLevel>4</WarningLevel>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <Deterministic>true</Deterministic>
-    <TargetFrameworkProfile />
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <UseWindowsForms>true</UseWindowsForms>
+    <UseWPF>true</UseWPF>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>
-    </StartupObject>
+    <StartupObject></StartupObject>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ControlzEx, Version=4.0.0.0, Culture=neutral, PublicKeyToken=69f1c32f803d307e, processorArchitecture=MSIL">
-      <HintPath>..\packages\ControlzEx.4.3.1\lib\net462\ControlzEx.dll</HintPath>
-    </Reference>
-    <Reference Include="LiveCharts, Version=0.9.7.0, Culture=neutral, PublicKeyToken=0bc1f845d1ebb8df, processorArchitecture=MSIL">
-      <HintPath>..\packages\LiveCharts.0.9.7\lib\net45\LiveCharts.dll</HintPath>
-    </Reference>
-    <Reference Include="LiveCharts.Wpf, Version=0.9.7.0, Culture=neutral, PublicKeyToken=0bc1f845d1ebb8df, processorArchitecture=MSIL">
-      <HintPath>..\packages\LiveCharts.Wpf.0.9.7\lib\net45\LiveCharts.Wpf.dll</HintPath>
-    </Reference>
-    <Reference Include="MahApps.Metro, Version=2.0.0.0, Culture=neutral, PublicKeyToken=51482d6f650b2b3f, processorArchitecture=MSIL">
-      <HintPath>..\packages\MahApps.Metro.2.1.1\lib\net47\MahApps.Metro.dll</HintPath>
-    </Reference>
-    <Reference Include="MahApps.Metro.IconPacks.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=0c0d510f9915137a, processorArchitecture=MSIL">
-      <HintPath>..\packages\MahApps.Metro.IconPacks.FontAwesome.4.4.0\lib\net47\MahApps.Metro.IconPacks.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="MahApps.Metro.IconPacks.FontAwesome, Version=4.0.0.0, Culture=neutral, PublicKeyToken=0c0d510f9915137a, processorArchitecture=MSIL">
-      <HintPath>..\packages\MahApps.Metro.IconPacks.FontAwesome.4.4.0\lib\net47\MahApps.Metro.IconPacks.FontAwesome.dll</HintPath>
-    </Reference>
-    <Reference Include="MahApps.Metro.SimpleChildWindow, Version=2.0.0.0, Culture=neutral, PublicKeyToken=ca3e0454e54ef52a, processorArchitecture=MSIL">
-      <HintPath>..\packages\MahApps.Metro.SimpleChildWindow.2.0.0-alpha0043\lib\net47\MahApps.Metro.SimpleChildWindow.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Expression.Interactions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Windows.Interactivity.WPF.2.0.20525\lib\net40\Microsoft.Expression.Interactions.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Windows.Design.Extensibility, Version=4.3.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
-    <Reference Include="Microsoft.Xaml.Behaviors, Version=1.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Xaml.Behaviors.Wpf.1.1.19\lib\net45\Microsoft.Xaml.Behaviors.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Xaml.Behaviors.Design, Version=1.0.0.0, Culture=neutral, PublicKeyToken=189c7f39020fabe0, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Xaml.Behaviors.Wpf.1.1.19\lib\net45\Design\Microsoft.Xaml.Behaviors.Design.dll</HintPath>
-    </Reference>
-    <Reference Include="Ninject, Version=3.3.4.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
-      <HintPath>..\packages\Ninject.3.3.4\lib\net45\Ninject.dll</HintPath>
-    </Reference>
-    <Reference Include="ReachFramework" />
-    <Reference Include="System" />
-    <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.Configuration" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Printing" />
-    <Reference Include="System.Web" />
-    <Reference Include="System.Web.Extensions" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Windows.Interactivity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Windows.Interactivity.WPF.2.0.20525\lib\net40\System.Windows.Interactivity.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Xml" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xaml">
-      <RequiredTargetFramework>4.0</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="WindowsBase" />
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
-  </ItemGroup>
-  <ItemGroup>
-    <ApplicationDefinition Include="App.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </ApplicationDefinition>
-    <Compile Include="Communication\Notifications.cs" />
-    <Compile Include="Converter\LeftMarginPercentageConverter.cs" />
-    <Compile Include="Converter\NumericMultiplicationConverter.cs" />
-    <Compile Include="Helper\CollectionExtension.cs" />
-    <Compile Include="Communication\Dialogs.cs" />
-    <Compile Include="Converter\BoolToVisibilityConverter.cs" />
-    <Compile Include="Converter\NumericSubstractionConverter.cs" />
-    <Compile Include="Converter\InvertedBoolToVisibilityConverter.cs" />
-    <Compile Include="Helper\StoryboardExtension.cs" />
-    <Compile Include="Helper\TolorianDeckPrinterHelper.cs" />
-    <Compile Include="Model\DeckCardModel.cs" />
-    <Compile Include="Model\FullCardModel.cs" />
-    <Compile Include="ViewModels\DeckStatisticsDesignViewModel.cs" />
-    <Compile Include="ViewModels\DeckStatisticsViewModel.cs" />
-    <Compile Include="ViewModels\DeckPrintDesignViewModel.cs" />
-    <Compile Include="ViewModels\DeckPrintViewModel.cs" />
-    <Compile Include="ViewModels\MultiLineInputViewModel.cs" />
-    <Compile Include="ViewModels\SelectArtworkViewModel.cs" />
-    <Compile Include="Views\DeckStatisticsView.xaml.cs">
-      <DependentUpon>DeckStatisticsView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\DeckPrintView.xaml.cs">
-      <DependentUpon>DeckPrintView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\SelectArtworkChildView.xaml.cs">
-      <DependentUpon>SelectArtworkChildView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\MultiLineInputChildView.xaml.cs">
-      <DependentUpon>MultiLineInputChildView.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Resources.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\DeckBuilderView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\CopyShopView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="App.xaml.cs">
-      <DependentUpon>App.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Base\BindableBase.cs" />
-    <Compile Include="Base\Command.cs" />
-    <Compile Include="Ninject\ServiceLocator.cs" />
-    <Compile Include="Ninject\ServiceModule.cs" />
-    <Compile Include="ViewModels\CopyShopDesignViewModel.cs" />
-    <Compile Include="ViewModels\CopyShopViewModel.cs" />
-    <Compile Include="ViewModels\DeckBuilderDesignViewModel.cs" />
-    <Compile Include="ViewModels\DeckBuilderViewModel.cs" />
-    <Compile Include="Views\DeckBuilderView.xaml.cs">
-      <DependentUpon>DeckBuilderView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\CopyShopView.xaml.cs">
-      <DependentUpon>CopyShopView.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Page Include="Views\DeckStatisticsView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\DeckPrintView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\SelectArtworkChildView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\MultiLineInputChildView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Properties\AssemblyInfo.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <None Include="packages.config" />
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Business\Business.csproj">
-      <Project>{449C2407-79C0-4198-97CA-42CE7EB570AC}</Project>
-      <Name>Business</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Controller\Controller.csproj">
-      <Project>{0f505bfb-37d5-40f2-bd89-82a9f60599c9}</Project>
-      <Name>Controller</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ScryfallDataAccess\ScryfallDataAccess.csproj">
-      <Project>{96D19586-2AC8-4236-AD41-F25D739CF626}</Project>
-      <Name>ScryfallDataAccess</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Icon.ico" />
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <PackageReference Include="LiveCharts.Wpf.NetCore3" Version="0.9.7" />
+    <PackageReference Include="MahApps.Metro">
+      <Version>2.1.1</Version>
+    </PackageReference>
+    <PackageReference Include="MahApps.Metro.IconPacks.FontAwesome">
+      <Version>4.4.0</Version>
+    </PackageReference>
+    <PackageReference Include="MahApps.Metro.SimpleChildWindow">
+      <Version>2.0.0-alpha0043</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+    <PackageReference Include="Ninject">
+      <Version>3.3.4</Version>
+    </PackageReference>
+    <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
+    <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Controller\Controller.csproj" />
+    <ProjectReference Include="..\ScryfallDataAccess\ScryfallDataAccess.csproj" />
+  </ItemGroup>
 </Project>

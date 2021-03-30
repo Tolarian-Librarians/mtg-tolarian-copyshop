@@ -14,7 +14,9 @@
         Commander,
         Brawl,
         Duel,
-        Oldschool
+        Oldschool,
+        Gladiator,
+        Premodern,
     }
 
 }

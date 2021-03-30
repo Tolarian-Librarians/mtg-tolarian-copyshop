@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows;
 using System.Windows.Documents;
 using Tolarian.Copyshop.Business.Interfaces;
 using Tolarian.Copyshop.Controller.Interfaces;
+using static Tolarian.Copyshop.Business.UseCaseInteractors.PrintInteractor;
 
 namespace Tolarian.Copyshop.Controller
 {
@@ -17,9 +17,9 @@ namespace Tolarian.Copyshop.Controller
             this._requester = requester;
         }
 
-        public FixedDocument GetPrintPages(Size pageSize, List<IFullCard> deckCards, float scale = 1.05f)
+        public FixedDocument GetPrintPages(PageFormat selectedPageFormat, List<IFullCard> deckCards, float scale = 1.05f)
             => this._requester.GetPrintPages(
-                pageSize,
+                selectedPageFormat,
                 new Stack<Uri>(deckCards.OrderByDescending(card => card.FormattedCardName).SelectMany(card =>
                 {
                     List<Uri> cards = new List<Uri>();

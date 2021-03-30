@@ -1,7 +1,7 @@
 ﻿using System.Collections.ObjectModel;
-using Tolarian.Copyshop.ScreenPresenter.Base;
+using Tolarian.Copyshop.Fontend.WPF.Base;
 
-namespace Tolarian.Copyshop.ScreenPresenter.Model
+namespace Tolarian.Copyshop.Fontend.WPF.Model
 {
     public class DeckCardModel : BindableBase
     {

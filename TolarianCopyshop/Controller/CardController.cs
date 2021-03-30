@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Web;
 using Tolarian.Copyshop.Business.Interfaces;
 using Tolarian.Copyshop.Business.Models.SfCardInfo;
@@ -33,7 +34,7 @@ namespace Tolarian.Copyshop.Controller
                 SfCard card = this._requester.GetCardByPrintId(printId);
                 response.Card = CardMapper.MapToCardDto(card);
             }
-            catch (HttpException ex)
+            catch (WebException ex)
             {
                 this.SetErrorMessage(ex);
             }
@@ -54,7 +55,7 @@ namespace Tolarian.Copyshop.Controller
                 (List<SfCard> Cards, string amountFound) businessResponse = this._requester.GetCardsBySearchQuery(query, maxCountOfItems);
                 response = CardMapper.MapToSearchResultDto(businessResponse.Cards, businessResponse.amountFound);
             }
-            catch (HttpException ex)
+            catch (WebException ex)
             {
                 this.SetErrorMessage(ex);
             }
@@ -76,7 +77,7 @@ namespace Tolarian.Copyshop.Controller
                 artworks = artworks.OrderByDescending(card => card.ReleaseDate).ToList();
                 response.Artworks = artworks;
             }
-            catch (HttpException ex)
+            catch (WebException ex)
             {
                 this.SetErrorMessage(ex);
             }
@@ -99,7 +100,7 @@ namespace Tolarian.Copyshop.Controller
                 response.Cards = CardMapper.MapToCardDto(Cards);
                 response.NotFound = NotFound;
             }
-            catch (HttpException ex)
+            catch (WebException ex)
             {
                 this.SetErrorMessage(ex);
             }
@@ -129,7 +130,7 @@ namespace Tolarian.Copyshop.Controller
                 response.Cards = CardMapper.MapToCardDto(Cards);
                 response.NotFound = NotFound;
             }
-            catch (HttpException ex)
+            catch (WebException ex)
             {
                 this.SetErrorMessage(ex);
             }
@@ -158,7 +159,7 @@ namespace Tolarian.Copyshop.Controller
                 (List<SfCard> Cards, string amountFound) businessResponse = this._requester.GetTokensByQuery(query);
                 response = CardMapper.MapToSearchResultDto(businessResponse.Cards, businessResponse.amountFound);
             }
-            catch (HttpException ex)
+            catch (WebException ex)
             {
                 this.SetErrorMessage(ex);
             }
@@ -185,7 +186,7 @@ namespace Tolarian.Copyshop.Controller
                 deckCards.AddRange(CardMapper.MapToCardDto(businessResponse));
                 response.Deck = deckCards;
             }
-            catch (HttpException ex)
+            catch (WebException ex)
             {
                 this.SetErrorMessage(ex);
             }

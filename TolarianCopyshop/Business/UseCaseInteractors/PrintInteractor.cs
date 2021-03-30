@@ -14,17 +14,32 @@ namespace Tolarian.Copyshop.Business.UseCaseInteractors
         private const double _defaultCardWidth = 226.7712;
         private const double _defaultCardHeight = 321.26016;
         private const int _cardsPerRowAndCol = 3;
+        private readonly Dictionary<PageFormat, Size> PageFormats = new Dictionary<PageFormat, Size>()
+        {
+            //! 1 cm ~ 37.79527559055118 => 1 mm ~ 3.779527559055118
+            // 210 x 297 mm
+            [PageFormat.A4] = new Size(793.70078740157476, 1122.5196850393702),
+            // 215.9 x 279.4 mm
+            [PageFormat.Letter] = new Size(816, 1056),
+        };
 
         private Size _pageSize;
         private Thickness _pageMargin;
         private double _customCardWidth;
         private double _customCardHeight;
 
-        public FixedDocument GetPrintPages(Size pageSize, Stack<Uri> deckCards, float scale)
+        public enum PageFormat
         {
+            A4,
+            Letter
+        }
+
+        public FixedDocument GetPrintPages(PageFormat format, Stack<Uri> deckCards, float scale)
+        {
+            this._pageSize = this.PageFormats[format];
+
             FixedDocument doc = new FixedDocument();
-            doc.DocumentPaginator.PageSize = pageSize;
-            this._pageSize = pageSize;
+            doc.DocumentPaginator.PageSize = this._pageSize;
 
             if (deckCards is null || deckCards.Count == 0)
             {

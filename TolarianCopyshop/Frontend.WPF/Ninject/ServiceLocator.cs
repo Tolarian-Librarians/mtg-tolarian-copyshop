@@ -1,14 +1,16 @@
 ﻿using Ninject;
-using Tolarian.Copyshop.ScreenPresenter.ViewModels;
+using Tolarian.Copyshop.Fontend.WPF.ViewModels;
 
-namespace Tolarian.Copyshop.ScreenPresenter.Ninject
+namespace Tolarian.Copyshop.Fontend.WPF.Ninject
 {
     public class ServiceLocator
     {
         private readonly IKernel kernel;
 
         public ServiceLocator()
-            => this.kernel = new StandardKernel(new ServiceModule());
+        {
+            this.kernel = new StandardKernel(new ServiceModule());
+        }
 
         public CopyShopViewModel CopyShopViewModel
             => this.kernel.Get<CopyShopViewModel>();
