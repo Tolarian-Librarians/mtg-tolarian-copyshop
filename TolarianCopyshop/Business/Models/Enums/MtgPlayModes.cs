@@ -17,6 +17,8 @@
         Oldschool,
         Gladiator,
         Premodern,
+        HistoricBrawl,
+        Alchemy,
+        PauperCommander,
     }
-
 }
