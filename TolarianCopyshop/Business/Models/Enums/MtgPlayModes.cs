@@ -20,5 +20,6 @@
         HistoricBrawl,
         Alchemy,
         PauperCommander,
+        Explorer,
     }
 }
