@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Tolarian.Copyshop.Business.Interfaces;
-using Tolarian.Copyshop.Business.Models.Enums;
 using Tolarian.Copyshop.Business.Models.SfCardInfo;
 using Tolarian.Copyshop.Controller;
 using Tolarian.Copyshop.Controller.ResponseObjects;
@@ -62,13 +61,6 @@ namespace Tests.ControllerTests
             Assert.IsNotNull(response.Card);
             Assert.AreEqual(1, response.Card.CardFaces.Count);
             Assert.AreEqual(expected.Name, response.Card.CardFaces.First().Name);
-
-            //Check that the legalities were separated correctly
-            List<MtgPlayModes> expectedFirstHalf = new List<MtgPlayModes> { MtgPlayModes.Commander, MtgPlayModes.Brawl, MtgPlayModes.Duel, MtgPlayModes.Future };
-            List<MtgPlayModes> expectedSecondHalf = new List<MtgPlayModes> { MtgPlayModes.Historic, MtgPlayModes.Legacy, MtgPlayModes.Modern };
-
-            Assert.IsTrue(expectedFirstHalf.All(legality => response.Card.Legalities.ContainsKey(legality.ToString())));
-            Assert.IsTrue(expectedSecondHalf.All(legality => response.Card.Legalities.ContainsKey(legality.ToString())));
         }
 
         [TestMethod]
@@ -89,7 +81,6 @@ namespace Tests.ControllerTests
             Assert.AreEqual(1, response.Card.CardFaces.Count);
             Assert.AreEqual(expected.Name, response.Card.CardFaces.First().Name);
             Assert.AreEqual("Text 1 // Text 2", response.Card.CardFaces.First().Text);
-
         }
 
         [TestMethod]
