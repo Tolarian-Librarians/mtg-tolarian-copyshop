@@ -23,7 +23,7 @@ namespace Tolarian.Copyshop.Business.Models.SfCardInfo
         public Dictionary<CardImageTypes, Uri> ImageUris { get; set; }
 
         [JsonProperty(PropertyName = "legalities")]
-        public Dictionary<MtgPlayModes, string> Legalities { get; set; }
+        public Dictionary<string, string> Legalities { get; set; }
 
         [JsonProperty(PropertyName = "card_faces")]
         public List<SfCardFace> CardFaces { get; set; }

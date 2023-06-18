@@ -102,7 +102,7 @@ namespace Tolarian.Copyshop.Controller.Mappers
                 RelatedCards = MapRelatedCardsOf(source),
                 IsTransformable = source.IsTransformable,
                 ConvertedManaCost = source.ConvertedManaCost,
-                ColorIdentity = source.ColorIdentity.Select(c => (ResponseObjects.Enums.MtgColor)((int)c)).ToList(),
+                ColorIdentity = source.ColorIdentity?.Select(c => (ResponseObjects.Enums.MtgColor)((int)c)).ToList(),
                 Colors = source.Colors?.Select(c => (ResponseObjects.Enums.MtgColor)((int)c)).ToList(),
                 ManaCostLine = source.ManaCostLine ?? source.CardFaces?.FirstOrDefault()?.ManaCostLine,
                 ProducedMana = source.ProducedMana?.Select(c => (ResponseObjects.Enums.MtgColor)((int)c)).ToList(),
