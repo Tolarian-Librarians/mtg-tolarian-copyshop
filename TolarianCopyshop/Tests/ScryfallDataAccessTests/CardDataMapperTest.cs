@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Refit;
-using Tolarian.Copyshop.ScryfallDataAccess;
 using System.Linq;
-using Tolarian.Copyshop.Business.Models.SfCardInfo;
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+using Refit;
+
 using Tolarian.Copyshop.Business.DbRequestModels;
+using Tolarian.Copyshop.Business.Models.SfCardInfo;
+using Tolarian.Copyshop.ScryfallDataAccess;
 
 namespace Tests.ScryfallDataAccessTests
 {
@@ -67,7 +70,7 @@ namespace Tests.ScryfallDataAccessTests
             Assert.AreEqual("Dusk // Dawn", result.Name);
             Assert.IsTrue(result.CardFaces.All(c => c.ImageUris == null));
         }
-        
+
         [TestMethod]
         public void GetCardByExactName_RelatedCards_Test()
         {

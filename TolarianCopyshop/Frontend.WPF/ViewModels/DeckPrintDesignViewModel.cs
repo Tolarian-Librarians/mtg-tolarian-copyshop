@@ -11,7 +11,7 @@ namespace Tolarian.Copyshop.Fontend.WPF.ViewModels
         public DeckPrintDesignViewModel(CardController cardController, PrintController printController, DeckCardModel deckCardModel, Dialogs dialogs)
             : base(cardController, printController, deckCardModel, dialogs)
         {
-            this.DeckCards = new DeckBuilderDesignViewModel().DeckCards;
+            DeckCards = new DeckBuilderDesignViewModel().DeckCards;
         }
     }
 }

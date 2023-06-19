@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+
 using Tolarian.Copyshop.Business.Models.SfCardInfo;
 
 namespace Tolarian.Copyshop.Business.Interfaces
@@ -10,6 +11,6 @@ namespace Tolarian.Copyshop.Business.Interfaces
         SfCard GetCardByPrintId(Guid printId);
         List<SfCard> GetPrintsOfCard(Guid cardId);
         (List<SfCard>, string) GetTokensByQuery(string searchQuery);
-        List<SfCard> GetCardsByIds(List<Guid> tokenGuids);
+        List<SfCard> GetCardsByIds(List<Guid> cardIds);
     }
 }

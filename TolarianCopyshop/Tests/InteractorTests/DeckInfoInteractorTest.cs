@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using Tolarian.Copyshop.Business.Models.DeckInfo;
 using Tolarian.Copyshop.Business.UseCaseInteractors;
 
@@ -27,7 +29,7 @@ namespace Tests.InteractorTests
             {
                 new DeckInfoCard { Copies = 3, PrintId = new Guid("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa") },
                 new DeckInfoCard { Copies = 1, PrintId = new Guid("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb") },
-                new DeckInfoCard { Copies = 2, PrintId = new Guid("cccccccccccccccccccccccccccccccc") }, 
+                new DeckInfoCard { Copies = 2, PrintId = new Guid("cccccccccccccccccccccccccccccccc") },
             };
         }
     }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+
 using Tolarian.Copyshop.Business.Models.Enums;
 using Tolarian.Copyshop.Business.Models.SfCardInfo;
 

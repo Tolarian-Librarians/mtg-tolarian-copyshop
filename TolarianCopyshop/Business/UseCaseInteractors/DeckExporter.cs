@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Text;
+
 using Tolarian.Copyshop.Business.Interfaces;
 using Tolarian.Copyshop.Business.Models.Export;
 
@@ -9,11 +10,11 @@ namespace Tolarian.Copyshop.Business.UseCaseInteractors
     {
         public string ExportDeck(List<ExportCard> cards)
         {
-            StringBuilder builder = new StringBuilder();
+            StringBuilder builder = new();
 
             foreach (ExportCard card in cards)
             {
-                builder.AppendLine(this.GetExportLine(card));
+                builder.AppendLine(GetExportLine(card));
             }
 
             return builder.ToString();

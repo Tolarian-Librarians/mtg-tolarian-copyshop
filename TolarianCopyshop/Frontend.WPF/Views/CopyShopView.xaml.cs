@@ -12,7 +12,7 @@ namespace Tolarian.Copyshop.Fontend.WPF.Views
         public CopyShopView()
         {
             _copyShopView = this;
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
         internal static CopyShopView GetInstance()

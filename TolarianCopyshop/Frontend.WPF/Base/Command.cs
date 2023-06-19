@@ -22,8 +22,8 @@ namespace Tolarian.Copyshop.Fontend.WPF.Base
         public Command(Action<object> execute, Predicate<object> canExecute)
             : base()
         {
-            this._execute = execute;
-            this._canExecute = canExecute;
+            _execute = execute;
+            _canExecute = canExecute;
         }
 
         #endregion
@@ -31,7 +31,7 @@ namespace Tolarian.Copyshop.Fontend.WPF.Base
         #region Methods
 
         public bool CanExecute(object parameter)
-            => this._canExecute == null ? true : this._canExecute(parameter);
+            => _canExecute == null ? true : _canExecute(parameter);
 
         public event EventHandler CanExecuteChanged
         {
@@ -39,7 +39,7 @@ namespace Tolarian.Copyshop.Fontend.WPF.Base
             remove { CommandManager.RequerySuggested -= value; }
         }
 
-        public void Execute(object parameter) => this._execute(parameter);
+        public void Execute(object parameter) => _execute(parameter);
 
         #endregion
     }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Web;
+
 using Tolarian.Copyshop.Business.Interfaces;
 using Tolarian.Copyshop.Business.Models.SfCardInfo;
 using Tolarian.Copyshop.Controller.Interfaces;
@@ -18,8 +18,8 @@ namespace Tolarian.Copyshop.Controller
 
         public CardController(ICardDataRequester requester, IDeckImportInteractor importInteractor)
         {
-            this._requester = requester;
-            this._importInteractor = importInteractor;
+            _requester = requester;
+            _importInteractor = importInteractor;
         }
 
         /// <summary>
@@ -27,20 +27,20 @@ namespace Tolarian.Copyshop.Controller
         /// </summary>
         public FullCardResponse GetCardByPrintId(Guid printId)
         {
-            FullCardResponse response = new FullCardResponse();
+            FullCardResponse response = new();
 
             try
             {
-                SfCard card = this._requester.GetCardByPrintId(printId);
+                SfCard card = _requester.GetCardByPrintId(printId);
                 response.Card = CardMapper.MapToCardDto(card);
             }
             catch (WebException ex)
             {
-                this.SetErrorMessage(ex);
+                SetErrorMessage(ex);
             }
             catch (AggregateException ex)
             {
-                this.SetErrorMessage(ex);
+                SetErrorMessage(ex);
             }
 
             return response;
@@ -48,20 +48,20 @@ namespace Tolarian.Copyshop.Controller
 
         public CardSearchResponse GetSearchResults(string query, int maxCountOfItems)
         {
-            CardSearchResponse response = new CardSearchResponse();
+            CardSearchResponse response = new();
 
             try
             {
-                (List<SfCard> Cards, string amountFound) businessResponse = this._requester.GetCardsBySearchQuery(query, maxCountOfItems);
-                response = CardMapper.MapToSearchResultDto(businessResponse.Cards, businessResponse.amountFound);
+                (List<SfCard> Cards, string amountFound) = _requester.GetCardsBySearchQuery(query, maxCountOfItems);
+                response = CardMapper.MapToSearchResultDto(Cards, amountFound);
             }
             catch (WebException ex)
             {
-                this.SetErrorMessage(ex);
+                SetErrorMessage(ex);
             }
             catch (AggregateException ex)
             {
-                this.SetErrorMessage(ex);
+                SetErrorMessage(ex);
             }
 
             return response;
@@ -69,21 +69,21 @@ namespace Tolarian.Copyshop.Controller
 
         public CardArtworkResponse GetArtworksOfCard(Guid cardId)
         {
-            CardArtworkResponse response = new CardArtworkResponse();
+            CardArtworkResponse response = new();
 
             try
             {
-                List<ArtworkCard> artworks = CardMapper.MapToArtworkDto(this._requester.GetPrintsOfCard(cardId));
+                List<ArtworkCard> artworks = CardMapper.MapToArtworkDto(_requester.GetPrintsOfCard(cardId));
                 artworks = artworks.OrderByDescending(card => card.ReleaseDate).ToList();
                 response.Artworks = artworks;
             }
             catch (WebException ex)
             {
-                this.SetErrorMessage(ex);
+                SetErrorMessage(ex);
             }
             catch (AggregateException ex)
             {
-                this.SetErrorMessage(ex);
+                SetErrorMessage(ex);
             }
 
             return response;
@@ -91,22 +91,22 @@ namespace Tolarian.Copyshop.Controller
 
         public CardImportResponse GetCardsByImportString(string importString)
         {
-            CardImportResponse response = new CardImportResponse();
+            CardImportResponse response = new();
 
             try
             {
                 List<string> lines = CardMapper.PrepareImportStringForBusiness(importString);
-                (List<SfCard> Cards, string NotFound) = this._importInteractor.GetCardsForImport(lines);
+                (List<SfCard> Cards, string NotFound) = _importInteractor.GetCardsForImport(lines);
                 response.Cards = CardMapper.MapToCardDto(Cards);
                 response.NotFound = NotFound;
             }
             catch (WebException ex)
             {
-                this.SetErrorMessage(ex);
+                SetErrorMessage(ex);
             }
             catch (AggregateException ex)
             {
-                this.SetErrorMessage(ex);
+                SetErrorMessage(ex);
             }
 
             return response;
@@ -114,37 +114,37 @@ namespace Tolarian.Copyshop.Controller
 
         public CardImportResponse GetCardsFromUri(string deckUrl)
         {
-            CardImportResponse response = new CardImportResponse();
+            CardImportResponse response = new();
 
             try
             {
-                Uri uri = new Uri(deckUrl);
+                Uri uri = new(deckUrl);
 
-                if (uri.Host.IndexOf("tappedout", StringComparison.InvariantCultureIgnoreCase) == -1)
+                if (!uri.Host.Contains("tappedout", StringComparison.InvariantCultureIgnoreCase))
                 {
                     throw new NotSupportedException("Currently, we only support importing decks from tappedout.net.");
                 }
 
-                (List<SfCard> Cards, string NotFound) = this._importInteractor.ImportFromTappedOut(uri);
+                (List<SfCard> Cards, string NotFound) = _importInteractor.ImportFromTappedOut(uri);
 
                 response.Cards = CardMapper.MapToCardDto(Cards);
                 response.NotFound = NotFound;
             }
             catch (WebException ex)
             {
-                this.SetErrorMessage(ex);
+                SetErrorMessage(ex);
             }
             catch (AggregateException ex)
             {
-                this.SetErrorMessage(ex);
+                SetErrorMessage(ex);
             }
             catch (NotSupportedException ex)
             {
-                this.SetErrorMessage(ex);
+                SetErrorMessage(ex);
             }
             catch (UriFormatException ex)
             {
-                this.SetErrorMessage(ex);
+                SetErrorMessage(ex);
             }
 
             return response;
@@ -152,20 +152,20 @@ namespace Tolarian.Copyshop.Controller
 
         public CardSearchResponse GetTokenSearchResults(string query)
         {
-            CardSearchResponse response = new CardSearchResponse();
+            CardSearchResponse response = new();
 
             try
             {
-                (List<SfCard> Cards, string amountFound) businessResponse = this._requester.GetTokensByQuery(query);
-                response = CardMapper.MapToSearchResultDto(businessResponse.Cards, businessResponse.amountFound);
+                (List<SfCard> Cards, string amountFound) = _requester.GetTokensByQuery(query);
+                response = CardMapper.MapToSearchResultDto(Cards, amountFound);
             }
             catch (WebException ex)
             {
-                this.SetErrorMessage(ex);
+                SetErrorMessage(ex);
             }
             catch (AggregateException ex)
             {
-                this.SetErrorMessage(ex);
+                SetErrorMessage(ex);
             }
 
             return response;
@@ -173,7 +173,7 @@ namespace Tolarian.Copyshop.Controller
 
         public AddTokensToDeckResponse AddTokensToDeck(List<IFullCard> deckCards, bool overwriteTokens)
         {
-            AddTokensToDeckResponse response = new AddTokensToDeckResponse();
+            AddTokensToDeckResponse response = new();
 
             try
             {
@@ -182,17 +182,17 @@ namespace Tolarian.Copyshop.Controller
                     deckCards.RemoveAll(c => c.CardFaces.Any(cf => cf.PrimaryCardType == ResponseObjects.Enums.CardType.Token));
                 }
 
-                List<SfCard> businessResponse = this._requester.GetCardsByIds(CardMapper.GetTokenGuidsOfDeck(deckCards));
+                List<SfCard> businessResponse = _requester.GetCardsByIds(CardMapper.GetTokenGuidsOfDeck(deckCards));
                 deckCards.AddRange(CardMapper.MapToCardDto(businessResponse));
                 response.Deck = deckCards;
             }
             catch (WebException ex)
             {
-                this.SetErrorMessage(ex);
+                SetErrorMessage(ex);
             }
             catch (AggregateException ex)
             {
-                this.SetErrorMessage(ex);
+                SetErrorMessage(ex);
             }
 
             return response;

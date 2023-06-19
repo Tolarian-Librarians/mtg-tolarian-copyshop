@@ -1,5 +1,7 @@
-﻿using Refit;
-using System.Net;
+﻿using System.Net;
+
+using Refit;
+
 using Tolarian.Copyshop.Business.Interfaces;
 using Tolarian.Copyshop.Business.Models.SfSetInfo;
 
@@ -18,13 +20,13 @@ namespace Tolarian.Copyshop.ScryfallDataAccess
 
         public SfPaginatedSetList GetAllSets()
         {
-            if(allSetsCached != null)
+            if (allSetsCached != null)
             {
                 return allSetsCached;
             }
 
             ApiResponse<SfPaginatedSetList> response = _service.GetAllSets().Result;
-            
+
             switch (response.StatusCode)
             {
                 case HttpStatusCode.OK:

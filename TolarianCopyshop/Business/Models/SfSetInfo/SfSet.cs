@@ -1,6 +1,7 @@
 ﻿
-using Newtonsoft.Json;
 using System;
+
+using Newtonsoft.Json;
 
 namespace Tolarian.Copyshop.Business.Models.SfSetInfo
 {
@@ -11,13 +12,13 @@ namespace Tolarian.Copyshop.Business.Models.SfSetInfo
 
         [JsonProperty(PropertyName = "code")]
         public string ScryfallSetCode { get; set; }
-        
+
         [JsonProperty(PropertyName = "arena_code")]
         public string MagicArenaSetCode { get; set; }
-        
+
         [JsonProperty(PropertyName = "mtgo_code")]
         public string MagicOnlineSetCode { get; set; }
-        
+
         [JsonProperty(PropertyName = "name")]
         public string SetName { get; set; }
     }

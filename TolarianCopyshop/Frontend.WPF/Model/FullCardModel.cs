@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+
 using Tolarian.Copyshop.Controller.Interfaces;
 using Tolarian.Copyshop.Controller.ResponseObjects;
 using Tolarian.Copyshop.Controller.ResponseObjects.Enums;
@@ -65,98 +66,98 @@ namespace Tolarian.Copyshop.Fontend.WPF.Model
 
         public Guid CardId
         {
-            get => this._cardId;
-            set => this.SetProperty(ref this._cardId, value);
+            get => _cardId;
+            set => SetProperty(ref _cardId, value);
         }
 
         public float ConvertedManaCost
         {
-            get => this._convertedManaCost;
-            set => this.SetProperty(ref this._convertedManaCost, value);
+            get => _convertedManaCost;
+            set => SetProperty(ref _convertedManaCost, value);
         }
 
         public List<MtgColor> ColorIdentity
         {
-            get => this._colorIdentity;
-            set => this.SetProperty(ref this._colorIdentity, value);
+            get => _colorIdentity;
+            set => SetProperty(ref _colorIdentity, value);
         }
 
         public List<MtgColor> Colors
         {
-            get => this._colors;
-            set => this.SetProperty(ref this._colors, value);
+            get => _colors;
+            set => SetProperty(ref _colors, value);
         }
 
         public List<MtgColor> ProducedMana
         {
-            get => this._producedMana;
-            set => this.SetProperty(ref this._producedMana, value);
+            get => _producedMana;
+            set => SetProperty(ref _producedMana, value);
         }
 
         public Guid PrintId
         {
-            get => this._printId;
-            set => this.SetProperty(ref this._printId, value);
+            get => _printId;
+            set => SetProperty(ref _printId, value);
         }
 
         public string FormattedCardName
         {
-            get => this._formattedCardName;
-            set => this.SetProperty(ref this._formattedCardName, value);
+            get => _formattedCardName;
+            set => SetProperty(ref _formattedCardName, value);
         }
 
         public string ManaCostLine
         {
-            get => this._manaCostLine;
-            set => this.SetProperty(ref this._manaCostLine, value);
+            get => _manaCostLine;
+            set => SetProperty(ref _manaCostLine, value);
         }
 
         public int CardCount
         {
-            get => this._cardCount;
-            set => this.SetProperty(ref this._cardCount, value);
+            get => _cardCount;
+            set => SetProperty(ref _cardCount, value);
         }
 
         public Dictionary<string, string> Legalities
         {
-            get => this._legalities;
-            set => this.SetProperty(ref this._legalities, value);
+            get => _legalities;
+            set => SetProperty(ref _legalities, value);
         }
 
         public string SetCode
         {
-            get => this._setCode;
-            set => this.SetProperty(ref this._setCode, value);
+            get => _setCode;
+            set => SetProperty(ref _setCode, value);
         }
 
         public ICollection<CardFace> CardFaces
         {
-            get => this._cardFaces;
-            set => this.SetProperty(ref this._cardFaces, value);
+            get => _cardFaces;
+            set => SetProperty(ref _cardFaces, value);
         }
 
         public ICollection<RelatedCard> RelatedCards
         {
-            get => this._relatedCards;
-            set => this.SetProperty(ref this._relatedCards, value);
+            get => _relatedCards;
+            set => SetProperty(ref _relatedCards, value);
         }
 
         public bool IsTransformable
         {
-            get => this._isTransformable;
-            set => this.SetProperty(ref this._isTransformable, value);
+            get => _isTransformable;
+            set => SetProperty(ref _isTransformable, value);
         }
 
         public bool HasArtworks
         {
-            get => this._hasArtworks;
-            set => this.SetProperty(ref this._hasArtworks, value);
+            get => _hasArtworks;
+            set => SetProperty(ref _hasArtworks, value);
         }
 
         public Uri SelectedCardFace
         {
-            get => this._selectedCardFace;
-            set => this.SetProperty(ref this._selectedCardFace, value);
+            get => _selectedCardFace;
+            set => SetProperty(ref _selectedCardFace, value);
         }
 
         #endregion

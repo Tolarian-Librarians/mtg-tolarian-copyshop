@@ -1,12 +1,17 @@
-﻿using Refit;
-using System.Net;
-using System.Web;
+﻿using System.Net;
+
+using Refit;
 
 namespace Tolarian.Copyshop.ScryfallDataAccess
 {
     public class DataMapperBase
     {
-        protected void HandleUnexpectedStatusCodeForResponse<T>(ApiResponse<T> response)
+        protected DataMapperBase()
+        {
+
+        }
+
+        protected static void HandleUnexpectedStatusCodeForResponse<T>(ApiResponse<T> response)
         {
             throw new WebException($"Unexpected Status Code of Http Request. Status {response.StatusCode}, Error: {response.Error}");
         }

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+
 using Tolarian.Copyshop.Business.Models.DeckInfo;
 using Tolarian.Copyshop.Business.Models.Enums;
 using Tolarian.Copyshop.Controller.Interfaces;

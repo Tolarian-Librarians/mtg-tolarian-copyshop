@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Input;
+
 using Tolarian.Copyshop.Controller.ResponseObjects;
 using Tolarian.Copyshop.Fontend.WPF.ViewModels;
 
@@ -16,35 +17,35 @@ namespace Tolarian.Copyshop.Fontend.WPF.Views
         public DeckBuilderView()
         {
             _deckBuilderView = this;
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
         internal static DeckBuilderView GetInstance()
             => _deckBuilderView;
 
         private void SearchTextBox_PreviewKeyDown(object sender, KeyEventArgs e)
-            => this.HandleSearchUpDown(e);
+            => HandleSearchUpDown(e);
 
         private void SearchResultBox_PreviewKeyDown(object sender, KeyEventArgs e)
-            => this.HandleSearchUpDown(e);
+            => HandleSearchUpDown(e);
 
         private void HandleSearchUpDown(KeyEventArgs e)
         {
             switch (e.Key)
             {
                 case Key.Up:
-                    if (this._SearchResultBox.SelectedIndex != 0)
+                    if (_SearchResultBox.SelectedIndex != 0)
                     {
-                        this.SetSearchResultItem(this._SearchResultBox.SelectedIndex - 1);
+                        SetSearchResultItem(_SearchResultBox.SelectedIndex - 1);
                     }
                     else
                     {
-                        this._SearchTextBox.Focus();
+                        _SearchTextBox.Focus();
                     }
                     e.Handled = true;
                     break;
                 case Key.Down:
-                    this.SetSearchResultItem(this._SearchResultBox.SelectedIndex + 1);
+                    SetSearchResultItem(_SearchResultBox.SelectedIndex + 1);
                     e.Handled = true;
                     break;
                 case Key.A:
@@ -94,10 +95,10 @@ namespace Tolarian.Copyshop.Fontend.WPF.Views
                 case Key.NumPad8:
                 case Key.NumPad9:
                 case Key.Back:
-                    if (!this._SearchTextBox.IsKeyboardFocusWithin && !this._SearchTextBox.IsFocused)
+                    if (!_SearchTextBox.IsKeyboardFocusWithin && !_SearchTextBox.IsFocused)
                     {
-                        this._SearchTextBox.Focus();
-                        this._SearchTextBox.CaretIndex = this._SearchTextBox.Text.Length;
+                        _SearchTextBox.Focus();
+                        _SearchTextBox.CaretIndex = _SearchTextBox.Text.Length;
 
                     }
                     break;
@@ -106,11 +107,11 @@ namespace Tolarian.Copyshop.Fontend.WPF.Views
 
         private void SetSearchResultItem(int index)
         {
-            if (!this._SearchResultBox.IsFocused)
+            if (!_SearchResultBox.IsFocused)
             {
-                this._SearchResultBox.Focus();
+                _SearchResultBox.Focus();
             }
-            if (this.DataContext is DeckBuilderViewModel oModel && oModel.SearchResults.Count > index)
+            if (DataContext is DeckBuilderViewModel oModel && oModel.SearchResults.Count > index)
             {
                 oModel.SelectedSearchIndex = index;
                 oModel.SelectedSearchItem = oModel.SearchResults.ElementAt(index);
@@ -119,7 +120,7 @@ namespace Tolarian.Copyshop.Fontend.WPF.Views
 
         private void SearchResultBox_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            if (e.LeftButton == MouseButtonState.Released && this.DataContext is DeckBuilderViewModel oModel && this._previewMouseDownSelectedCard == oModel.SelectedSearchItem)
+            if (e.LeftButton == MouseButtonState.Released && DataContext is DeckBuilderViewModel oModel && _previewMouseDownSelectedCard == oModel.SelectedSearchItem)
             {
                 oModel.ApplySelectedSearchItemCommand.Execute(new object());
             }
@@ -129,9 +130,9 @@ namespace Tolarian.Copyshop.Fontend.WPF.Views
 
         private void _SearchResultBox_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (e.LeftButton == MouseButtonState.Pressed && this.DataContext is DeckBuilderViewModel oModel)
+            if (e.LeftButton == MouseButtonState.Pressed && DataContext is DeckBuilderViewModel oModel)
             {
-                this._previewMouseDownSelectedCard = oModel.SelectedSearchItem;
+                _previewMouseDownSelectedCard = oModel.SelectedSearchItem;
             }
         }
     }

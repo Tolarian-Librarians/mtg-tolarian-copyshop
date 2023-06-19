@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+
 using Tolarian.Copyshop.Controller.Interfaces;
 using Tolarian.Copyshop.Fontend.WPF.Model;
 
@@ -13,7 +14,7 @@ namespace Tolarian.Copyshop.Fontend.WPF.Helper
 
         private static ObservableCollection<FullCardModel> ToFullCardCollection(this List<IFullCard> IFullCardCollection)
         {
-            ObservableCollection<FullCardModel> FullCardCollection = new ObservableCollection<FullCardModel>();
+            ObservableCollection<FullCardModel> FullCardCollection = new();
             IFullCardCollection.ForEach(card => FullCardCollection.Add(FullCardModel.Create(card)));
             return FullCardCollection;
         }
@@ -23,7 +24,7 @@ namespace Tolarian.Copyshop.Fontend.WPF.Helper
 
         private static List<IFullCard> ToIFullCardList(this List<FullCardModel> FullCardCollection)
         {
-            List<IFullCard> IFullCardCollection = new List<IFullCard>();
+            List<IFullCard> IFullCardCollection = new();
             FullCardCollection.ForEach(card => IFullCardCollection.Add(FullCardModel.Create(card)));
             return IFullCardCollection;
         }

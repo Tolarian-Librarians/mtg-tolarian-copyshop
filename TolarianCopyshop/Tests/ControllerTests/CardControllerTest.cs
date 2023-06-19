@@ -1,8 +1,11 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+using Moq;
+
 using Tolarian.Copyshop.Business.Interfaces;
 using Tolarian.Copyshop.Business.Models.SfCardInfo;
 using Tolarian.Copyshop.Controller;
@@ -21,9 +24,9 @@ namespace Tests.ControllerTests
         [TestInitialize]
         public void Initialize()
         {
-            this._repo = new MockRepository(MockBehavior.Strict);
-            this._requesterMock = this._repo.Create<ICardDataRequester>();
-            this._importerMock = this._repo.Create<IDeckImportInteractor>();
+            _repo = new MockRepository(MockBehavior.Strict);
+            _requesterMock = _repo.Create<ICardDataRequester>();
+            _importerMock = _repo.Create<IDeckImportInteractor>();
         }
 
         [TestMethod]
@@ -31,8 +34,8 @@ namespace Tests.ControllerTests
         {
             //Arrange
             SfCard dummy = TestUtils.GetDummyCard();
-            this._requesterMock.Setup(m => m.GetCardsBySearchQuery(It.IsAny<string>(), It.IsAny<int>())).Returns((new List<SfCard> { dummy }, "1"));
-            CardController unitUnterTest = this.GetController();
+            _requesterMock.Setup(m => m.GetCardsBySearchQuery(It.IsAny<string>(), It.IsAny<int>())).Returns((new List<SfCard> { dummy }, "1"));
+            CardController unitUnterTest = GetController();
 
             //Act
             var response = unitUnterTest.GetSearchResults("", 1);
@@ -50,8 +53,8 @@ namespace Tests.ControllerTests
         {
             //Arrange
             SfCard expected = TestUtils.GetDummyCard();
-            this._requesterMock.Setup(m => m.GetCardByPrintId(It.IsAny<Guid>())).Returns(expected);
-            CardController unitUnterTest = this.GetController();
+            _requesterMock.Setup(m => m.GetCardByPrintId(It.IsAny<Guid>())).Returns(expected);
+            CardController unitUnterTest = GetController();
 
             //Act
             FullCardResponse response = unitUnterTest.GetCardByPrintId(Guid.Empty);
@@ -69,8 +72,8 @@ namespace Tests.ControllerTests
             //Arrange
             SfCard expected = TestUtils.GetDummyDoubleCard();
 
-            this._requesterMock.Setup(m => m.GetCardByPrintId(It.IsAny<Guid>())).Returns(expected);
-            CardController unitUnterTest = this.GetController();
+            _requesterMock.Setup(m => m.GetCardByPrintId(It.IsAny<Guid>())).Returns(expected);
+            CardController unitUnterTest = GetController();
 
             //Act
             FullCardResponse response = unitUnterTest.GetCardByPrintId(Guid.Empty);
@@ -89,8 +92,8 @@ namespace Tests.ControllerTests
             //Arrange
             SfCard expected = TestUtils.GetDummyDualFacedCard();
 
-            this._requesterMock.Setup(m => m.GetCardByPrintId(It.IsAny<Guid>())).Returns(expected);
-            CardController unitUnterTest = this.GetController();
+            _requesterMock.Setup(m => m.GetCardByPrintId(It.IsAny<Guid>())).Returns(expected);
+            CardController unitUnterTest = GetController();
 
             //Act
             FullCardResponse response = unitUnterTest.GetCardByPrintId(Guid.Empty);
@@ -109,8 +112,8 @@ namespace Tests.ControllerTests
             SfCard dummy = TestUtils.GetDummyCard();
             dummy.SetName = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
             dummy.SetCode = "SSS";
-            this._requesterMock.Setup(m => m.GetPrintsOfCard(It.IsAny<Guid>())).Returns(new List<SfCard> { dummy });
-            CardController unitUnterTest = this.GetController();
+            _requesterMock.Setup(m => m.GetPrintsOfCard(It.IsAny<Guid>())).Returns(new List<SfCard> { dummy });
+            CardController unitUnterTest = GetController();
 
             var result = unitUnterTest.GetArtworksOfCard(Guid.Empty);
 
@@ -126,8 +129,8 @@ namespace Tests.ControllerTests
             SfCard dummy = TestUtils.GetDummyCard();
             dummy.SetName = "Kaladesh";
             dummy.SetCode = "KDH";
-            this._requesterMock.Setup(m => m.GetPrintsOfCard(It.IsAny<Guid>())).Returns(new List<SfCard> { dummy });
-            CardController unitUnterTest = this.GetController();
+            _requesterMock.Setup(m => m.GetPrintsOfCard(It.IsAny<Guid>())).Returns(new List<SfCard> { dummy });
+            CardController unitUnterTest = GetController();
 
             var result = unitUnterTest.GetArtworksOfCard(Guid.Empty);
 
@@ -139,7 +142,7 @@ namespace Tests.ControllerTests
 
         private CardController GetController()
         {
-            return new CardController(this._requesterMock.Object, this._importerMock.Object);
+            return new CardController(_requesterMock.Object, _importerMock.Object);
         }
     }
 }

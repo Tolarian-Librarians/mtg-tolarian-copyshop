@@ -1,9 +1,11 @@
-﻿using HtmlAgilityPack;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Web;
+
+using HtmlAgilityPack;
+
 using Tolarian.Copyshop.Business.DbRequestModels;
 using Tolarian.Copyshop.Business.EntitiesModels;
 using Tolarian.Copyshop.Business.Interfaces;
@@ -19,36 +21,36 @@ namespace Tolarian.Copyshop.Business.UseCaseInteractors
 
         public DeckImportInteractor(ICardDataGateway cardGateway, ISetCodeTranslator setCodeTranslator, IImportStringParser importStringParser)
         {
-            this._cardGateway = cardGateway;
-            this._setCodeTranslator = setCodeTranslator;
-            this._importStringParser = importStringParser;
+            _cardGateway = cardGateway;
+            _setCodeTranslator = setCodeTranslator;
+            _importStringParser = importStringParser;
         }
 
         public (List<SfCard> Cards, string NotFound) GetCardsForImport(List<string> importLines)
         {
             List<KeyValuePair<PreImportCard, int>> cardsToCopiesMap
-                = this._importStringParser.ResolvePreImportCardsFromImportString(importLines);
+                = _importStringParser.ResolvePreImportCardsFromImportString(importLines);
 
             List<GetCardCollectionRequest> requests = cardsToCopiesMap.Select(pair => new GetCardCollectionRequest { Name = pair.Key.CardName, SetCode = pair.Key.SetCode }).ToList();
 
-            this.TranslateSetCodesToScryfall(requests);
+            TranslateSetCodesToScryfall(requests);
 
-            SfCardCollection firstTryResponse = this._cardGateway.GetCardCollectionByIdentifiers(requests);
+            SfCardCollection firstTryResponse = _cardGateway.GetCardCollectionByIdentifiers(requests);
             List<SfCard> foundOnFirstTry = firstTryResponse.Data.ToList();
             SfIdentifier[] missedIdentifiers = firstTryResponse.NotFound;
             List<KeyValuePair<PreImportCard, int>> cardsToCopiesMapWithoutMissed = GetMapWithoutMissedCards(cardsToCopiesMap, missedIdentifiers);
-            List<SfCard> importedDeck = this.AddCardsInCorrectAmount(cardsToCopiesMapWithoutMissed, foundOnFirstTry);
+            List<SfCard> importedDeck = AddCardsInCorrectAmount(cardsToCopiesMapWithoutMissed, foundOnFirstTry);
             cardsToCopiesMap.RemoveAll(x => cardsToCopiesMapWithoutMissed.Contains(x));
 
             SfCardCollection secondTryResponse = SfCardCollection.GetEmpty();
 
             if (missedIdentifiers.Any())
             {
-                secondTryResponse = this._cardGateway.GetCardCollectionByIdentifiers(missedIdentifiers.Select(i => new GetCardCollectionRequest { Name = i.Name, SetCode = null }).ToList());
-                importedDeck.AddRange(this.AddCardsInCorrectAmount(GetMapWithoutMissedCards(cardsToCopiesMap, secondTryResponse.NotFound), secondTryResponse.Data.ToList()));
+                secondTryResponse = _cardGateway.GetCardCollectionByIdentifiers(missedIdentifiers.Select(i => new GetCardCollectionRequest { Name = i.Name, SetCode = null }).ToList());
+                importedDeck.AddRange(AddCardsInCorrectAmount(GetMapWithoutMissedCards(cardsToCopiesMap, secondTryResponse.NotFound), secondTryResponse.Data.ToList()));
             }
 
-            return (importedDeck, this.FormatNotFoundListIn(secondTryResponse));
+            return (importedDeck, FormatNotFoundListIn(secondTryResponse));
         }
 
         private static List<KeyValuePair<PreImportCard, int>> GetMapWithoutMissedCards(List<KeyValuePair<PreImportCard, int>> cardsToCopiesMap, SfIdentifier[] missedIdentifiers)
@@ -58,12 +60,12 @@ namespace Tolarian.Copyshop.Business.UseCaseInteractors
 
         private void TranslateSetCodesToScryfall(List<GetCardCollectionRequest> requests)
         {
-            requests.ForEach(request => request.SetCode = this._setCodeTranslator.TranslateArenaCodeToScryfallCode(request.SetCode));
+            requests.ForEach(request => request.SetCode = _setCodeTranslator.TranslateArenaCodeToScryfallCode(request.SetCode));
         }
 
-        private List<SfCard> AddCardsInCorrectAmount(List<KeyValuePair<PreImportCard, int>> cardsToCopiesMap, List<SfCard> importedCards)
+        private static List<SfCard> AddCardsInCorrectAmount(List<KeyValuePair<PreImportCard, int>> cardsToCopiesMap, List<SfCard> importedCards)
         {
-            List<SfCard> result = new List<SfCard>();
+            List<SfCard> result = new();
 
             for (int i = 0; i < importedCards.Count; i++)
             {
@@ -76,7 +78,7 @@ namespace Tolarian.Copyshop.Business.UseCaseInteractors
             return result;
         }
 
-        private string FormatNotFoundListIn(SfCardCollection source)
+        private static string FormatNotFoundListIn(SfCardCollection source)
         {
             IEnumerable<string> notFound = source.NotFound.Select(nf => string.Join(" ", nf.Name, nf.SetCode)).Distinct();
 
@@ -86,31 +88,29 @@ namespace Tolarian.Copyshop.Business.UseCaseInteractors
         public (List<SfCard>, string notFound) ImportFromTappedOut(Uri deckUrl)
         {
             HtmlDocument htmlDoc;
-            using (WebClient client = new WebClient())
+            using (WebClient client = new())
             {
                 htmlDoc = new HtmlDocument();
-                using (System.IO.Stream domStream = client.OpenRead(deckUrl))
-                {
-                    htmlDoc.Load(domStream);
-                }
+                using System.IO.Stream domStream = client.OpenRead(deckUrl);
+                htmlDoc.Load(domStream);
             }
 
             HtmlNode boardContainer = htmlDoc.DocumentNode.SelectSingleNode("descendant-or-self::div[@class='row board-container']");
             List<string> importLines = boardContainer.SelectNodes("descendant::li[@class='member']/a")
-                                                               .Select(node => this.GetAsImportString(node, false)).ToList();
+                                                               .Select(node => GetAsImportString(node, false)).ToList();
 
             //Commander has a different place inside the dom than the regular cards
             HtmlNode commanderNode = boardContainer.SelectSingleNode("descendant::img[@class='commander-img']/parent::a");
             if (commanderNode != null)
             {
-                importLines.Add(this.GetAsImportString(commanderNode, true));
+                importLines.Add(GetAsImportString(commanderNode, true));
             }
 
-            (List<SfCard> Cards, string NotFound) result = this.GetCardsForImport(importLines);
+            (List<SfCard> Cards, string NotFound) result = GetCardsForImport(importLines);
             return result;
         }
 
-        private string GetAsImportString(HtmlNode node, bool isCommander)
+        private static string GetAsImportString(HtmlNode node, bool isCommander)
         {
             const string nameAttribute = "data-name";
             return $"{(isCommander ? "1" : node.InnerText.TrimEnd('x'))} {HttpUtility.HtmlDecode(node.GetAttributeValue(nameAttribute, "Error"))}";

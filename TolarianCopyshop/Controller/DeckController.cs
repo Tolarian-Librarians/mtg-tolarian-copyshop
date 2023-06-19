@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+
 using Tolarian.Copyshop.Business.Interfaces;
 using Tolarian.Copyshop.Business.Models.DeckInfo;
 using Tolarian.Copyshop.Controller.Interfaces;
@@ -17,8 +18,8 @@ namespace Tolarian.Copyshop.Controller
 
         public DeckController(IDeckInfoInteractor deckInfoInteractor, ISaveAndLoadInteractor saveAndLoadInteractor)
         {
-            this._deckInfoInteractor = deckInfoInteractor;
-            this._saveAndLoadInteractor = saveAndLoadInteractor;
+            _deckInfoInteractor = deckInfoInteractor;
+            _saveAndLoadInteractor = saveAndLoadInteractor;
         }
 
         public List<IFullCard> LoadDeckFromFile(string fileName)
@@ -44,7 +45,7 @@ namespace Tolarian.Copyshop.Controller
                 _saveAndLoadInteractor.SaveDeck(SaveAndLoadMapper.ConvertToBusiness(deckCards), fileName);
                 return true;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 SetErrorMessage(ex);
                 return false;
@@ -53,7 +54,7 @@ namespace Tolarian.Copyshop.Controller
 
         public int GetTotalCardCountOfDeck(List<IFullCard> deckCards)
         {
-            List<DeckInfoCard> businessModel =  DeckMapper.MapDeckDtoToBusiness(deckCards);
+            List<DeckInfoCard> businessModel = DeckMapper.MapDeckDtoToBusiness(deckCards);
             return _deckInfoInteractor.GetTotalCardCountOfDeck(businessModel);
         }
 

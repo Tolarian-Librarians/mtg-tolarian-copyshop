@@ -1,12 +1,15 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using Moq;
-using Tolarian.Copyshop.Business.Interfaces;
-using Tolarian.Copyshop.Business.UseCaseInteractors;
-using Tolarian.Copyshop.Business.Models.SfCardInfo;
-using System;
+
 using Tolarian.Copyshop.Business.DbRequestModels;
+using Tolarian.Copyshop.Business.Interfaces;
+using Tolarian.Copyshop.Business.Models.SfCardInfo;
+using Tolarian.Copyshop.Business.UseCaseInteractors;
 
 namespace Tests.InteractorTests
 {
@@ -60,7 +63,7 @@ namespace Tests.InteractorTests
             Assert.AreEqual(maxCountOfItems, result.Item1.Count);
             Assert.AreEqual(dummyList.Data.Length.ToString(), result.Item2);
         }
-        
+
         [TestMethod]
         public void GetTokensBySearchQuery_Test()
         {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+
 using Tolarian.Copyshop.Business.Models.Enums;
 using Tolarian.Copyshop.Business.Models.SfCardInfo;
 using Tolarian.Copyshop.Controller.Interfaces;
@@ -60,7 +61,7 @@ namespace Tolarian.Copyshop.Controller.Mappers
 
         internal static SearchCard MapToSearchResultDto(SfCard source)
         {
-            SearchCard result = new SearchCard
+            SearchCard result = new()
             {
                 Name = source.Name,
                 PrimaryCardType = GetPrimaryCardType(GetBaseCardTypesFromTypeLine(source.TypeLine)),
@@ -91,7 +92,7 @@ namespace Tolarian.Copyshop.Controller.Mappers
 
         internal static IFullCard MapToCardDto(SfCard source)
         {
-            FullCard result = new FullCard
+            FullCard result = new()
             {
                 CardId = source.CardId,
                 PrintId = source.PrintId,
@@ -114,7 +115,7 @@ namespace Tolarian.Copyshop.Controller.Mappers
 
         private static ICollection<CardFace> MapCardFacesOf(SfCard source)
         {
-            List<CardFace> result = new List<CardFace>();
+            List<CardFace> result = new();
             if (source.IsTransformable)
             {
                 result = source.CardFaces.Select(cf =>
@@ -156,7 +157,7 @@ namespace Tolarian.Copyshop.Controller.Mappers
 
         private static ICollection<RelatedCard> MapRelatedCardsOf(SfCard source)
         {
-            List<RelatedCard> result = new List<RelatedCard>();
+            List<RelatedCard> result = new();
 
             if (source.RelatedCards != null)
             {
@@ -201,7 +202,7 @@ namespace Tolarian.Copyshop.Controller.Mappers
             typesOfCard = typesOfCard.Select(str => str.ToLower().Trim()).ToList();
             typesOfCard.RemoveAll(str => string.IsNullOrWhiteSpace(str) || str == "-" || str == "—");
 
-            List<ResponseObjects.Enums.CardType> result = new List<ResponseObjects.Enums.CardType>();
+            List<ResponseObjects.Enums.CardType> result = new();
 
             foreach (string type in typesOfCard)
             {

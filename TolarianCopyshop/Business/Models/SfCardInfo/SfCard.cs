@@ -1,6 +1,8 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
+
+using Newtonsoft.Json;
+
 using Tolarian.Copyshop.Business.Models.Enums;
 
 namespace Tolarian.Copyshop.Business.Models.SfCardInfo
@@ -72,6 +74,6 @@ namespace Tolarian.Copyshop.Business.Models.SfCardInfo
 
         public override string ToString() => Name;
 
-        public static SfCard GetEmpty() => new SfCard { CardId = Guid.Empty };
+        public static SfCard GetEmpty() => new() { CardId = Guid.Empty };
     }
 }

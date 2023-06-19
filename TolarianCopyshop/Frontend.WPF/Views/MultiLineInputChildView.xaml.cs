@@ -1,4 +1,5 @@
 ﻿using MahApps.Metro.SimpleChildWindow;
+
 using Tolarian.Copyshop.Fontend.WPF.Base;
 using Tolarian.Copyshop.Fontend.WPF.ViewModels;
 
@@ -13,10 +14,10 @@ namespace Tolarian.Copyshop.Fontend.WPF.Views
 
         public MultiLineInputChildView(string header, string startText)
         {
-            this.InitializeComponent();
-            this.DataContext = new MultiLineInputViewModel(new Command(this.HandleAffirmativeCommand), new Command(this.HandleNegativeCommand));
+            InitializeComponent();
+            DataContext = new MultiLineInputViewModel(new Command(HandleAffirmativeCommand), new Command(HandleNegativeCommand));
 
-            if (this.DataContext is MultiLineInputViewModel viewModel)
+            if (DataContext is MultiLineInputViewModel viewModel)
             {
                 viewModel.Header = header;
                 viewModel.MultiLineText = startText;
@@ -26,12 +27,12 @@ namespace Tolarian.Copyshop.Fontend.WPF.Views
 
         private void HandleAffirmativeCommand(object _)
         {
-            if (this.DataContext is MultiLineInputViewModel viewModel)
+            if (DataContext is MultiLineInputViewModel viewModel)
             {
-                this.Close(viewModel.MultiLineText);
+                Close(viewModel.MultiLineText);
             }
         }
 
-        private void HandleNegativeCommand(object _) => this.Close();
+        private void HandleNegativeCommand(object _) => Close();
     }
 }

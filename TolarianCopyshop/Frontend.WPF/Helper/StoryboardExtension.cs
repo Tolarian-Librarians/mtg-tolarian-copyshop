@@ -8,7 +8,7 @@ namespace Tolarian.Copyshop.Fontend.WPF.Helper
     {
         public static Task BeginAsync(this Storyboard storyboard)
         {
-            TaskCompletionSource<bool> completionSource = new TaskCompletionSource<bool>();
+            TaskCompletionSource<bool> completionSource = new();
             if (storyboard == null)
             {
                 completionSource.SetException(new ArgumentNullException());

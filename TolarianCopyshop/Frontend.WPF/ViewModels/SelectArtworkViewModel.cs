@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+
 using Tolarian.Copyshop.Controller;
 using Tolarian.Copyshop.Controller.ResponseObjects;
 using Tolarian.Copyshop.Fontend.WPF.Base;
@@ -10,7 +11,7 @@ namespace Tolarian.Copyshop.Fontend.WPF.ViewModels
     {
         #region Fields
 
-        private ObservableCollection<ArtworkCard> _artworks = new ObservableCollection<ArtworkCard>();
+        private ObservableCollection<ArtworkCard> _artworks = new();
         private bool _artworksLoaded;
         private readonly CardController _cardController;
         private readonly Guid _cardId;
@@ -21,9 +22,9 @@ namespace Tolarian.Copyshop.Fontend.WPF.ViewModels
 
         public SelectArtworkViewModel(CardController cardController, Guid cardId, Command affirmativeCommand)
         {
-            this._cardController = cardController;
-            this.AffirmativeCommand = affirmativeCommand;
-            this._cardId = cardId;
+            _cardController = cardController;
+            AffirmativeCommand = affirmativeCommand;
+            _cardId = cardId;
         }
 
         #endregion
@@ -34,14 +35,14 @@ namespace Tolarian.Copyshop.Fontend.WPF.ViewModels
 
         public ObservableCollection<ArtworkCard> Artworks
         {
-            get => this._artworks;
-            set => this.SetProperty(ref this._artworks, value);
+            get => _artworks;
+            set => SetProperty(ref _artworks, value);
         }
 
         public bool ArtworksLoaded
         {
-            get => this._artworksLoaded;
-            set => this.SetProperty(ref this._artworksLoaded, value);
+            get => _artworksLoaded;
+            set => SetProperty(ref _artworksLoaded, value);
         }
 
         #endregion
@@ -50,8 +51,8 @@ namespace Tolarian.Copyshop.Fontend.WPF.ViewModels
 
         public void LoadArtworks()
         {
-            this.Artworks = new ObservableCollection<ArtworkCard>(this._cardController.GetArtworksOfCard(this._cardId).Artworks);
-            this.ArtworksLoaded = true;
+            Artworks = new ObservableCollection<ArtworkCard>(_cardController.GetArtworksOfCard(_cardId).Artworks);
+            ArtworksLoaded = true;
         }
 
         #endregion

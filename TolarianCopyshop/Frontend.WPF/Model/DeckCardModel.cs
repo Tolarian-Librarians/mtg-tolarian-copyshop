@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+
 using Tolarian.Copyshop.Fontend.WPF.Base;
 
 namespace Tolarian.Copyshop.Fontend.WPF.Model
@@ -9,13 +10,13 @@ namespace Tolarian.Copyshop.Fontend.WPF.Model
 
         public DeckCardModel()
         {
-            this.DeckCards = new ObservableCollection<FullCardModel>();
+            DeckCards = new ObservableCollection<FullCardModel>();
         }
 
         public ObservableCollection<FullCardModel> DeckCards
         {
-            get => this._deckCards;
-            set => this.SetProperty(ref this._deckCards, value);
+            get => _deckCards;
+            set => SetProperty(ref _deckCards, value);
         }
     }
 }

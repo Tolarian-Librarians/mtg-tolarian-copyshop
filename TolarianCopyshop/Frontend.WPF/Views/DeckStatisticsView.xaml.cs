@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+
 using Tolarian.Copyshop.Fontend.WPF.ViewModels;
 
 namespace Tolarian.Copyshop.Fontend.WPF.Views
@@ -11,12 +12,12 @@ namespace Tolarian.Copyshop.Fontend.WPF.Views
     {
         public DeckStatisticsView()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
         private void DeckStatisticsView_Loaded(object sender, RoutedEventArgs e)
         {
-            if (this.DataContext is DeckStatisticsViewModel viewModel)
+            if (DataContext is DeckStatisticsViewModel viewModel)
             {
                 viewModel.LoadChartData();
             }

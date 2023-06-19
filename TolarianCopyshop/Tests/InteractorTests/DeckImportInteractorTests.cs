@@ -1,7 +1,10 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
-using System;
+﻿using System;
 using System.Collections.Generic;
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+using Moq;
+
 using Tolarian.Copyshop.Business.DbRequestModels;
 using Tolarian.Copyshop.Business.EntitiesModels;
 using Tolarian.Copyshop.Business.Interfaces;
@@ -21,42 +24,42 @@ namespace Tests.InteractorTests
         [TestInitialize]
         public void Initialize()
         {
-            this._rep = new MockRepository(MockBehavior.Strict);
-            this._cardGatewayMock = this._rep.Create<ICardDataGateway>();
-            this._translatorMock = this._rep.Create<ISetCodeTranslator>();
-            this._parserMock = this._rep.Create<IImportStringParser>();
+            _rep = new MockRepository(MockBehavior.Strict);
+            _cardGatewayMock = _rep.Create<ICardDataGateway>();
+            _translatorMock = _rep.Create<ISetCodeTranslator>();
+            _parserMock = _rep.Create<IImportStringParser>();
         }
 
         [TestCleanup]
         public void Cleanup()
         {
-            this._rep.VerifyAll();
+            _rep.VerifyAll();
         }
 
         [TestMethod]
         public void GetCardsForImport_Test()
         {
             //Arrange
-            DeckImportInteractor unitUnderTest = this.GetInteractor();
-            this.SetupMocks();
+            DeckImportInteractor unitUnderTest = GetInteractor();
+            SetupMocks();
 
             //Act
-            (List<SfCard> cards, string notFound) = unitUnderTest.GetCardsForImport(this.dummyImportString);
+            (List<SfCard> cards, string notFound) = unitUnderTest.GetCardsForImport(dummyImportString);
 
             //Assert
             Assert.IsTrue(string.IsNullOrEmpty(notFound));
             Assert.IsNotNull(cards);
             Assert.AreEqual(cards.Count, 16);
-            this._cardGatewayMock.Verify(m => m.GetCardCollectionByIdentifiers(It.IsAny<List<GetCardCollectionRequest>>()), Times.Once);
-            this._translatorMock.Verify(m => m.TranslateArenaCodeToScryfallCode(It.IsAny<string>()), Times.Exactly(3));
+            _cardGatewayMock.Verify(m => m.GetCardCollectionByIdentifiers(It.IsAny<List<GetCardCollectionRequest>>()), Times.Once);
+            _translatorMock.Verify(m => m.TranslateArenaCodeToScryfallCode(It.IsAny<string>()), Times.Exactly(3));
         }
 
         [TestMethod]
         public void GetCardsForImport_NothingFound_Test()
         {
             //Arrange
-            DeckImportInteractor unitUnderTest = this.GetInteractor();
-            this.SetupMocks();
+            DeckImportInteractor unitUnderTest = GetInteractor();
+            SetupMocks();
 
             SfCardCollection notFoundResult = new SfCardCollection
             {
@@ -67,34 +70,34 @@ namespace Tests.InteractorTests
                 },
             };
 
-            this._cardGatewayMock.Setup(m => m.GetCardCollectionByIdentifiers(It.IsAny<List<GetCardCollectionRequest>>())).Returns(notFoundResult);
+            _cardGatewayMock.Setup(m => m.GetCardCollectionByIdentifiers(It.IsAny<List<GetCardCollectionRequest>>())).Returns(notFoundResult);
 
             //Act
-            (List<SfCard> cards, string notFound) = unitUnderTest.GetCardsForImport(this.dummyImportString);
+            (List<SfCard> cards, string notFound) = unitUnderTest.GetCardsForImport(dummyImportString);
 
             //Assert
-            this._cardGatewayMock.Verify(m => m.GetCardCollectionByIdentifiers(It.IsAny<List<GetCardCollectionRequest>>()), Times.Exactly(2));
+            _cardGatewayMock.Verify(m => m.GetCardCollectionByIdentifiers(It.IsAny<List<GetCardCollectionRequest>>()), Times.Exactly(2));
         }
 
         [TestMethod]
         public void ImportFromTappedOut_Test()
         {
             Uri uri = new Uri("https://tappedout.net/mtg-decks/your-life-can-depend-on-this-dont-blink/");
-            (List<SfCard>, string notFound) result = this.GetInteractor().ImportFromTappedOut(uri);
+            (List<SfCard>, string notFound) result = GetInteractor().ImportFromTappedOut(uri);
         }
 
         private DeckImportInteractor GetInteractor()
         {
-            return new DeckImportInteractor(this._cardGatewayMock.Object, this._translatorMock.Object, this._parserMock.Object);
+            return new DeckImportInteractor(_cardGatewayMock.Object, _translatorMock.Object, _parserMock.Object);
         }
 
         private void SetupMocks()
         {
-            this._parserMock.Setup(m => m.ResolvePreImportCardsFromImportString(It.Is<List<string>>(p => p == this.dummyImportString))).Returns(this.preImportCards);
-            this._translatorMock.Setup(m => m.TranslateArenaCodeToScryfallCode(It.Is<string>(p => p == "CN2"))).Returns("CN2");
-            this._translatorMock.Setup(m => m.TranslateArenaCodeToScryfallCode(It.Is<string>(p => p == "RNA"))).Returns("RNA");
-            this._translatorMock.Setup(m => m.TranslateArenaCodeToScryfallCode(It.Is<string>(p => p == "DAR"))).Returns("DOM");
-            this._cardGatewayMock.Setup(m => m.GetCardCollectionByIdentifiers(It.IsAny<List<GetCardCollectionRequest>>())).Returns(this.dummyResult);
+            _parserMock.Setup(m => m.ResolvePreImportCardsFromImportString(It.Is<List<string>>(p => p == dummyImportString))).Returns(preImportCards);
+            _translatorMock.Setup(m => m.TranslateArenaCodeToScryfallCode(It.Is<string>(p => p == "CN2"))).Returns("CN2");
+            _translatorMock.Setup(m => m.TranslateArenaCodeToScryfallCode(It.Is<string>(p => p == "RNA"))).Returns("RNA");
+            _translatorMock.Setup(m => m.TranslateArenaCodeToScryfallCode(It.Is<string>(p => p == "DAR"))).Returns("DOM");
+            _cardGatewayMock.Setup(m => m.GetCardCollectionByIdentifiers(It.IsAny<List<GetCardCollectionRequest>>())).Returns(dummyResult);
         }
 
         private List<string> dummyImportString = new List<string>

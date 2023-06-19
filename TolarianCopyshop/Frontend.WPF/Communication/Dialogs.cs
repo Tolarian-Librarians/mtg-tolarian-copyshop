@@ -1,9 +1,12 @@
-﻿using MahApps.Metro.Controls.Dialogs;
-using MahApps.Metro.SimpleChildWindow;
-using System;
+﻿using System;
 using System.Threading.Tasks;
 using System.Windows;
+
+using MahApps.Metro.Controls.Dialogs;
+using MahApps.Metro.SimpleChildWindow;
+
 using Tolarian.Copyshop.Fontend.WPF.Views;
+
 using static MahApps.Metro.SimpleChildWindow.ChildWindowManager;
 
 namespace Tolarian.Copyshop.Fontend.WPF.Communication
@@ -20,7 +23,7 @@ namespace Tolarian.Copyshop.Fontend.WPF.Communication
 
         public Dialogs()
         {
-            this._DialogWindow = CopyShopView.GetInstance();
+            _DialogWindow = CopyShopView.GetInstance();
         }
 
         #endregion
@@ -31,7 +34,7 @@ namespace Tolarian.Copyshop.Fontend.WPF.Communication
         {
             if (!string.IsNullOrEmpty(errorMessage))
             {
-                this.ShowMessageOnUIThread("Error", errorMessage);
+                ShowMessageOnUIThread("Error", errorMessage);
             }
         }
 
@@ -47,16 +50,16 @@ namespace Tolarian.Copyshop.Fontend.WPF.Communication
         #region Base Dialogs
 
         internal async void ShowMessageOnUIThread(string header, string message)
-            => await Application.Current.Dispatcher.Invoke(() => this._DialogWindow.ShowMessageAsync(header, message).ConfigureAwait(false));
+            => await Application.Current.Dispatcher.Invoke(() => _DialogWindow.ShowMessageAsync(header, message).ConfigureAwait(false));
 
         internal MessageDialogResult ShowQuestionOnUIThread(string header, string message, MessageDialogStyle style,
             string affirmativeButtonText = "YES", string negativeButtonText = "NO", string firstAuxiliaryButtonText = "CANCEL", string secondAuxiliaryButtonText = "")
-            => Application.Current.Dispatcher.Invoke(() => this.ShowQuestion(header, message, style,
+            => Application.Current.Dispatcher.Invoke(() => ShowQuestion(header, message, style,
                 affirmativeButtonText, negativeButtonText, firstAuxiliaryButtonText, secondAuxiliaryButtonText));
 
         private MessageDialogResult ShowQuestion(string header, string message, MessageDialogStyle style,
             string affirmativeButtonText, string negativeButtonText, string firstAuxiliaryButtonText, string secondAuxiliaryButtonText)
-            => this._DialogWindow.ShowModalMessageExternal(header, message, style,
+            => _DialogWindow.ShowModalMessageExternal(header, message, style,
                  new MetroDialogSettings()
                  {
                      AffirmativeButtonText = affirmativeButtonText,
@@ -68,10 +71,10 @@ namespace Tolarian.Copyshop.Fontend.WPF.Communication
                  });
 
         internal async Task<string> ShowInputOnUIThread(string header, string message)
-            => await this._DialogWindow.ShowInputAsync(header, message).ConfigureAwait(false);
+            => await _DialogWindow.ShowInputAsync(header, message).ConfigureAwait(false);
 
         internal void ShowProgressOnUIThread(string header, string message, Action FunctionWhileProgress, Action FunctionAfterProgress = null)
-            => Application.Current.Dispatcher.Invoke(() => this.ShowProgress(header, message, FunctionWhileProgress, FunctionAfterProgress));
+            => Application.Current.Dispatcher.Invoke(() => ShowProgress(header, message, FunctionWhileProgress, FunctionAfterProgress));
 
         private async void ShowProgress(string header, string message, Action FunctionWhileProgress, Action FunctionAfterProgress)
         {
@@ -94,19 +97,19 @@ namespace Tolarian.Copyshop.Fontend.WPF.Communication
         private ProgressDialogController progressController;
         public async void StartProgress(string header, string message)
         {
-            if (this.progressController is null)
+            if (progressController is null)
             {
-                this.progressController = await CopyShopView.GetInstance().ShowProgressAsync(header, message).ConfigureAwait(true);
-                this.progressController.SetIndeterminate();
+                progressController = await CopyShopView.GetInstance().ShowProgressAsync(header, message).ConfigureAwait(true);
+                progressController.SetIndeterminate();
             }
         }
 
         public async void EndProgress()
         {
-            if (this.progressController != null)
+            if (progressController != null)
             {
-                await this.progressController.CloseAsync().ConfigureAwait(true);
-                this.progressController = null;
+                await progressController.CloseAsync().ConfigureAwait(true);
+                progressController = null;
             }
         }
 

@@ -1,9 +1,11 @@
-﻿using Refit;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading;
+
+using Refit;
+
 using Tolarian.Copyshop.Business.DbRequestModels;
 using Tolarian.Copyshop.Business.Interfaces;
 using Tolarian.Copyshop.Business.Models.SfCardInfo;
@@ -12,12 +14,14 @@ namespace Tolarian.Copyshop.ScryfallDataAccess
 {
     public class CardDataMapper : DataMapperBase, ICardDataGateway
     {
-        IScryfallApi _service;
         //Scryfall will return a maximum of 75 Cards per request
         private const int _scryfallApiReturnCountMaximum = 75;
+
+        private readonly IScryfallApi _service;
+
         public CardDataMapper()
         {
-            _service = RestService.For<IScryfallApi>(Constants.SCRYFALL_BASE_URI);
+            _service = RestService.For<IScryfallApi>(Constants.SCRYFALL_BASE_URI, new() { ContentSerializer = new NewtonsoftJsonContentSerializer() });
         }
 
         public SfCard GetCardByPrintId(Guid printId)
@@ -48,7 +52,7 @@ namespace Tolarian.Copyshop.ScryfallDataAccess
                     SfPaginatedCardList currentPage = firstPageResponse.Content;
                     var result = currentPage.Data.ToList();
 
-                    if(currentPage.MorePagesAvailable)
+                    if (currentPage.MorePagesAvailable)
                         result.AddRange(ReadNextPagesOf(currentPage, oracleId));
 
                     return result;
@@ -59,7 +63,7 @@ namespace Tolarian.Copyshop.ScryfallDataAccess
                     break;
             }
 
-            return null;
+            return new List<SfCard>();
         }
 
         private List<SfCard> ReadNextPagesOf(SfPaginatedCardList firstPage, Guid oracleId)
@@ -89,15 +93,15 @@ namespace Tolarian.Copyshop.ScryfallDataAccess
             return result;
         }
 
-        public SfCardCollection GetCardCollectionByIdentifiers(List<GetCardCollectionRequest> request)
+        public SfCardCollection GetCardCollectionByIdentifiers(List<GetCardCollectionRequest> cardNames)
         {
-            if (request.Count == 0)
+            if (cardNames.Count == 0)
             {
                 return SfCardCollection.GetEmpty();
             }
 
             //List needs to be chunked into lists of max 75 items because SF will return a maximum of 75 cards
-            List<List<GetCardCollectionRequest>> chunkedRequests = ChunkListBySize(request, _scryfallApiReturnCountMaximum);
+            List<List<GetCardCollectionRequest>> chunkedRequests = ChunkListBySize(cardNames, _scryfallApiReturnCountMaximum);
 
             var containers = chunkedRequests.Select(cr => new SfIdentifierContainer
             {
@@ -133,13 +137,15 @@ namespace Tolarian.Copyshop.ScryfallDataAccess
 
         private static SfCardCollection MergeCardCollections(IEnumerable<SfCardCollection> response)
         {
-            SfCardCollection result = new SfCardCollection();
-            result.Data = response.SelectMany(r => r.Data).ToArray();
-            result.NotFound = response.SelectMany(r => r.NotFound).ToArray();
+            SfCardCollection result = new()
+            {
+                Data = response.SelectMany(r => r.Data).ToArray(),
+                NotFound = response.SelectMany(r => r.NotFound).ToArray()
+            };
             return result;
         }
 
-        private List<List<T>> ChunkListBySize<T>(List<T> source, int chunkSize)
+        private static List<List<T>> ChunkListBySize<T>(List<T> source, int chunkSize)
         {
             return source
                 .Select((x, i) => new { Index = i, Value = x })
@@ -175,13 +181,13 @@ namespace Tolarian.Copyshop.ScryfallDataAccess
                 case HttpStatusCode.OK:
                     return response.Content.Data.ToList();
                 case HttpStatusCode.NotFound:
-                    return  new List<SfCard>();
+                    return new List<SfCard>();
                 default:
                     HandleUnexpectedStatusCodeForResponse(response);
                     break;
             }
 
-            return null;
+            return new List<SfCard>();
         }
     }
 }

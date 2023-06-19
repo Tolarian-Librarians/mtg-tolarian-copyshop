@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+
 using Tolarian.Copyshop.Controller.ResponseObjects.Enums;
 
 namespace Tolarian.Copyshop.Controller.ResponseObjects

@@ -5,6 +5,7 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Markup;
 using System.Windows.Media;
+
 using Tolarian.Copyshop.Business.Interfaces;
 
 namespace Tolarian.Copyshop.Business.UseCaseInteractors
@@ -14,7 +15,7 @@ namespace Tolarian.Copyshop.Business.UseCaseInteractors
         private const double _defaultCardWidth = 226.7712;
         private const double _defaultCardHeight = 321.26016;
         private const int _cardsPerRowAndCol = 3;
-        private readonly Dictionary<PageFormat, Size> PageFormats = new Dictionary<PageFormat, Size>()
+        private readonly Dictionary<PageFormat, Size> PageFormats = new()
         {
             //! 1 cm ~ 37.79527559055118 => 1 mm ~ 3.779527559055118
             // 210 x 297 mm
@@ -36,10 +37,10 @@ namespace Tolarian.Copyshop.Business.UseCaseInteractors
 
         public FixedDocument GetPrintPages(PageFormat format, Stack<Uri> deckCards, float scale)
         {
-            this._pageSize = this.PageFormats[format];
+            _pageSize = PageFormats[format];
 
-            FixedDocument doc = new FixedDocument();
-            doc.DocumentPaginator.PageSize = this._pageSize;
+            FixedDocument doc = new();
+            doc.DocumentPaginator.PageSize = _pageSize;
 
             if (deckCards is null || deckCards.Count == 0)
             {
@@ -47,22 +48,22 @@ namespace Tolarian.Copyshop.Business.UseCaseInteractors
                 return doc;
             }
 
-            this.SetScale(scale);
-            this.SetPageMargin();
-            this.AddCardImagesToDoc(deckCards, doc);
+            SetScale(scale);
+            SetPageMargin();
+            AddCardImagesToDoc(deckCards, doc);
             return doc;
         }
 
         private void SetPageMargin()
         {
             // 3 cards seperated by 1 px
-            double totalCardWidth = (this._customCardWidth * 3) + 2;
-            double totalCardHeight = (this._customCardHeight * 3) + 2;
+            double totalCardWidth = (_customCardWidth * 3) + 2;
+            double totalCardHeight = (_customCardHeight * 3) + 2;
 
-            double horizontalMargin = this._pageSize.Width - totalCardWidth;
-            double vertialMargin = this._pageSize.Height - totalCardHeight;
+            double horizontalMargin = _pageSize.Width - totalCardWidth;
+            double vertialMargin = _pageSize.Height - totalCardHeight;
 
-            this._pageMargin = new Thickness(
+            _pageMargin = new Thickness(
                 horizontalMargin / 2,
                 vertialMargin / 2,
                 horizontalMargin / 2,
@@ -71,18 +72,18 @@ namespace Tolarian.Copyshop.Business.UseCaseInteractors
 
         private void SetScale(float scale)
         {
-            this._customCardWidth = _defaultCardWidth * scale;
-            this._customCardHeight = _defaultCardHeight * scale;
+            _customCardWidth = _defaultCardWidth * scale;
+            _customCardHeight = _defaultCardHeight * scale;
         }
 
         private void AddCardImagesToDoc(Stack<Uri> deckCards, FixedDocument doc)
         {
             while (deckCards.Count > 0)
             {
-                PageContent pageContent = new PageContent();
-                FixedPage page = GetPage(doc, this._pageMargin);
+                PageContent pageContent = new();
+                FixedPage page = GetPage(doc, _pageMargin);
 
-                this.AddCardImagesToPage(deckCards, page);
+                AddCardImagesToPage(deckCards, page);
 
                 ((IAddChild)pageContent).AddChild(page);
                 doc.Pages.Add(pageContent);
@@ -90,7 +91,7 @@ namespace Tolarian.Copyshop.Business.UseCaseInteractors
         }
         private static FixedPage GetPage(FixedDocument doc, Thickness pageMargin)
         {
-            FixedPage page = new FixedPage
+            FixedPage page = new()
             {
                 Width = doc.DocumentPaginator.PageSize.Width,
                 Height = doc.DocumentPaginator.PageSize.Height,
@@ -122,9 +123,9 @@ namespace Tolarian.Copyshop.Business.UseCaseInteractors
                 Uri uri = deckCards.Pop();
                 if (lastUri != uri)
                 {
-                    imgSource = this.GetImageSourceFromUri(uri);
+                    imgSource = GetImageSourceFromUri(uri);
                 }
-                Image img = this.GetImageFromUri(imgSource, xPos, yPos);
+                Image img = GetImageFromUri(imgSource, xPos, yPos);
                 lastUri = uri;
                 page.Children.Add(img);
             }
@@ -134,12 +135,12 @@ namespace Tolarian.Copyshop.Business.UseCaseInteractors
             => deckCards.Count == 0;
 
         private Image GetImageFromUri(ImageSource source, int xPos, int yPos)
-            => new Image
+            => new()
             {
                 Source = source,
-                Width = this._customCardWidth,
-                Height = this._customCardHeight,
-                RenderTransform = new TranslateTransform((this._customCardWidth * xPos) + xPos, (this._customCardHeight * yPos) + yPos),
+                Width = _customCardWidth,
+                Height = _customCardHeight,
+                RenderTransform = new TranslateTransform((_customCardWidth * xPos) + xPos, (_customCardHeight * yPos) + yPos),
             };
 
         private ImageSource GetImageSourceFromUri(Uri source)

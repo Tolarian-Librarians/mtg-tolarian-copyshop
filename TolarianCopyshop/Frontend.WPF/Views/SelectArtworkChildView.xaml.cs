@@ -1,7 +1,9 @@
-﻿using MahApps.Metro.SimpleChildWindow;
-using System;
+﻿using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+
+using MahApps.Metro.SimpleChildWindow;
+
 using Tolarian.Copyshop.Controller;
 using Tolarian.Copyshop.Controller.ResponseObjects;
 using Tolarian.Copyshop.Fontend.WPF.Base;
@@ -16,18 +18,18 @@ namespace Tolarian.Copyshop.Fontend.WPF.Views
     {
         public SelectArtworkChildView(CardController cardController, Guid cardId)
         {
-            this.InitializeComponent();
-            this.Loaded += this.SelectArtworkChildView_Loaded;
-            this.Closing += this.SelectArtworkChildView_Closing;
-            this.DataContext = new SelectArtworkViewModel(cardController, cardId, new Command(this.HandleAffirmativeCommand));
+            InitializeComponent();
+            Loaded += SelectArtworkChildView_Loaded;
+            Closing += SelectArtworkChildView_Closing;
+            DataContext = new SelectArtworkViewModel(cardController, cardId, new Command(HandleAffirmativeCommand));
         }
 
         private void SelectArtworkChildView_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-            => this.DataContext = null;
+            => DataContext = null;
 
         private void SelectArtworkChildView_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
-            if (this.DataContext is SelectArtworkViewModel viewModel)
+            if (DataContext is SelectArtworkViewModel viewModel)
             {
                 Task.Run(() => viewModel.LoadArtworks());
             }
@@ -35,11 +37,11 @@ namespace Tolarian.Copyshop.Fontend.WPF.Views
 
         private void HandleAffirmativeCommand(object commandParameter)
         {
-            if (commandParameter is Guid printId && this.DataContext is SelectArtworkViewModel model)
+            if (commandParameter is Guid printId && DataContext is SelectArtworkViewModel model)
             {
                 // reset collection to interrupt loading of images
                 model.Artworks = new ObservableCollection<ArtworkCard>();
-                this.Close(printId);
+                Close(printId);
             }
         }
 

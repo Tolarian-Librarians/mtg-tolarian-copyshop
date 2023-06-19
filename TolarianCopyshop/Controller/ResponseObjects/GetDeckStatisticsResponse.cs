@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+
 using Tolarian.Copyshop.Controller.ResponseObjects.Enums;
 
 namespace Tolarian.Copyshop.Controller.ResponseObjects
@@ -19,7 +20,7 @@ namespace Tolarian.Copyshop.Controller.ResponseObjects
 
 
         public static GetDeckStatisticsResponse Empty()
-            => new GetDeckStatisticsResponse()
+            => new()
             {
                 ColorSymbolCounts = new Dictionary<MtgColor, int>(),
                 ColorCardsCounts = new Dictionary<MtgColor, int>(),

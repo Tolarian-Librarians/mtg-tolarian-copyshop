@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Documents;
+
 using Tolarian.Copyshop.Controller;
 using Tolarian.Copyshop.Controller.Interfaces;
 using Tolarian.Copyshop.Fontend.WPF.Base;
@@ -10,6 +11,7 @@ using Tolarian.Copyshop.Fontend.WPF.Communication;
 using Tolarian.Copyshop.Fontend.WPF.Helper;
 using Tolarian.Copyshop.Fontend.WPF.Model;
 using Tolarian.Copyshop.Fontend.WPF.Views;
+
 using static Tolarian.Copyshop.Business.UseCaseInteractors.PrintInteractor;
 
 namespace Tolarian.Copyshop.Fontend.WPF.ViewModels
@@ -34,15 +36,15 @@ namespace Tolarian.Copyshop.Fontend.WPF.ViewModels
         public DeckPrintViewModel(CardController cardController, PrintController printController, DeckCardModel deckCardModel, Dialogs dialogs)
         {
             _deckPrintViewModel = this;
-            this._cardController = cardController;
-            this._deckCardModel = deckCardModel;
-            this._printController = printController;
-            this._dialogs = dialogs;
+            _cardController = cardController;
+            _deckCardModel = deckCardModel;
+            _printController = printController;
+            _dialogs = dialogs;
 
-            this.PrintCommand = new Command(this.OnPrintCommand);
-            this.ResetCardScaleCommand = new Command(this.OnResetCardScaleCommand);
+            PrintCommand = new Command(OnPrintCommand);
+            ResetCardScaleCommand = new Command(OnResetCardScaleCommand);
 
-            this.SelectedPageFormat = PageFormat.A4;
+            SelectedPageFormat = PageFormat.A4;
         }
 
         #endregion
@@ -55,23 +57,23 @@ namespace Tolarian.Copyshop.Fontend.WPF.ViewModels
 
         public int CardScale
         {
-            get => this._cardScale;
+            get => _cardScale;
             set
             {
-                this.SetProperty(ref this._cardScale, value);
+                SetProperty(ref _cardScale, value);
                 DeckPrintView.GetInstance()?.ReloadDocumentPreview();
             }
         }
 
-        public IEnumerable<PageFormat> PageFormats 
+        public IEnumerable<PageFormat> PageFormats
             => Enum.GetValues(typeof(PageFormat)).Cast<PageFormat>();
 
         public PageFormat SelectedPageFormat
         {
-            get => this._selectedPageFormat;
+            get => _selectedPageFormat;
             set
             {
-                this.SetProperty(ref this._selectedPageFormat, value);
+                SetProperty(ref _selectedPageFormat, value);
                 DeckPrintView.GetInstance()?.ReloadDocumentPreview();
             }
         }
@@ -79,13 +81,13 @@ namespace Tolarian.Copyshop.Fontend.WPF.ViewModels
 
         public ObservableCollection<FullCardModel> DeckCards
         {
-            get => this._deckCardModel.DeckCards;
+            get => _deckCardModel.DeckCards;
             set
             {
-                if (!Equals(this._deckCardModel.DeckCards, value))
+                if (!Equals(_deckCardModel.DeckCards, value))
                 {
-                    this._deckCardModel.DeckCards = value;
-                    this.OnPropertyChanged(nameof(this.DeckCards));
+                    _deckCardModel.DeckCards = value;
+                    OnPropertyChanged(nameof(DeckCards));
                     DeckBuilderViewModel.GetInstance().InvokeDeckCards();
                 }
             }
@@ -103,20 +105,20 @@ namespace Tolarian.Copyshop.Fontend.WPF.ViewModels
         #region public methods
 
         public void InvokeDeckCards()
-            => this.OnPropertyChanged(nameof(this.DeckCards));
+            => OnPropertyChanged(nameof(DeckCards));
 
         public FixedDocument GetPrintPages()
-            => this._printController.GetPrintPages(this.SelectedPageFormat, this.DeckCards.Cast<IFullCard>().ToList(), (float)this.CardScale / 100);
+            => _printController.GetPrintPages(SelectedPageFormat, DeckCards.Cast<IFullCard>().ToList(), (float)CardScale / 100);
 
         #endregion
 
         #region private methods
 
         private void OnPrintCommand(object _)
-            => new TolorianDeckPrinterHelper(DeckPrintView.GetInstance().PrintDocumentPreview.Document, this._dialogs).Print();
+            => new TolorianDeckPrinterHelper(DeckPrintView.GetInstance().PrintDocumentPreview.Document, _dialogs).Print();
 
         private void OnResetCardScaleCommand(object _)
-            => this.CardScale = 100;
+            => CardScale = 100;
 
         #endregion
 

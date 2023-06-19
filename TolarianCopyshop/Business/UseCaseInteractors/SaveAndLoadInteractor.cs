@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+
 using Tolarian.Copyshop.Business.Interfaces;
 using Tolarian.Copyshop.Business.Models.SaveAndLoad;
 using Tolarian.Copyshop.Business.Models.SfCardInfo;
@@ -13,17 +14,17 @@ namespace Tolarian.Copyshop.Business.UseCaseInteractors
 
         public SaveAndLoadInteractor(ICardDataRequester cardDataRequester)
         {
-            this._cardDataRequester = cardDataRequester;
+            _cardDataRequester = cardDataRequester;
         }
 
         public List<SfCard> LoadDeck(string fileName)
         {
             string line;
-            List<Guid> requests = new List<Guid>();
+            List<Guid> requests = new();
 
-            using StreamReader reader = new StreamReader(fileName);
-            
-            while((line = reader.ReadLine()) != null)
+            using StreamReader reader = new(fileName);
+
+            while ((line = reader.ReadLine()) != null)
             {
                 string[] split = line.Split('|');
 
@@ -41,7 +42,7 @@ namespace Tolarian.Copyshop.Business.UseCaseInteractors
 
         public void SaveDeck(List<SaveCard> cardsToSave, string fileName)
         {
-            using StreamWriter writer = new StreamWriter(fileName);
+            using StreamWriter writer = new(fileName);
 
             foreach (SaveCard card in cardsToSave)
             {

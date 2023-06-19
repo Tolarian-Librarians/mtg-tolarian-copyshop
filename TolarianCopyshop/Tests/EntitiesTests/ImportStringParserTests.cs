@@ -1,5 +1,7 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using Tolarian.Copyshop.Business.Entities;
 
 namespace Tests.EntitiesTests
@@ -17,7 +19,7 @@ namespace Tests.EntitiesTests
                 "8 Forest (DAR) 254",
             };
 
-            ImportStringParser unitUnderTest = this.GetParser();
+            ImportStringParser unitUnderTest = GetParser();
 
             List<KeyValuePair<Tolarian.Copyshop.Business.EntitiesModels.PreImportCard, int>> result = unitUnderTest.ResolvePreImportCardsFromImportString(dummyImportString);
 
@@ -38,7 +40,7 @@ namespace Tests.EntitiesTests
                 "8 Forest 254",
             };
 
-            ImportStringParser unitUnderTest = this.GetParser();
+            ImportStringParser unitUnderTest = GetParser();
 
             List<KeyValuePair<Tolarian.Copyshop.Business.EntitiesModels.PreImportCard, int>> result = unitUnderTest.ResolvePreImportCardsFromImportString(dummyImportString);
 

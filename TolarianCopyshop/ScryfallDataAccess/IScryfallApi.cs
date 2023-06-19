@@ -1,6 +1,8 @@
-﻿using Refit;
-using System;
+﻿using System;
 using System.Threading.Tasks;
+
+using Refit;
+
 using Tolarian.Copyshop.Business.Models.SfCardInfo;
 using Tolarian.Copyshop.Business.Models.SfSetInfo;
 
@@ -13,7 +15,7 @@ namespace Tolarian.Copyshop.ScryfallDataAccess
 
         [Get("/cards/autocomplete?q=\"{searchQuery}\"&include_extras=false")]
         Task<ApiResponse<SfCatalog>> GetCardsByAutoCompleteQuery(string searchQuery);
-        
+
         [Get("/cards/search?q={searchQuery}+(layout:token+or+layout:emblem)&include_extras=true")]
         Task<ApiResponse<SfPaginatedCardList>> GetTokensByQuery(string searchQuery);
 

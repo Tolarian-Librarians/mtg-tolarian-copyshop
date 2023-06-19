@@ -21,7 +21,7 @@ namespace Tolarian.Copyshop.Fontend.WPF.Base
             if (!Equals(storage, value))
             {
                 storage = value;
-                this.OnPropertyChanged(propertyName);
+                OnPropertyChanged(propertyName);
                 return true;
             }
             return false;

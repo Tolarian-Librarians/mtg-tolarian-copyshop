@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+
 using Tolarian.Copyshop.Controller;
 using Tolarian.Copyshop.Controller.ResponseObjects;
 using Tolarian.Copyshop.Fontend.WPF.Communication;
@@ -15,7 +16,7 @@ namespace Tolarian.Copyshop.Fontend.WPF.ViewModels
         public DeckBuilderDesignViewModel(CardController cardController, DeckController deckController, DeckCardModel deckCardModel, Dialogs dialogs)
             : base(cardController, deckController, deckCardModel, dialogs)
         {
-            this.DeckCards = new ObservableCollection<FullCardModel>
+            DeckCards = new ObservableCollection<FullCardModel>
             {
                 new FullCardModel()
                 {
@@ -105,8 +106,8 @@ namespace Tolarian.Copyshop.Fontend.WPF.ViewModels
                 },
             };
 
-            this.SelectedCard = this.DeckCards[0];
-            this.SelectedCard.SelectedCardFace = this.SelectedCard.CardFaces.First().LargeImage;
+            SelectedCard = DeckCards[0];
+            SelectedCard.SelectedCardFace = SelectedCard.CardFaces.First().LargeImage;
         }
     }
 }

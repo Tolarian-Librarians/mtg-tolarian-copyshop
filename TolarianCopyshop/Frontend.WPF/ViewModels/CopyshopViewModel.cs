@@ -1,11 +1,14 @@
-﻿using MahApps.Metro.Controls.Dialogs;
-using Microsoft.Win32;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+
+using MahApps.Metro.Controls.Dialogs;
+
+using Microsoft.Win32;
+
 using Tolarian.Copyshop.Controller;
 using Tolarian.Copyshop.Controller.Interfaces;
 using Tolarian.Copyshop.Controller.ResponseObjects;
@@ -24,7 +27,6 @@ namespace Tolarian.Copyshop.Fontend.WPF.ViewModels
         private readonly CardController _cardController;
         private readonly DeckController _deckController;
         private readonly ExportController _exportController;
-        private readonly PrintController _printController;
         private readonly Dialogs _dialogs;
 
         private int _selectedTabIndex;
@@ -34,27 +36,25 @@ namespace Tolarian.Copyshop.Fontend.WPF.ViewModels
         #region Constructor
 
         public CopyShopViewModel(CardController cardController,
-                                 PrintController printController,
                                  DeckController deckController,
                                  ExportController exportController,
                                  Dialogs dialogs)
         {
             _copyshop = this;
-            this._cardController = cardController;
-            this._printController = printController;
-            this._deckController = deckController;
-            this._exportController = exportController;
-            this._dialogs = dialogs;
+            _cardController = cardController;
+            _deckController = deckController;
+            _exportController = exportController;
+            _dialogs = dialogs;
 
             // Commands
-            this.NewCommand = new Command(this.NewDeck);
-            this.OpenCommand = new Command(this.OpenDeck);
-            this.SaveCommand = new Command(this.SaveDeck);
-            this.ImportCommand = new Command(this.ImportDeck);
-            this.ExportCommand = new Command(this.ExportDeck);
-            this.ClearCommand = new Command(this.ClearDeck);
-            this.ImportTokenCommand = new Command(this.ImportToken);
-            this.OpenLinkCommand = new Command(this.OpenLink);
+            NewCommand = new Command(NewDeck);
+            OpenCommand = new Command(OpenDeck);
+            SaveCommand = new Command(SaveDeck);
+            ImportCommand = new Command(ImportDeck);
+            ExportCommand = new Command(ExportDeck);
+            ClearCommand = new Command(ClearDeck);
+            ImportTokenCommand = new Command(ImportToken);
+            OpenLinkCommand = new Command(OpenLink);
         }
 
         #endregion
@@ -83,8 +83,8 @@ namespace Tolarian.Copyshop.Fontend.WPF.ViewModels
 
         public int SelectedTabIndex
         {
-            get => this._selectedTabIndex;
-            set => this.SetProperty(ref this._selectedTabIndex, value);
+            get => _selectedTabIndex;
+            set => SetProperty(ref _selectedTabIndex, value);
         }
 
         #endregion
@@ -95,23 +95,23 @@ namespace Tolarian.Copyshop.Fontend.WPF.ViewModels
             => _copyshop;
 
         private void NewDeck(object _)
-            => this.ClearDeck(_);
+            => ClearDeck(_);
 
         private void ClearDeck(object _)
         {
-            if (this.HandleRequestSave())
+            if (HandleRequestSave())
             {
-                this.SaveFile = string.Empty;
+                SaveFile = string.Empty;
                 DeckBuilderViewModel.GetInstance().AddCards(null, true);
-                this.GoToTabPage(0);
+                GoToTabPage(0);
             }
         }
 
         private void OpenDeck(object _)
         {
-            if (this.HandleRequestSave())
+            if (HandleRequestSave())
             {
-                OpenFileDialog openFileDialog = new OpenFileDialog()
+                OpenFileDialog openFileDialog = new()
                 {
                     AddExtension = true,
                     DefaultExt = ".tcd",
@@ -121,19 +121,19 @@ namespace Tolarian.Copyshop.Fontend.WPF.ViewModels
                 };
                 if (openFileDialog.ShowDialog() == true)
                 {
-                    this._dialogs.ShowProgressOnUIThread("Loading Deck", "Please wait while your deck is loaded...",
+                    _dialogs.ShowProgressOnUIThread("Loading Deck", "Please wait while your deck is loaded...",
                         new Action(() =>
                         {
-                            List<FullCardModel> response = this._deckController.LoadDeckFromFile(openFileDialog.FileName).ConvertAll(FullCardModel.Create);
+                            List<FullCardModel> response = _deckController.LoadDeckFromFile(openFileDialog.FileName).ConvertAll(FullCardModel.Create);
 
-                            this._dialogs.SendErrorMessage(this._cardController.GetErrorMessage());
+                            _dialogs.SendErrorMessage(_cardController.GetErrorMessage());
                             if (response.Count > 0)
                             {
                                 DeckBuilderViewModel.GetInstance().AddCards(response, true);
                             }
                         }),
-                        new Action(() => this.GoToTabPage(0)));
-                    this.SaveFile = openFileDialog.FileName;
+                        new Action(() => GoToTabPage(0)));
+                    SaveFile = openFileDialog.FileName;
                 }
             }
         }
@@ -145,28 +145,22 @@ namespace Tolarian.Copyshop.Fontend.WPF.ViewModels
             {
                 return true;
             }
-            switch (this._dialogs.ShowQuestionOnUIThread("Save", "Do you want to save your Deck?", MessageDialogStyle.AffirmativeAndNegativeAndSingleAuxiliary))
+            return _dialogs.ShowQuestionOnUIThread("Save", "Do you want to save your Deck?", MessageDialogStyle.AffirmativeAndNegativeAndSingleAuxiliary) switch
             {
-                case MessageDialogResult.Canceled:
-                case MessageDialogResult.FirstAuxiliary:
-                case MessageDialogResult.SecondAuxiliary:
-                    return false;
-                case MessageDialogResult.Negative:
-                    return true;
-                case MessageDialogResult.Affirmative:
-                    return this.HandleSave(false);
-            }
-            return true;
+                MessageDialogResult.Canceled or MessageDialogResult.FirstAuxiliary or MessageDialogResult.SecondAuxiliary => false,
+                MessageDialogResult.Affirmative => HandleSave(false),
+                _ => true,
+            };
         }
 
         private bool HandleSave(bool saveAs)
         {
-            if (!saveAs && !string.IsNullOrEmpty(this.SaveFile))
+            if (!saveAs && !string.IsNullOrEmpty(SaveFile))
             {
-                return this._deckController.SaveDeckToFile(this.SaveFile, DeckBuilderViewModel.GetInstance().DeckCards.Cast<IFullCard>().ToList());
+                return _deckController.SaveDeckToFile(SaveFile, DeckBuilderViewModel.GetInstance().DeckCards.Cast<IFullCard>().ToList());
             }
 
-            SaveFileDialog saveFileDialog = new SaveFileDialog()
+            SaveFileDialog saveFileDialog = new()
             {
                 AddExtension = true,
                 DefaultExt = ".tcd",
@@ -175,8 +169,8 @@ namespace Tolarian.Copyshop.Fontend.WPF.ViewModels
             };
             if (saveFileDialog.ShowDialog() == true)
             {
-                this.SaveFile = saveFileDialog.FileName;
-                return this._deckController.SaveDeckToFile(saveFileDialog.FileName, DeckBuilderViewModel.GetInstance().DeckCards.Cast<IFullCard>().ToList());
+                SaveFile = saveFileDialog.FileName;
+                return _deckController.SaveDeckToFile(saveFileDialog.FileName, DeckBuilderViewModel.GetInstance().DeckCards.Cast<IFullCard>().ToList());
             }
 
             return false;
@@ -186,7 +180,7 @@ namespace Tolarian.Copyshop.Fontend.WPF.ViewModels
         {
             if (commandParameter is bool saveAs)
             {
-                this.HandleSave(saveAs);
+                HandleSave(saveAs);
             }
         }
 
@@ -195,7 +189,7 @@ namespace Tolarian.Copyshop.Fontend.WPF.ViewModels
             bool replaceTokens = false;
             if (DeckBuilderViewModel.GetInstance().DeckCards.Count > 0)
             {
-                switch (this._dialogs.ShowQuestionOnUIThread("Import Tokens", "Do you want to remove exiting tokens in your deck?", MessageDialogStyle.AffirmativeAndNegativeAndSingleAuxiliary))
+                switch (_dialogs.ShowQuestionOnUIThread("Import Tokens", "Do you want to remove exiting tokens in your deck?", MessageDialogStyle.AffirmativeAndNegativeAndSingleAuxiliary))
                 {
                     case MessageDialogResult.FirstAuxiliary:
                     case MessageDialogResult.SecondAuxiliary:
@@ -210,14 +204,14 @@ namespace Tolarian.Copyshop.Fontend.WPF.ViewModels
                 }
             }
 
-            this._dialogs.ShowProgressOnUIThread("IMPORT TOKEN", "Please wait while your tokens are imported...", new Action(() => this.ImportTokenCards(replaceTokens)));
-            this.GoToTabPage(0);
+            _dialogs.ShowProgressOnUIThread("IMPORT TOKEN", "Please wait while your tokens are imported...", new Action(() => ImportTokenCards(replaceTokens)));
+            GoToTabPage(0);
         }
 
         private void ImportTokenCards(bool replaceTokens)
         {
-            AddTokensToDeckResponse response = this._cardController.AddTokensToDeck(DeckBuilderViewModel.GetInstance().DeckCards.Cast<IFullCard>().ToList(), replaceTokens);
-            this._dialogs.SendErrorMessage(this._cardController.GetErrorMessage());
+            AddTokensToDeckResponse response = _cardController.AddTokensToDeck(DeckBuilderViewModel.GetInstance().DeckCards.Cast<IFullCard>().ToList(), replaceTokens);
+            _dialogs.SendErrorMessage(_cardController.GetErrorMessage());
             if (response.Deck.Count > 0)
             {
                 DeckBuilderViewModel.GetInstance().AddCards(response.Deck.ConvertAll(FullCardModel.Create), true);
@@ -231,7 +225,7 @@ namespace Tolarian.Copyshop.Fontend.WPF.ViewModels
                 bool overrideDeck = false;
                 if (DeckBuilderViewModel.GetInstance().DeckCards.Count > 0)
                 {
-                    switch (this._dialogs.ShowQuestionOnUIThread("Import", "Do you want to override your Deck?", MessageDialogStyle.AffirmativeAndNegativeAndDoubleAuxiliary, "Save Deck & Override", "Discard Deck & Override", "Add Cards", "Cancel"))
+                    switch (_dialogs.ShowQuestionOnUIThread("Import", "Do you want to override your Deck?", MessageDialogStyle.AffirmativeAndNegativeAndDoubleAuxiliary, "Save Deck & Override", "Discard Deck & Override", "Add Cards", "Cancel"))
                     {
                         case MessageDialogResult.SecondAuxiliary:
                         case MessageDialogResult.Canceled:
@@ -240,7 +234,7 @@ namespace Tolarian.Copyshop.Fontend.WPF.ViewModels
                             overrideDeck = true;
                             break;
                         case MessageDialogResult.Affirmative:
-                            this.HandleSave(false);
+                            HandleSave(false);
                             overrideDeck = true;
                             break;
                         case MessageDialogResult.FirstAuxiliary:
@@ -252,7 +246,7 @@ namespace Tolarian.Copyshop.Fontend.WPF.ViewModels
                 string importCards = string.Empty;
                 if (importType.Equals("TEXT", StringComparison.OrdinalIgnoreCase))
                 {
-                    importCards = await this._dialogs.ShowChildWindowOnUIThread<string>(new MultiLineInputChildView("IMPORT DECK", string.Empty)).ConfigureAwait(false);
+                    importCards = await _dialogs.ShowChildWindowOnUIThread<string>(new MultiLineInputChildView("IMPORT DECK", string.Empty)).ConfigureAwait(false);
                 }
                 else if (importType.Equals("CLIPBOARD", StringComparison.OrdinalIgnoreCase))
                 {
@@ -260,7 +254,7 @@ namespace Tolarian.Copyshop.Fontend.WPF.ViewModels
                 }
                 else if (importType.Equals("URL", StringComparison.OrdinalIgnoreCase))
                 {
-                    await this.ImportDeckByUrl(overrideDeck).ConfigureAwait(false);
+                    await ImportDeckByUrl(overrideDeck).ConfigureAwait(false);
                     return;
                 }
                 else
@@ -271,41 +265,41 @@ namespace Tolarian.Copyshop.Fontend.WPF.ViewModels
                 if (!string.IsNullOrWhiteSpace(importCards))
                 {
                     string notFoundCards = string.Empty;
-                    this._dialogs.ShowProgressOnUIThread("IMPORT", "Please wait while your deck is imported...",
-                        new Action(() => this.ImportDeckCardsByString(importCards, overrideDeck, ref notFoundCards)),
-                        new Action(() => this.Post_ImportDeckCards(ref notFoundCards)));
+                    _dialogs.ShowProgressOnUIThread("IMPORT", "Please wait while your deck is imported...",
+                        new Action(() => ImportDeckCardsByString(importCards, overrideDeck, ref notFoundCards)),
+                        new Action(() => Post_ImportDeckCards(ref notFoundCards)));
                 }
             }
         }
 
         private async Task ImportDeckByUrl(bool overrideDeck)
         {
-            string Url = await this._dialogs.ShowInputOnUIThread("IMPORT BY TAPPEDOUT.NET", "Please enter URL...").ConfigureAwait(false);
+            string Url = await _dialogs.ShowInputOnUIThread("IMPORT BY TAPPEDOUT.NET", "Please enter URL...").ConfigureAwait(false);
 
             if (!string.IsNullOrWhiteSpace(Url))
             {
                 string notFoundCards = string.Empty;
-                this._dialogs.ShowProgressOnUIThread("IMPORT", "Please wait while your deck is imported...",
-                    new Action(() => this.ImportDeckCardsByUrl(Url, overrideDeck, ref notFoundCards)),
-                    new Action(() => this.Post_ImportDeckCards(ref notFoundCards)));
+                _dialogs.ShowProgressOnUIThread("IMPORT", "Please wait while your deck is imported...",
+                    new Action(() => ImportDeckCardsByUrl(Url, overrideDeck, ref notFoundCards)),
+                    new Action(() => Post_ImportDeckCards(ref notFoundCards)));
             }
         }
 
         private void ImportDeckCardsByUrl(string url, bool overrideDeck, ref string notFoundCards)
         {
-            CardImportResponse response = this._cardController.GetCardsFromUri(url ?? "");
-            this.ImportDeckCards(response, overrideDeck, ref notFoundCards);
+            CardImportResponse response = _cardController.GetCardsFromUri(url ?? "");
+            ImportDeckCards(response, overrideDeck, ref notFoundCards);
         }
 
         private void ImportDeckCardsByString(string cards, bool overrideDeck, ref string notFoundCards)
         {
-            CardImportResponse response = this._cardController.GetCardsByImportString(cards ?? "");
-            this.ImportDeckCards(response, overrideDeck, ref notFoundCards);
+            CardImportResponse response = _cardController.GetCardsByImportString(cards ?? "");
+            ImportDeckCards(response, overrideDeck, ref notFoundCards);
         }
 
         private void ImportDeckCards(CardImportResponse response, bool overrideDeck, ref string notFoundCards)
         {
-            this._dialogs.SendErrorMessage(this._cardController.GetErrorMessage());
+            _dialogs.SendErrorMessage(_cardController.GetErrorMessage());
             if (response.Cards.Count > 0)
             {
                 DeckBuilderViewModel.GetInstance().AddCards(response.Cards.ConvertAll(FullCardModel.Create), overrideDeck);
@@ -317,18 +311,14 @@ namespace Tolarian.Copyshop.Fontend.WPF.ViewModels
         {
             if (commandParameter is string importType)
             {
-                string cards = this._exportController.ExportDeck(DeckBuilderViewModel.GetInstance().DeckCards.Cast<IFullCard>().ToList());
+                string cards = _exportController.ExportDeck(DeckBuilderViewModel.GetInstance().DeckCards.Cast<IFullCard>().ToList());
                 if (importType.Equals("TEXT", StringComparison.OrdinalIgnoreCase))
                 {
-                    this._dialogs.ShowChildWindowOnUIThread<string>(new MultiLineInputChildView("EXPORT DECK", cards));
+                    _dialogs.ShowChildWindowOnUIThread<string>(new MultiLineInputChildView("EXPORT DECK", cards));
                 }
                 else if (importType.Equals("CLIPBOARD", StringComparison.OrdinalIgnoreCase))
                 {
                     Clipboard.SetText(cards);
-                }
-                else
-                {
-                    return;
                 }
             }
         }
@@ -337,8 +327,8 @@ namespace Tolarian.Copyshop.Fontend.WPF.ViewModels
         {
             if (!string.IsNullOrWhiteSpace(notFoundCards))
             {
-                this.GoToTabPage(0);
-                this._dialogs.ShowMessageOnUIThread("Missing Cards", "The following cards could not be found:" + Environment.NewLine + notFoundCards);
+                GoToTabPage(0);
+                _dialogs.ShowMessageOnUIThread("Missing Cards", "The following cards could not be found:" + Environment.NewLine + notFoundCards);
             }
         }
 
@@ -351,7 +341,7 @@ namespace Tolarian.Copyshop.Fontend.WPF.ViewModels
         }
 
         private void GoToTabPage(int page)
-            => this.SelectedTabIndex = page;
+            => SelectedTabIndex = page;
 
         #endregion
 

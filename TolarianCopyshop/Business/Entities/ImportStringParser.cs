@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+
 using Tolarian.Copyshop.Business.EntitiesModels;
 using Tolarian.Copyshop.Business.Interfaces;
 
@@ -21,7 +22,7 @@ namespace Tolarian.Copyshop.Business.Entities
 
         private KeyValuePair<PreImportCard, int> ResolveCardName(string line)
         {
-            PreImportCard actualCardRequest = new PreImportCard();
+            PreImportCard actualCardRequest = new();
             string[] splitted = line.Split(' ');
 
             if (IsLastValueArenaCode(splitted))

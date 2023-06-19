@@ -1,4 +1,5 @@
 ﻿using System;
+
 using Tolarian.Copyshop.Controller.ResponseObjects.Enums;
 
 namespace Tolarian.Copyshop.Controller.ResponseObjects

@@ -1,6 +1,8 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
+
+using Newtonsoft.Json;
+
 using Tolarian.Copyshop.Business.Models.Enums;
 
 namespace Tolarian.Copyshop.Business.Models.SfCardInfo

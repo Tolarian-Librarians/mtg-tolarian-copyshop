@@ -11,6 +11,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
+
 using Tolarian.Copyshop.Controller;
 using Tolarian.Copyshop.Controller.Interfaces;
 using Tolarian.Copyshop.Controller.ResponseObjects;
@@ -48,9 +49,9 @@ namespace Tolarian.Copyshop.Fontend.WPF.ViewModels
         private SearchCardType _searchType = SearchCardType.Normal;
         private string _searchTextBoxPlaceHolder = "Search for cards on Scryfall ...";
 
-        private Task task;
-        private CancellationTokenSource tokenSource;
-        private CancellationToken token;
+        private Task _task;
+        private CancellationTokenSource _tokenSource;
+        private CancellationToken _token;
 
         #endregion
 
@@ -59,21 +60,21 @@ namespace Tolarian.Copyshop.Fontend.WPF.ViewModels
         public DeckBuilderViewModel(CardController cardController, DeckController deckController, DeckCardModel deckCardModel, Dialogs dialogs)
         {
             _deckBuilder = this;
-            this._cardController = cardController;
-            this._deckController = deckController;
-            this._deckCardModel = deckCardModel;
-            this._dialogs = dialogs;
+            _cardController = cardController;
+            _deckController = deckController;
+            _deckCardModel = deckCardModel;
+            _dialogs = dialogs;
 
-            this.IncreaseCardAmountCommand = new Command(this.IncreaseAmountSelectedCard);
-            this.ReduceCardAmountCommand = new Command(this.ReduceAmountSelectedCard);
-            this.DeleteCardCommand = new Command(this.DeleteSelectedCard);
-            this.ApplySelectedSearchItemCommand = new Command(this.ApplySelectedSearchItem);
-            this.ClearSearchCommand = new Command(this.ClearSearch);
-            this.ToggleSearchCommand = new Command(this.ToggleSearch);
-            this.SelectArtworkCommand = new Command(this.SelectArtwork);
-            this.TransformCardCommand = new Command(this.TransformCard);
+            IncreaseCardAmountCommand = new Command(IncreaseAmountSelectedCard);
+            ReduceCardAmountCommand = new Command(ReduceAmountSelectedCard);
+            DeleteCardCommand = new Command(DeleteSelectedCard);
+            ApplySelectedSearchItemCommand = new Command(ApplySelectedSearchItem);
+            ClearSearchCommand = new Command(ClearSearch);
+            ToggleSearchCommand = new Command(ToggleSearch);
+            SelectArtworkCommand = new Command(SelectArtwork);
+            TransformCardCommand = new Command(TransformCard);
 
-            this._deckCardModel.DeckCards.CollectionChanged += this.DeckCards_CollectionChanged;
+            _deckCardModel.DeckCards.CollectionChanged += DeckCards_CollectionChanged;
         }
 
         #endregion
@@ -82,121 +83,121 @@ namespace Tolarian.Copyshop.Fontend.WPF.ViewModels
 
         public ObservableCollection<FullCardModel> DeckCards
         {
-            get => this._deckCardModel.DeckCards;
+            get => _deckCardModel.DeckCards;
             set
             {
-                if (!Equals(this._deckCardModel.DeckCards, value))
+                if (!Equals(_deckCardModel.DeckCards, value))
                 {
-                    this._deckCardModel.DeckCards = value;
-                    this.OnPropertyChanged(nameof(this.DeckCards));
+                    _deckCardModel.DeckCards = value;
+                    OnPropertyChanged(nameof(DeckCards));
                     DeckPrintViewModel.GetInstance()?.InvokeDeckCards();
-                    this.CalculateDeckCardCount();
+                    CalculateDeckCardCount();
                 }
             }
         }
 
         public int DeckCardCount
         {
-            get => this._deckCardCount;
-            set => this.SetProperty(ref this._deckCardCount, value);
+            get => _deckCardCount;
+            set => SetProperty(ref _deckCardCount, value);
         }
 
         public FullCardModel SelectedCard
         {
-            get => this._selectedCard;
+            get => _selectedCard;
             set
             {
-                this.SetProperty(ref this._selectedCard, value);
-                if (this.SelectedCard != null)
+                SetProperty(ref _selectedCard, value);
+                if (SelectedCard != null)
                 {
-                    this.IsFirstFaceVisible = true;
-                    this.IsSecondFaceVisible = false;
+                    IsFirstFaceVisible = true;
+                    IsSecondFaceVisible = false;
                 }
             }
         }
 
         public bool IsFirstFaceVisible
         {
-            get => this._isFirstFaceVisible;
-            set => this.SetProperty(ref this._isFirstFaceVisible, value);
+            get => _isFirstFaceVisible;
+            set => SetProperty(ref _isFirstFaceVisible, value);
         }
 
         public bool IsSecondFaceVisible
         {
-            get => this._isSecondFaceVisible;
-            set => this.SetProperty(ref this._isSecondFaceVisible, value);
+            get => _isSecondFaceVisible;
+            set => SetProperty(ref _isSecondFaceVisible, value);
         }
 
         public ObservableCollection<SearchCard> SearchResults
         {
-            get => this._searchResults;
-            set => this.SetProperty(ref this._searchResults, value);
+            get => _searchResults;
+            set => SetProperty(ref _searchResults, value);
         }
 
         public bool IsSearchResultVisible
         {
-            get => this._isSearchResultVisible;
-            set => this.SetProperty(ref this._isSearchResultVisible, value);
+            get => _isSearchResultVisible;
+            set => SetProperty(ref _isSearchResultVisible, value);
         }
 
         public bool IsSearchProgressVisible
         {
-            get => this._isSearchProgressVisible;
-            set => this.SetProperty(ref this._isSearchProgressVisible, value);
+            get => _isSearchProgressVisible;
+            set => SetProperty(ref _isSearchProgressVisible, value);
         }
 
         public string SearchText
         {
-            get => this._searchText;
+            get => _searchText;
             set
             {
-                this.SetProperty(ref this._searchText, value);
-                this.OnSearchTextChangedAsync();
+                SetProperty(ref _searchText, value);
+                OnSearchTextChangedAsync();
             }
         }
 
         public bool HasSearchText
         {
-            get => this._hasSearchText;
-            set => this.SetProperty(ref this._hasSearchText, value);
+            get => _hasSearchText;
+            set => SetProperty(ref _hasSearchText, value);
         }
 
         public SearchCard SelectedSearchItem
         {
-            get => this._selectedSearchItem;
+            get => _selectedSearchItem;
             set
             {
-                if (value != null || (value == null && string.IsNullOrEmpty(this.SearchText)))
+                if (value != null || string.IsNullOrEmpty(SearchText))
                 {
-                    this.SetProperty(ref this._selectedSearchItem, value);
+                    SetProperty(ref _selectedSearchItem, value);
                 }
                 else
                 {
-                    this.OnPropertyChanged(nameof(this.SelectedSearchItem));
+                    OnPropertyChanged(nameof(SelectedSearchItem));
                 }
             }
         }
 
         public int SelectedSearchIndex
         {
-            get => this._selectedSearchIndex;
+            get => _selectedSearchIndex;
             set
             {
-                if (value >= 0 || (value < 0 && string.IsNullOrEmpty(this.SearchText)))
+                if (value >= 0 || (value < 0 && string.IsNullOrEmpty(SearchText)))
                 {
-                    this.SetProperty(ref this._selectedSearchIndex, value);
+                    SetProperty(ref _selectedSearchIndex, value);
                 }
                 else
                 {
-                    this.OnPropertyChanged(nameof(this.SelectedSearchIndex));
+                    OnPropertyChanged(nameof(SelectedSearchIndex));
                 }
             }
         }
 
         public string SearchResultCount
         {
-            get => this._searchResultCount;
-            set => this.SetProperty(ref this._searchResultCount, value);
+            get => _searchResultCount;
+            set => SetProperty(ref _searchResultCount, value);
         }
 
         public enum SearchCardType
@@ -206,25 +207,25 @@ namespace Tolarian.Copyshop.Fontend.WPF.ViewModels
 
         public SearchCardType SearchType
         {
-            get => this._searchType;
-            set => this.SetProperty(ref this._searchType, value);
+            get => _searchType;
+            set => SetProperty(ref _searchType, value);
         }
 
         public string SearchTextBoxPlaceHolder
         {
-            get => this._searchTextBoxPlaceHolder;
-            set => this.SetProperty(ref this._searchTextBoxPlaceHolder, value);
+            get => _searchTextBoxPlaceHolder;
+            set => SetProperty(ref _searchTextBoxPlaceHolder, value);
         }
 
         public string SearchDeckText
         {
-            get => this._searchDeckText;
+            get => _searchDeckText;
             set
             {
-                this.SetProperty(ref this._searchDeckText, value);
+                SetProperty(ref _searchDeckText, value);
                 ICollectionView deckListView = CollectionViewSource.GetDefaultView(DeckBuilderView.GetInstance()._DeckListView.Items);
 
-                if (string.IsNullOrWhiteSpace(this.SearchDeckText))
+                if (string.IsNullOrWhiteSpace(SearchDeckText))
                 {
                     deckListView.Filter = null;
                 }
@@ -232,9 +233,9 @@ namespace Tolarian.Copyshop.Fontend.WPF.ViewModels
                 {
                     deckListView.Filter = (obj) =>
                     {
-                        if (!string.IsNullOrWhiteSpace(this.SearchDeckText) && obj is FullCardModel CardModel)
+                        if (!string.IsNullOrWhiteSpace(SearchDeckText) && obj is FullCardModel CardModel)
                         {
-                            return CardModel.FormattedCardName.IndexOf(this.SearchDeckText.Trim(), StringComparison.OrdinalIgnoreCase) >= 0;
+                            return CardModel.FormattedCardName.Contains(SearchDeckText.Trim(), StringComparison.OrdinalIgnoreCase);
                         }
                         return true;
                     };
@@ -272,22 +273,22 @@ namespace Tolarian.Copyshop.Fontend.WPF.ViewModels
         private async void SelectArtwork(object _)
         {
             CopyShopView view = CopyShopView.GetInstance();
-            Guid result = await this._dialogs.ShowChildWindowOnUIThread<Guid>(new SelectArtworkChildView(this._cardController, this.SelectedCard.CardId)
+            Guid result = await _dialogs.ShowChildWindowOnUIThread<Guid>(new SelectArtworkChildView(_cardController, SelectedCard.CardId)
             {
                 ChildWindowWidth = view.ActualWidth - 200d,
                 ChildWindowHeight = view.ActualHeight - 150d,
             }).ConfigureAwait(false);
 
-            if (result is Guid printId && printId != Guid.Empty && printId != this.SelectedCard.PrintId)
+            if (result is Guid printId && printId != Guid.Empty && printId != SelectedCard.PrintId)
             {
-                int CardCount = this.SelectedCard.CardCount;
-                Application.Current.Dispatcher.Invoke(() => this.DeleteSelectedCard(this.SelectedCard));
+                int CardCount = SelectedCard.CardCount;
+                Application.Current.Dispatcher.Invoke(() => DeleteSelectedCard(SelectedCard));
 
-                FullCardModel newCard = FullCardModel.Create(this._cardController.GetCardByPrintId(printId).Card);
+                FullCardModel newCard = FullCardModel.Create(_cardController.GetCardByPrintId(printId).Card);
                 newCard.CardCount = CardCount;
 
-                Application.Current.Dispatcher.Invoke(() => this.AddCard(newCard));
-                this.SelectedCard = newCard;
+                Application.Current.Dispatcher.Invoke(() => AddCard(newCard));
+                SelectedCard = newCard;
             }
         }
 
@@ -301,50 +302,50 @@ namespace Tolarian.Copyshop.Fontend.WPF.ViewModels
             DoubleAnimationUsingKeyFrames firstAnimation = (Application.Current.Resources["FirstFlip"] as DoubleAnimationUsingKeyFrames).Clone();
             DoubleAnimationUsingKeyFrames secondAnimation = (Application.Current.Resources["SecondFlip"] as DoubleAnimationUsingKeyFrames).Clone();
 
-            await DoTransformAnimation(visibleImage, firstAnimation);
+            await DoTransformAnimation(visibleImage, firstAnimation).ConfigureAwait(false);
 
-            this.IsFirstFaceVisible = !this.IsFirstFaceVisible;
-            this.IsSecondFaceVisible = !this.IsSecondFaceVisible;
+            IsFirstFaceVisible = !IsFirstFaceVisible;
+            IsSecondFaceVisible = !IsSecondFaceVisible;
 
-            await DoTransformAnimation(invisibleImage, secondAnimation);
+            await DoTransformAnimation(invisibleImage, secondAnimation).ConfigureAwait(false);
             // Revert invisible image - so it's set korrekt if the user changes the SelectedCard
-            await DoTransformAnimation(visibleImage, secondAnimation);
+            await DoTransformAnimation(visibleImage, secondAnimation).ConfigureAwait(false);
         }
 
         private static async Task DoTransformAnimation(Image image, DoubleAnimationUsingKeyFrames animation)
         {
-            Storyboard sb = new Storyboard();
+            Storyboard sb = new();
             Storyboard.SetTarget(animation, image);
             sb.Children.Add(animation);
             await sb.BeginAsync().ConfigureAwait(false);
         }
 
         public void InvokeDeckCards()
-            => this.OnPropertyChanged(nameof(this.DeckCards));
+            => OnPropertyChanged(nameof(DeckCards));
 
         private void DeleteSelectedCard(object clickedCard)
         {
             if (clickedCard is FullCardModel card)
             {
-                foreach (FullCardModel deleteCard in this.DeckCards.Where(o => o.CardId == card.CardId).ToList())
+                foreach (FullCardModel deleteCard in DeckCards.Where(o => o.CardId == card.CardId).ToList())
                 {
-                    this.DeckCards.Remove(deleteCard);
+                    DeckCards.Remove(deleteCard);
                 }
             }
         }
 
         private void DeckCards_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-            => this.CalculateDeckCardCount();
+            => CalculateDeckCardCount();
 
         private void CalculateDeckCardCount()
-            => this.DeckCardCount = this._deckController?.GetTotalCardCountOfDeck(this.DeckCards.Cast<IFullCard>().ToList()) ?? 0;
+            => DeckCardCount = _deckController?.GetTotalCardCountOfDeck(DeckCards.Cast<IFullCard>().ToList()) ?? 0;
 
         private void IncreaseAmountSelectedCard(object clickedCard)
         {
             if (clickedCard is FullCardModel card)
             {
-                this.DeckCards.Where(o => o.CardId == card.CardId).Select(o => o.CardCount++).ToList(); // ToList is needed in order to evaluate the select immediately due to lazy evaluation
-                this.CalculateDeckCardCount();
+                DeckCards.First(o => o.CardId == card.CardId).CardCount++;
+                CalculateDeckCardCount();
             }
         }
 
@@ -352,9 +353,9 @@ namespace Tolarian.Copyshop.Fontend.WPF.ViewModels
         {
             if (clickedCard is FullCardModel card)
             {
-                this.DeckCards.Where(o => o.CardId == card.CardId).Select(o => --o.CardCount).ToList(); // ToList is needed in order to evaluate the select immediately due to lazy evaluation
-                this.DeleteSelectedCard(this.DeckCards.FirstOrDefault(o => o.CardCount < 1));
-                this.CalculateDeckCardCount();
+                DeckCards.First(o => o.CardId == card.CardId).CardCount--;
+                DeleteSelectedCard(DeckCards.FirstOrDefault(o => o.CardCount < 1));
+                CalculateDeckCardCount();
             }
         }
 
@@ -362,36 +363,36 @@ namespace Tolarian.Copyshop.Fontend.WPF.ViewModels
         {
             if (asNewList)
             {
-                this.CreateNewDeckList();
+                CreateNewDeckList();
             }
 
             if (cardList != null)
             {
                 foreach (FullCardModel card in cardList)
                 {
-                    this.AddCard(card);
+                    AddCard(card);
                 }
             }
         }
 
         private void AddCard(FullCardModel card)
         {
-            if (this.DeckCards.FirstOrDefault(o => o.CardId == card.CardId) is FullCardModel ExistingCard)
+            if (DeckCards.FirstOrDefault(o => o.CardId == card.CardId) is FullCardModel ExistingCard)
             {
                 ExistingCard.CardCount++;
-                this.CalculateDeckCardCount();
+                CalculateDeckCardCount();
             }
             else
             {
-                Application.Current.Dispatcher.Invoke(new Action(() => this.DeckCards.Add(card)), DispatcherPriority.Normal);
+                Application.Current.Dispatcher.Invoke(new Action(() => DeckCards.Add(card)), DispatcherPriority.Normal);
             }
         }
 
         private void CreateNewDeckList()
         {
-            this._deckCardModel.DeckCards.CollectionChanged -= this.DeckCards_CollectionChanged;
-            this.DeckCards = new ObservableCollection<FullCardModel>();
-            this._deckCardModel.DeckCards.CollectionChanged += this.DeckCards_CollectionChanged;
+            _deckCardModel.DeckCards.CollectionChanged -= DeckCards_CollectionChanged;
+            DeckCards = new ObservableCollection<FullCardModel>();
+            _deckCardModel.DeckCards.CollectionChanged += DeckCards_CollectionChanged;
         }
 
         private void ToggleSearch(object state)
@@ -399,106 +400,96 @@ namespace Tolarian.Copyshop.Fontend.WPF.ViewModels
             if ((bool)state)
             {
                 //checked
-                this.SearchType = SearchCardType.Token;
-                this.SearchTextBoxPlaceHolder = "Search for tokens on Scryfall ...";
+                SearchType = SearchCardType.Token;
+                SearchTextBoxPlaceHolder = "Search for tokens on Scryfall ...";
             }
             else
             {
                 //unchecked
-                this.SearchType = SearchCardType.Normal;
-                this.SearchTextBoxPlaceHolder = "Search for cards on Scryfall ...";
+                SearchType = SearchCardType.Normal;
+                SearchTextBoxPlaceHolder = "Search for cards on Scryfall ...";
             }
         }
 
         private async void OnSearchTextChangedAsync()
         {
-            Console.WriteLine($"[{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}]: OnSearchTextChangedAsync: {this._searchText}");
             // Run async to not lock the UI
-            if (this.task != null && this.task.Status != TaskStatus.RanToCompletion)
+            if (_task != null && _task.Status != TaskStatus.RanToCompletion)
             {
-                this.tokenSource.Cancel();
-                await this.task.ConfigureAwait(false);
+                _tokenSource.Cancel();
+                await _task.ConfigureAwait(false);
             }
-            this.tokenSource = new CancellationTokenSource();
-            this.token = this.tokenSource.Token;
-            this.task = Task.Run(() => this.OnSearchTextChanged(), this.token);
-            await this.task.ConfigureAwait(false);
+            _tokenSource = new CancellationTokenSource();
+            _token = _tokenSource.Token;
+            _task = Task.Run(() => OnSearchTextChanged(), _token);
+            await _task.ConfigureAwait(false);
         }
 
         private void OnSearchTextChanged()
         {
-            Console.WriteLine($"[{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}]: OnSearchTextChanged(): Start");
-            this.HasSearchText = this.SearchText.Length > 0;
+            HasSearchText = SearchText.Length > 0;
 
-            if (this.SearchText.Length < 3)
+            if (SearchText.Length < 3)
             {
-                this.ResetSearchedItems();
+                ResetSearchedItems();
                 return;
             }
-            this.IsSearchResultVisible = true;
-            this.IsSearchProgressVisible = true;
+            IsSearchResultVisible = true;
+            IsSearchProgressVisible = true;
 
-            Console.WriteLine($"[{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}]: OnSearchTextChanged(): Request");
-            CardSearchResponse result = this.SearchType switch
+            CardSearchResponse result = SearchType switch
             {
-                SearchCardType.Normal => this._cardController.GetSearchResults(this.SearchText, 12),
-                SearchCardType.Token => this._cardController.GetTokenSearchResults(this.SearchText),
+                SearchCardType.Normal => _cardController.GetSearchResults(SearchText, 12),
+                SearchCardType.Token => _cardController.GetTokenSearchResults(SearchText),
                 _ => new CardSearchResponse(),
             };
-            Console.WriteLine($"[{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}]: OnSearchTextChanged(): Result");
 
-            if (this.token.IsCancellationRequested)
+            if (_token.IsCancellationRequested)
             {
-                Console.WriteLine($"[{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}]: OnSearchTextChanged(): Task Cancel");
                 return;
             }
 
-            Console.WriteLine($"[{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}]: OnSearchTextChanged(): UI Begin");
-            this._dialogs.SendErrorMessage(this._cardController.GetErrorMessage());
-            this.SearchResultCount = result.ResultsCount;
-            this.SearchResults = new ObservableCollection<SearchCard>(result.Results);
-            this.IsSearchProgressVisible = false;
+            _dialogs.SendErrorMessage(_cardController.GetErrorMessage());
+            SearchResultCount = result.ResultsCount;
+            SearchResults = new ObservableCollection<SearchCard>(result.Results);
+            IsSearchProgressVisible = false;
 
-            Console.WriteLine($"[{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}]: OnSearchTextChanged(): UI End");
-            if (this.SearchResults.Count > 0)
+            if (SearchResults.Count > 0)
             {
                 Application.Current.Dispatcher.Invoke(new Action(() =>
                 {
-                    Console.WriteLine($"[{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}]: OnSearchTextChanged(): Invoke Begin");
-                    this.SelectedSearchItem = this.SearchResults.FirstOrDefault(o => o.PrintId == this.SelectedSearchItem?.PrintId) ?? this.SearchResults[0];
-                    this.SelectedSearchIndex = this.SearchResults.IndexOf(this.SelectedSearchItem);
-                    Console.WriteLine($"[{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}]: OnSearchTextChanged(): Invoke End");
+                    SelectedSearchItem = SearchResults.FirstOrDefault(o => o.PrintId == SelectedSearchItem?.PrintId) ?? SearchResults[0];
+                    SelectedSearchIndex = SearchResults.IndexOf(SelectedSearchItem);
                 }), DispatcherPriority.Normal);
             }
-            Console.WriteLine($"[{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}]: OnSearchTextChanged(): End");
         }
 
         private void ApplySelectedSearchItem(object _)
         {
-            if (this.SelectedSearchItem is null)
+            if (SelectedSearchItem is null)
             {
                 return;
             }
 
-            FullCardResponse response = this._cardController.GetCardByPrintId(this.SelectedSearchItem.PrintId);
-            this._dialogs.SendErrorMessage(this._cardController.GetErrorMessage());
-            this.AddCard(FullCardModel.Create(response.Card));
+            FullCardResponse response = _cardController.GetCardByPrintId(SelectedSearchItem.PrintId);
+            _dialogs.SendErrorMessage(_cardController.GetErrorMessage());
+            AddCard(FullCardModel.Create(response.Card));
 
-            this.SearchText = string.Empty;
-            this.ResetSearchedItems();
+            SearchText = string.Empty;
+            ResetSearchedItems();
             DeckBuilderView.GetInstance()._SearchTextBox.Focus();
         }
 
         private void ResetSearchedItems()
         {
-            this.SearchResultCount = "0";
-            this.SelectedSearchItem = null;
-            this.SearchResults = new ObservableCollection<SearchCard>();
-            this.IsSearchResultVisible = false;
+            SearchResultCount = "0";
+            SelectedSearchItem = null;
+            SearchResults = new ObservableCollection<SearchCard>();
+            IsSearchResultVisible = false;
         }
 
         private void ClearSearch(object obj)
-            => this.SearchText = string.Empty;
+            => SearchText = string.Empty;
 
         #endregion
 

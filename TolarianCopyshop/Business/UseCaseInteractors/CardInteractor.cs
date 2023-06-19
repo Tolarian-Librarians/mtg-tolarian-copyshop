@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+
 using Tolarian.Copyshop.Business.DbRequestModels;
 using Tolarian.Copyshop.Business.Interfaces;
 using Tolarian.Copyshop.Business.Models.SfCardInfo;
@@ -33,15 +34,15 @@ namespace Tolarian.Copyshop.Business.UseCaseInteractors
             List<string> cardNames = _gateway.GetCardNamesByAutoCompleteQuery(searchQuery).Data.ToList();
 
             List<SfCard> result = _gateway.GetCardCollectionByIdentifiers(
-                cardNames.Select(name => new GetCardCollectionRequest { Name = name}).ToList()
+                cardNames.Select(name => new GetCardCollectionRequest { Name = name }).ToList()
                 ).Data.ToList();
 
             return (TruncateListToMaxSize(maxCountOfItems, result), cardNames.Count >= 20 ? "20+" : cardNames.Count.ToString());
         }
 
-        private List<SfCard> TruncateListToMaxSize(int maxCountOfItems, List<SfCard> targetList)
+        private static List<SfCard> TruncateListToMaxSize(int maxCountOfItems, List<SfCard> targetList)
         {
-            List<SfCard> resultList = new List<SfCard>(targetList);
+            var resultList = new List<SfCard>(targetList);
             int firstInvalidIndex = maxCountOfItems;
 
             if (resultList.Count > maxCountOfItems)

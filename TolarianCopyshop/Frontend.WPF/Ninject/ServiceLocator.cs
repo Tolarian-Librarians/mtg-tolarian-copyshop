@@ -1,4 +1,5 @@
 ﻿using Ninject;
+
 using Tolarian.Copyshop.Fontend.WPF.ViewModels;
 
 namespace Tolarian.Copyshop.Fontend.WPF.Ninject
@@ -9,19 +10,19 @@ namespace Tolarian.Copyshop.Fontend.WPF.Ninject
 
         public ServiceLocator()
         {
-            this.kernel = new StandardKernel(new ServiceModule());
+            kernel = new StandardKernel(new ServiceModule());
         }
 
         public CopyShopViewModel CopyShopViewModel
-            => this.kernel.Get<CopyShopViewModel>();
+            => kernel.Get<CopyShopViewModel>();
 
         public DeckBuilderViewModel DeckBuilderViewModel
-            => this.kernel.Get<DeckBuilderViewModel>();
+            => kernel.Get<DeckBuilderViewModel>();
 
         public DeckPrintViewModel DeckViewerViewModel
-            => this.kernel.Get<DeckPrintViewModel>();
+            => kernel.Get<DeckPrintViewModel>();
 
         public DeckStatisticsViewModel DeckStatisticsViewModel
-            => this.kernel.Get<DeckStatisticsViewModel>();
+            => kernel.Get<DeckStatisticsViewModel>();
     }
 }

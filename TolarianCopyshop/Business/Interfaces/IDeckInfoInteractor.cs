@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+
 using Tolarian.Copyshop.Business.Models.DeckInfo;
 using Tolarian.Copyshop.Business.Models.Enums;
 

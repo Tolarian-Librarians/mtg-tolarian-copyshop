@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+
 using Tolarian.Copyshop.Business.Interfaces;
 using Tolarian.Copyshop.Business.Models.DeckInfo;
 using Tolarian.Copyshop.Business.Models.Enums;
-using System.Linq;
-using System;
 
 namespace Tolarian.Copyshop.Business.UseCaseInteractors
 {
