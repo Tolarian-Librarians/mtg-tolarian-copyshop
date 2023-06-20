@@ -100,10 +100,10 @@ namespace Tolarian.Copyshop.Business.UseCaseInteractors
                                                                .Select(node => GetAsImportString(node, false)).ToList();
 
             //Commander has a different place inside the dom than the regular cards
-            HtmlNode commanderNode = boardContainer.SelectSingleNode("descendant::img[@class='commander-img']/parent::a");
-            if (commanderNode != null)
+            var commanderNodes = boardContainer.SelectNodes("/descendant::img[contains(@class,'commander-img')]/parent::a");
+            if (commanderNodes != null)
             {
-                importLines.Add(GetAsImportString(commanderNode, true));
+                importLines.AddRange(commanderNodes.Select(commanderNode => GetAsImportString(commanderNode, true)));
             }
 
             (List<SfCard> Cards, string NotFound) result = GetCardsForImport(importLines);

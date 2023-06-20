@@ -111,6 +111,14 @@ namespace Tolarian.Copyshop.ScryfallDataAccess
             var response = containers.Select(c => IssueGetCardCollectionRequest(c)).ToList();
             SfCardCollection result = MergeCardCollections(response);
 
+            if (result.NotFound.Any())
+            {
+                result = TryGetMissingCardsDirctly(result);
+                result.Data = result.Data
+                    .OrderBy(card => cardNames.Select(o => o.Name).ToList().IndexOf(card.Name))
+                    .ToArray();
+            }
+
             return result;
         }
 
@@ -143,6 +151,49 @@ namespace Tolarian.Copyshop.ScryfallDataAccess
                 NotFound = response.SelectMany(r => r.NotFound).ToArray()
             };
             return result;
+        }
+
+        private SfCardCollection TryGetMissingCardsDirctly(SfCardCollection cardCollection)
+        {
+            List<SfCard> found = new();
+            List<SfIdentifier> notFound = new();
+            foreach (var notFoundIdentifier in cardCollection.NotFound)
+            {
+                var response = IssueGetCardByExactNameRequest(notFoundIdentifier.Name, notFoundIdentifier.SetCode);
+                if (response != null)
+                {
+                    found.Add(response);
+                }
+                else
+                {
+                    notFound.Add(notFoundIdentifier);
+                }
+            }
+
+            cardCollection.Data = cardCollection.Data.Concat(found).ToArray();
+            cardCollection.NotFound = notFound.ToArray();
+            return cardCollection;
+        }
+
+        private SfCard IssueGetCardByExactNameRequest(string name, string setCode)
+        {
+            ApiResponse<SfCard> response = _service.GetCardByExactName(name, setCode).Result;
+
+            // Give Scryfall time to breath
+            Thread.Sleep(100);
+
+            switch (response.StatusCode)
+            {
+                case HttpStatusCode.OK:
+                    return response.Content;
+                case HttpStatusCode.NotFound:
+                    return null;
+                default:
+                    HandleUnexpectedStatusCodeForResponse(response);
+                    break;
+            }
+
+            return null;
         }
 
         private static List<List<T>> ChunkListBySize<T>(List<T> source, int chunkSize)
