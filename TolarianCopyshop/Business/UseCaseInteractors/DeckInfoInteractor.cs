@@ -26,7 +26,7 @@ namespace Tolarian.Copyshop.Business.UseCaseInteractors
 
             foreach (var cardType in Enum.GetValues(typeof(CardType)).Cast<CardType>())
             {
-                result.Add(cardType, playables.Sum(c => c.cardFaces[0].PrimaryCardType == cardType ? c.Copies : 0));
+                result.Add(cardType, playables.Sum(c => c.CardFaces[0].PrimaryCardType == cardType ? c.Copies : 0));
             }
 
             return result;
@@ -75,13 +75,13 @@ namespace Tolarian.Copyshop.Business.UseCaseInteractors
             {
                 if (card.Colors is null)
                 {
-                    if (card.cardFaces is null || card.cardFaces[0].Colors is null)
+                    if (card.CardFaces is null || card.CardFaces[0].Colors is null)
                     {
                         result[MtgColor.C] += card.Copies;
                     }
                     else
                     {
-                        result[GetColorFromCardData(card.cardFaces[0].Colors)] += card.Copies;
+                        result[GetColorFromCardData(card.CardFaces[0].Colors)] += card.Copies;
                     }
                 }
                 else
@@ -111,13 +111,13 @@ namespace Tolarian.Copyshop.Business.UseCaseInteractors
 
         public Dictionary<float, int> GetCreatureManaCurve(List<DeckInfoCard> deck)
         {
-            var creatures = GetOnlyPlayables(deck, false).Where(c => c.cardFaces[0].PrimaryCardType == CardType.Creature);
+            var creatures = GetOnlyPlayables(deck, false).Where(c => c.CardFaces[0].PrimaryCardType == CardType.Creature);
             return GetManaCurve(creatures);
         }
 
         public Dictionary<float, int> GetNonCreatureManaCurve(List<DeckInfoCard> deck)
         {
-            var nonCreatures = GetOnlyPlayables(deck, false).Where(c => c.cardFaces[0].PrimaryCardType != CardType.Creature);
+            var nonCreatures = GetOnlyPlayables(deck, false).Where(c => c.CardFaces[0].PrimaryCardType != CardType.Creature);
             return GetManaCurve(nonCreatures);
         }
 
@@ -153,19 +153,19 @@ namespace Tolarian.Copyshop.Business.UseCaseInteractors
         {
             var playables = GetOnlyPlayables(deck, false);
 
-            return playables.Sum(c => c.cardFaces[0].PrimaryCardType == CardType.Creature ? c.Copies : 0);
+            return playables.Sum(c => c.CardFaces[0].PrimaryCardType == CardType.Creature ? c.Copies : 0);
         }
 
         public int GetNonCreatureCount(List<DeckInfoCard> deck)
         {
             var playables = GetOnlyPlayables(deck, false);
 
-            return playables.Sum(c => c.cardFaces[0].PrimaryCardType != CardType.Creature ? c.Copies : 0);
+            return playables.Sum(c => c.CardFaces[0].PrimaryCardType != CardType.Creature ? c.Copies : 0);
         }
 
         private List<DeckInfoCard> GetOnlyPlayables(List<DeckInfoCard> deck, bool includeLands)
         {
-            return deck.Where(dc => dc.cardFaces.Any(cf => cf.PrimaryCardType != CardType.Token &&
+            return deck.Where(dc => dc.CardFaces.Any(cf => cf.PrimaryCardType != CardType.Token &&
                                                     cf.PrimaryCardType != CardType.Emblem &&
                                                     cf.PrimaryCardType != CardType.Unknown &&
                                                     (includeLands || cf.PrimaryCardType != CardType.Land)

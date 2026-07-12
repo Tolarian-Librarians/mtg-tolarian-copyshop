@@ -96,8 +96,8 @@ namespace Tests.ScryfallDataAccessTests
             var result = mapper.GetPrintsOfCard(dummyOracleGuid);
 
             Assert.IsNotNull(result);
-            Assert.HasCount(8, result);
-            Assert.AreEqual(8, result.Count(x => x.CardId == dummyOracleGuid));
+            Assert.HasCount(16, result);
+            Assert.AreEqual(16, result.Count(x => x.CardId == dummyOracleGuid));
         }
 
         [TestMethod]
@@ -130,7 +130,7 @@ namespace Tests.ScryfallDataAccessTests
             var result = mapper.GetTokensByQuery(query);
 
             //Assert
-            Assert.HasCount(8, result);
+            Assert.HasCount(14, result);
             Assert.DoesNotContain(c => !c.Name.Contains(query) && !c.TypeLine.Contains("Token"), result);
         }
 

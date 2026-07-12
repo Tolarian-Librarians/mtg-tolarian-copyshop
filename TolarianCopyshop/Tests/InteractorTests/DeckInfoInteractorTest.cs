@@ -27,9 +27,9 @@ namespace Tests.InteractorTests
         {
             return new List<DeckInfoCard>
             {
-                new DeckInfoCard { Copies = 3, PrintId = new Guid("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa") },
-                new DeckInfoCard { Copies = 1, PrintId = new Guid("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb") },
-                new DeckInfoCard { Copies = 2, PrintId = new Guid("cccccccccccccccccccccccccccccccc") },
+                new DeckInfoCard { Copies = 3, PrintId = new Guid("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"), CardFaces = new List<DeckInfoCardFace>() { new DeckInfoCardFace() } },
+                new DeckInfoCard { Copies = 1, PrintId = new Guid("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"), CardFaces = new List<DeckInfoCardFace>() { new DeckInfoCardFace() } },
+                new DeckInfoCard { Copies = 2, PrintId = new Guid("cccccccccccccccccccccccccccccccc"), CardFaces = new List<DeckInfoCardFace>() { new DeckInfoCardFace() } },
             };
         }
     }

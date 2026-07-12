@@ -108,7 +108,7 @@ namespace Tolarian.Copyshop.ScryfallDataAccess
                 Identifiers = cr.Select(r => new SfIdentifier
                 {
                     // For splitcards is only one cardname required
-                    Name = r.Name.Split("//").First(),
+                    Name = r.Name?.Split("//").First(),
                     SetCode = r.SetCode,
                     Id = r.Id,
                 }).ToList()
