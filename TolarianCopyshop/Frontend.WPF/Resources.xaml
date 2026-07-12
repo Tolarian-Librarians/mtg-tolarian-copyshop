@@ -145,12 +145,12 @@
                                 <Separator />
                                 <Button Command="NavigationCommands.IncreaseZoom" CommandTarget="{Binding RelativeSource={RelativeSource TemplatedParent}}" ToolTip="Zoom In">
                                     <Button.Content>
-                                        <iconPacks:PackIconFontAwesome Height="16" Margin="4,0,0,0" Kind="SearchPlusSolid" />
+                                        <iconPacks:PackIconFontAwesome Height="16" Margin="4,0,0,0" Kind="MagnifyingGlassPlusSolid" />
                                     </Button.Content>
                                 </Button>
                                 <Button Command="NavigationCommands.DecreaseZoom" CommandTarget="{Binding RelativeSource={RelativeSource TemplatedParent}}" ToolTip="Zoom Out">
                                     <Button.Content>
-                                        <iconPacks:PackIconFontAwesome Height="16" Margin="4,0,0,0" Kind="SearchMinusSolid" />
+                                        <iconPacks:PackIconFontAwesome Height="16" Margin="4,0,0,0" Kind="MagnifyingGlassMinusSolid" />
                                     </Button.Content>
                                 </Button>
                                 <Button Command="NavigationCommands.Zoom"
@@ -158,7 +158,7 @@
                                         CommandTarget="{Binding RelativeSource={RelativeSource TemplatedParent}}"
                                         ToolTip="Actual Size">
                                     <Button.Content>
-                                        <iconPacks:PackIconFontAwesome Height="16" Margin="4,0,0,0" Kind="UndoSolid" />
+                                        <iconPacks:PackIconFontAwesome Height="16" Margin="4,0,0,0" Kind="ArrowRotateLeftSolid" />
                                     </Button.Content>
                                 </Button>
                                 <Separator />
@@ -172,7 +172,7 @@
                                         CommandTarget="{Binding RelativeSource={RelativeSource TemplatedParent}}"
                                         ToolTip="Whole Page">
                                     <Button.Content>
-                                        <iconPacks:PackIconFontAwesome Height="16" Margin="4,0,0,0" Kind="FileAltSolid" />
+                                        <iconPacks:PackIconFontAwesome Height="16" Margin="4,0,0,0" Kind="FileLinesSolid" />
                                     </Button.Content>
                                 </Button>
                                 <Button Command="DocumentViewer.FitToMaxPagesAcrossCommand"
@@ -180,7 +180,7 @@
                                         CommandTarget="{Binding RelativeSource={RelativeSource TemplatedParent}}"
                                         ToolTip="Two Pages">
                                     <Button.Content>
-                                        <iconPacks:PackIconFontAwesome Height="16" Margin="4,0,0,0" Kind="ColumnsSolid" />
+                                        <iconPacks:PackIconFontAwesome Height="16" Margin="4,0,0,0" Kind="TableColumnsSolid" />
                                     </Button.Content>
                                 </Button>
                                 <Button Command="DocumentViewer.FitToMaxPagesAcrossCommand"
@@ -211,7 +211,7 @@
                                 </TextBlock>
                                 <Button Command="{Binding ResetCardScaleCommand}" ToolTip="Reset card scale">
                                     <Button.Content>
-                                        <iconPacks:PackIconFontAwesome Height="16" Margin="4,0,0,0" Kind="UndoSolid" />
+                                        <iconPacks:PackIconFontAwesome Height="16" Margin="4,0,0,0" Kind="ArrowRotateLeftSolid" />
                                     </Button.Content>
                                 </Button>
                                 <Separator />

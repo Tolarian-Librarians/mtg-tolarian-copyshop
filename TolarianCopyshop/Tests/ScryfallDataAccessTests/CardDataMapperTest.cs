@@ -35,7 +35,7 @@ namespace Tests.ScryfallDataAccessTests
             SfCatalog result = mapper.GetCardNamesByAutoCompleteQuery(query);
 
             //Assert
-            Assert.IsTrue(result.ObjectCount == 1);
+            Assert.AreEqual(1, result.ObjectCount);
             Assert.AreEqual(expectedCardName, result.Data[0]);
         }
 
@@ -50,9 +50,9 @@ namespace Tests.ScryfallDataAccessTests
             SfCard result = mapper.GetCardByPrintId(id);
 
             //Assert
-            Assert.IsTrue(result != null);
+            Assert.IsNotNull(result);
             Assert.AreEqual("Growing Rites of Itlimoc // Itlimoc, Cradle of the Sun", result.Name);
-            Assert.AreEqual(2, result.CardFaces.Count);
+            Assert.HasCount(2, result.CardFaces);
         }
 
         [TestMethod]
@@ -66,7 +66,7 @@ namespace Tests.ScryfallDataAccessTests
             SfCard result = mapper.GetCardByPrintId(id);
 
             //Assert
-            Assert.IsTrue(result != null);
+            Assert.IsNotNull(result);
             Assert.AreEqual("Dusk // Dawn", result.Name);
             Assert.IsTrue(result.CardFaces.All(c => c.ImageUris == null));
         }
@@ -82,7 +82,7 @@ namespace Tests.ScryfallDataAccessTests
             SfCard result = mapper.GetCardByPrintId(id);
 
             //Assert
-            Assert.IsTrue(result != null);
+            Assert.IsNotNull(result);
             Assert.AreEqual("Toothy, Imaginary Friend", result.Name);
             Assert.IsNotNull(result.RelatedCards);
         }
@@ -96,7 +96,7 @@ namespace Tests.ScryfallDataAccessTests
             var result = mapper.GetPrintsOfCard(dummyOracleGuid);
 
             Assert.IsNotNull(result);
-            Assert.AreEqual(8, result.Count);
+            Assert.HasCount(8, result);
             Assert.AreEqual(8, result.Count(x => x.CardId == dummyOracleGuid));
         }
 
@@ -115,8 +115,8 @@ namespace Tests.ScryfallDataAccessTests
             SfCardCollection result = mapper.GetCardCollectionByIdentifiers(names);
 
             //Assert
-            Assert.IsTrue(result != null);
-            Assert.AreEqual(2, result.Data.Length);
+            Assert.IsNotNull(result);
+            Assert.HasCount(2, result.Data);
         }
 
         [TestMethod]
@@ -130,11 +130,11 @@ namespace Tests.ScryfallDataAccessTests
             var result = mapper.GetTokensByQuery(query);
 
             //Assert
-            Assert.AreEqual(result.Count, 8);
-            Assert.IsTrue(!result.Any(c => !c.Name.Contains(query) && !c.TypeLine.Contains("Token")));
+            Assert.HasCount(8, result);
+            Assert.DoesNotContain(c => !c.Name.Contains(query) && !c.TypeLine.Contains("Token"), result);
         }
 
-        private CardDataMapper GetMapper()
+        private static CardDataMapper GetMapper()
         {
             return new CardDataMapper();
         }

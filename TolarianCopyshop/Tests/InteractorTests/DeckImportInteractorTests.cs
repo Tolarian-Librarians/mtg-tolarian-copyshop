@@ -49,7 +49,7 @@ namespace Tests.InteractorTests
             //Assert
             Assert.IsTrue(string.IsNullOrEmpty(notFound));
             Assert.IsNotNull(cards);
-            Assert.AreEqual(cards.Count, 16);
+            Assert.HasCount(16, cards);
             _cardGatewayMock.Verify(m => m.GetCardCollectionByIdentifiers(It.IsAny<List<GetCardCollectionRequest>>()), Times.Once);
             _translatorMock.Verify(m => m.TranslateArenaCodeToScryfallCode(It.IsAny<string>()), Times.Exactly(3));
         }
@@ -100,21 +100,21 @@ namespace Tests.InteractorTests
             _cardGatewayMock.Setup(m => m.GetCardCollectionByIdentifiers(It.IsAny<List<GetCardCollectionRequest>>())).Returns(dummyResult);
         }
 
-        private List<string> dummyImportString = new List<string>
+        private readonly List<string> dummyImportString = new List<string>
         {
             "4 Birds of Paradise (CN2) 176",
             "4 Collision // Colossus (RNA) 223",
             "8 Forest (DAR) 254",
         };
 
-        private List<KeyValuePair<PreImportCard, int>> preImportCards = new List<KeyValuePair<PreImportCard, int>>
+        private readonly List<KeyValuePair<PreImportCard, int>> preImportCards = new List<KeyValuePair<PreImportCard, int>>
         {
             new KeyValuePair<PreImportCard, int>(new PreImportCard{ CardName = "Birds of Paradise", SetCode = "CN2" }, 4),
             new KeyValuePair<PreImportCard, int>(new PreImportCard{ CardName = "Collision // Colossus", SetCode = "RNA" }, 4),
             new KeyValuePair<PreImportCard, int>(new PreImportCard{ CardName = "Forest", SetCode = "DAR" }, 8),
         };
 
-        private SfCardCollection dummyResult = new SfCardCollection
+        private readonly SfCardCollection dummyResult = new SfCardCollection
         {
             Data = new SfCard[]
             {

@@ -33,7 +33,7 @@
             <MenuItem Header="FILE">
                 <MenuItem Command="{Binding NewCommand}" Header="New">
                     <MenuItem.Icon>
-                        <iconPacks:PackIconFontAwesome Height="16" Margin="4,0,0,0" Kind="FileAltSolid" />
+                        <iconPacks:PackIconFontAwesome Height="16" Margin="4,0,0,0" Kind="FileLinesSolid" />
                     </MenuItem.Icon>
                 </MenuItem>
                 <MenuItem Command="{Binding OpenCommand}" Header="Open">
@@ -43,12 +43,12 @@
                 </MenuItem>
                 <MenuItem Command="{Binding SaveCommand}" CommandParameter="{StaticResource FalseValue}" Header="Save">
                     <MenuItem.Icon>
-                        <iconPacks:PackIconFontAwesome Height="16" Margin="4,0,0,0" Kind="SaveSolid" />
+                        <iconPacks:PackIconFontAwesome Height="16" Margin="4,0,0,0" Kind="FloppyDiskSolid" />
                     </MenuItem.Icon>
                 </MenuItem>
                 <MenuItem Command="{Binding SaveCommand}" CommandParameter="{StaticResource TrueValue}" Header="Save to">
                     <MenuItem.Icon>
-                        <iconPacks:PackIconFontAwesome Height="16" Margin="4,0,0,0" Kind="HddSolid" />
+                        <iconPacks:PackIconFontAwesome Height="16" Margin="4,0,0,0" Kind="HardDriveSolid" />
                     </MenuItem.Icon>
                 </MenuItem>
                 <Separator />
@@ -74,7 +74,7 @@
                 </MenuItem>
                 <MenuItem Header="Export to ...">
                     <MenuItem.Icon>
-                        <iconPacks:PackIconFontAwesome Height="16" Margin="4,0,0,0" Kind="ShareSquareSolid" />
+                        <iconPacks:PackIconFontAwesome Height="16" Margin="4,0,0,0" Kind="ShareFromSquareSolid" />
                     </MenuItem.Icon>
                     <MenuItem Command="{Binding ExportCommand}" CommandParameter="Text" Header="Export to Text">
                         <MenuItem.Icon>
@@ -91,7 +91,7 @@
             <MenuItem Header="ACTION">
                 <MenuItem Command="{Binding ClearCommand}" Header="Clear Decklist">
                     <MenuItem.Icon>
-                        <iconPacks:PackIconFontAwesome Height="16" Margin="4,0,0,0" Kind="TrashAltSolid" />
+                        <iconPacks:PackIconFontAwesome Height="16" Margin="4,0,0,0" Kind="TrashCanSolid" />
                     </MenuItem.Icon>
                 </MenuItem>
                 <MenuItem Command="{Binding ImportTokenCommand}" Header="Import Tokens">

@@ -22,7 +22,7 @@
                                        HorizontalAlignment="Center"
                                        VerticalAlignment="Center"
                                        Foreground="White"
-                                       Kind="AngleDoubleRightSolid" />
+                                       Kind="AnglesRightSolid" />
     </simpleChildWindow:ChildWindow.Icon>
 
     <Grid>
