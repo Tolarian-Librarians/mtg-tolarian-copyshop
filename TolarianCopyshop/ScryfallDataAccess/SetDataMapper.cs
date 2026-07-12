@@ -15,7 +15,7 @@ namespace Tolarian.Copyshop.ScryfallDataAccess
 
         public SetDataMapper()
         {
-            _service = RestService.For<IScryfallApi>(Constants.SCRYFALL_BASE_URI);
+            _service = RestService.For<IScryfallApi>(_httpClient);
         }
 
         public SfPaginatedSetList GetAllSets()

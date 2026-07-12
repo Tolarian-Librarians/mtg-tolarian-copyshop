@@ -21,7 +21,7 @@ namespace Tolarian.Copyshop.ScryfallDataAccess
 
         public CardDataMapper()
         {
-            _service = RestService.For<IScryfallApi>(Constants.SCRYFALL_BASE_URI, new() { ContentSerializer = new NewtonsoftJsonContentSerializer() });
+            _service = RestService.For<IScryfallApi>(_httpClient, new RefitSettings() { ContentSerializer = new NewtonsoftJsonContentSerializer() });
         }
 
         public SfCard GetCardByPrintId(Guid printId)
