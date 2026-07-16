@@ -59,7 +59,6 @@ namespace Tests.InteractorTests
 
             var result = unitUnderTest.GetCardsBySearchQuery("aaaa", maxCountOfItems);
 
-            Assert.IsNotNull(result);
             Assert.AreEqual(maxCountOfItems, result.Item1.Count);
             Assert.AreEqual(dummyList.Data.Length.ToString(), result.Item2);
         }
@@ -74,8 +73,7 @@ namespace Tests.InteractorTests
 
             var response = unitUnderTest.GetTokensByQuery("aaaa");
 
-            Assert.IsNotNull(response);
-            Assert.AreEqual(response.Item1, dummyList);
+            Assert.AreSequenceEqual(response.Item1, dummyList);
             Assert.AreEqual(response.Item2, dummyList.Count.ToString());
         }
 
