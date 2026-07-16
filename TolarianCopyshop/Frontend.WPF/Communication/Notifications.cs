@@ -1,9 +1,11 @@
 ﻿using System.Drawing;
 using System.Reflection;
+using System.Runtime.Versioning;
 using System.Windows.Forms;
 
 namespace Tolarian.Copyshop.Fontend.WPF.Communication
 {
+    [SupportedOSPlatform("windows")]
     public static class Notifications
     {
         private static NotifyIcon _notifyIcon;

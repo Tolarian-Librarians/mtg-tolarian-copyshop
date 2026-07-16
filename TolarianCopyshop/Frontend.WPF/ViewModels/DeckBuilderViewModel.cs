@@ -277,7 +277,7 @@ namespace Tolarian.Copyshop.Fontend.WPF.ViewModels
             {
                 ChildWindowWidth = view.ActualWidth - 200d,
                 ChildWindowHeight = view.ActualHeight - 150d,
-            }).ConfigureAwait(false);
+            });
 
             if (result is Guid printId && printId != Guid.Empty && printId != SelectedCard.PrintId)
             {
@@ -302,14 +302,14 @@ namespace Tolarian.Copyshop.Fontend.WPF.ViewModels
             DoubleAnimationUsingKeyFrames firstAnimation = (Application.Current.Resources["FirstFlip"] as DoubleAnimationUsingKeyFrames).Clone();
             DoubleAnimationUsingKeyFrames secondAnimation = (Application.Current.Resources["SecondFlip"] as DoubleAnimationUsingKeyFrames).Clone();
 
-            await DoTransformAnimation(visibleImage, firstAnimation).ConfigureAwait(false);
+            await DoTransformAnimation(visibleImage, firstAnimation);
 
             IsFirstFaceVisible = !IsFirstFaceVisible;
             IsSecondFaceVisible = !IsSecondFaceVisible;
 
-            await DoTransformAnimation(invisibleImage, secondAnimation).ConfigureAwait(false);
+            await DoTransformAnimation(invisibleImage, secondAnimation);
             // Revert invisible image - so it's set korrekt if the user changes the SelectedCard
-            await DoTransformAnimation(visibleImage, secondAnimation).ConfigureAwait(false);
+            await DoTransformAnimation(visibleImage, secondAnimation);
         }
 
         private static async Task DoTransformAnimation(Image image, DoubleAnimationUsingKeyFrames animation)
@@ -317,7 +317,7 @@ namespace Tolarian.Copyshop.Fontend.WPF.ViewModels
             Storyboard sb = new();
             Storyboard.SetTarget(animation, image);
             sb.Children.Add(animation);
-            await sb.BeginAsync().ConfigureAwait(false);
+            await sb.BeginAsync();
         }
 
         public void InvokeDeckCards()
@@ -417,12 +417,12 @@ namespace Tolarian.Copyshop.Fontend.WPF.ViewModels
             if (_task != null && _task.Status != TaskStatus.RanToCompletion)
             {
                 _tokenSource.Cancel();
-                await _task.ConfigureAwait(false);
+                await _task;
             }
             _tokenSource = new CancellationTokenSource();
             _token = _tokenSource.Token;
             _task = Task.Run(() => OnSearchTextChanged(), _token);
-            await _task.ConfigureAwait(false);
+            await _task;
         }
 
         private void OnSearchTextChanged()

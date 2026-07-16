@@ -43,14 +43,14 @@ namespace Tolarian.Copyshop.Fontend.WPF.Communication
         #region Child Window
 
         internal async Task<T> ShowChildWindowOnUIThread<T>(ChildWindow childWindow)
-            => await Application.Current.Dispatcher.Invoke(() => CopyShopView.GetInstance().ShowChildWindowAsync<T>(childWindow).ConfigureAwait(false));
+            => await Application.Current.Dispatcher.Invoke(() => CopyShopView.GetInstance().ShowChildWindowAsync<T>(childWindow));
 
         #endregion
 
         #region Base Dialogs
 
         internal async void ShowMessageOnUIThread(string header, string message)
-            => await Application.Current.Dispatcher.Invoke(() => _DialogWindow.ShowMessageAsync(header, message).ConfigureAwait(false));
+            => await Application.Current.Dispatcher.Invoke(() => _DialogWindow.ShowMessageAsync(header, message));
 
         internal MessageDialogResult ShowQuestionOnUIThread(string header, string message, MessageDialogStyle style,
             string affirmativeButtonText = "YES", string negativeButtonText = "NO", string firstAuxiliaryButtonText = "CANCEL", string secondAuxiliaryButtonText = "")
@@ -71,7 +71,7 @@ namespace Tolarian.Copyshop.Fontend.WPF.Communication
                  });
 
         internal async Task<string> ShowInputOnUIThread(string header, string message)
-            => await _DialogWindow.ShowInputAsync(header, message).ConfigureAwait(false);
+            => await _DialogWindow.ShowInputAsync(header, message);
 
         internal void ShowProgressOnUIThread(string header, string message, Action FunctionWhileProgress, Action FunctionAfterProgress = null)
             => Application.Current.Dispatcher.Invoke(() => ShowProgress(header, message, FunctionWhileProgress, FunctionAfterProgress));

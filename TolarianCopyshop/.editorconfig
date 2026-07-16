@@ -72,23 +72,6 @@ dotnet_code_quality_unused_parameters = all:suggestion
 # Suppression preferences
 dotnet_remove_unnecessary_suppression_exclusions = none
 
-# Reliability preferences
-## ConfigureAwait(false)
-# ASYNC0004: Use ConfigureAwait(false) on await expression
-dotnet_diagnostic.ASYNC0004.severity = error
-
-# MA0004: Use .ConfigureAwait(false)
-dotnet_diagnostic.MA0004.severity = error
-
-# RCS1090: Call 'ConfigureAwait(false)'.
-dotnet_diagnostic.RCS1090.severity = error
-
-# VSTHRD111: Use ConfigureAwait(bool)
-dotnet_diagnostic.VSTHRD111.severity = error
-
-# CA2007: Consider calling ConfigureAwait on the awaited task
-dotnet_diagnostic.CA2007.severity = error
-
 # Log template 
 dotnet_diagnostic.CA2017.severity = error
 dotnet_diagnostic.CA2254.severity = error

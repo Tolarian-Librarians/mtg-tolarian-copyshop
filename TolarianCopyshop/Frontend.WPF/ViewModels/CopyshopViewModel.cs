@@ -246,7 +246,7 @@ namespace Tolarian.Copyshop.Fontend.WPF.ViewModels
                 string importCards = string.Empty;
                 if (importType.Equals("TEXT", StringComparison.OrdinalIgnoreCase))
                 {
-                    importCards = await _dialogs.ShowChildWindowOnUIThread<string>(new MultiLineInputChildView("IMPORT DECK", string.Empty)).ConfigureAwait(false);
+                    importCards = await _dialogs.ShowChildWindowOnUIThread<string>(new MultiLineInputChildView("IMPORT DECK", string.Empty));
                 }
                 else if (importType.Equals("CLIPBOARD", StringComparison.OrdinalIgnoreCase))
                 {
@@ -254,7 +254,7 @@ namespace Tolarian.Copyshop.Fontend.WPF.ViewModels
                 }
                 else if (importType.Equals("URL", StringComparison.OrdinalIgnoreCase))
                 {
-                    await ImportDeckByUrl(overrideDeck).ConfigureAwait(false);
+                    await ImportDeckByUrl(overrideDeck);
                     return;
                 }
                 else
@@ -274,7 +274,7 @@ namespace Tolarian.Copyshop.Fontend.WPF.ViewModels
 
         private async Task ImportDeckByUrl(bool overrideDeck)
         {
-            string Url = await _dialogs.ShowInputOnUIThread("IMPORT BY TAPPEDOUT.NET", "Please enter URL...").ConfigureAwait(false);
+            string Url = await _dialogs.ShowInputOnUIThread("IMPORT BY TAPPEDOUT.NET", "Please enter URL...");
 
             if (!string.IsNullOrWhiteSpace(Url))
             {
@@ -307,14 +307,14 @@ namespace Tolarian.Copyshop.Fontend.WPF.ViewModels
             notFoundCards = response.NotFound;
         }
 
-        private void ExportDeck(object commandParameter)
+        private async void ExportDeck(object commandParameter)
         {
             if (commandParameter is string importType)
             {
                 string cards = _exportController.ExportDeck(DeckBuilderViewModel.GetInstance().DeckCards.Cast<IFullCard>().ToList());
                 if (importType.Equals("TEXT", StringComparison.OrdinalIgnoreCase))
                 {
-                    _dialogs.ShowChildWindowOnUIThread<string>(new MultiLineInputChildView("EXPORT DECK", cards));
+                    await _dialogs.ShowChildWindowOnUIThread<string>(new MultiLineInputChildView("EXPORT DECK", cards));
                 }
                 else if (importType.Equals("CLIPBOARD", StringComparison.OrdinalIgnoreCase))
                 {
