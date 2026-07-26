@@ -336,7 +336,11 @@ namespace Tolarian.Copyshop.Fontend.WPF.ViewModels
         {
             if (commandParameter is string link && Uri.TryCreate(link, UriKind.Absolute, out Uri hyperlink))
             {
-                _ = Process.Start(new ProcessStartInfo(hyperlink.AbsoluteUri));
+                _ = Process.Start(new ProcessStartInfo
+                {
+                    FileName = hyperlink.AbsoluteUri,
+                    UseShellExecute = true
+                });
             }
         }
 

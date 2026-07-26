@@ -106,9 +106,9 @@
                         <iconPacks:PackIconFontAwesome Height="16" Margin="4,0,0,0" Kind="AddressCardSolid" />
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Command="{Binding OpenLinkCommand}" CommandParameter="https://bitbucket.org/tolarianlibrarians/mtg-tolarian-copyshop" Header="Tolarian Copyshop on BitBucket">
+                <MenuItem Command="{Binding OpenLinkCommand}" CommandParameter="https://github.com/Tolarian-Librarians/mtg-tolarian-copyshop" Header="Tolarian Copyshop on GitHub">
                     <MenuItem.Icon>
-                        <iconPacks:PackIconFontAwesome Height="16" Margin="4,0,0,0" Kind="BitbucketBrands" />
+                        <iconPacks:PackIconFontAwesome Height="16" Margin="4,0,0,0" Kind="GitHubBrands" />
                     </MenuItem.Icon>
                 </MenuItem>
             </MenuItem>
