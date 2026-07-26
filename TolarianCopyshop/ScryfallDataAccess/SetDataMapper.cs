@@ -30,6 +30,10 @@ namespace Tolarian.Copyshop.ScryfallDataAccess
             switch (response.StatusCode)
             {
                 case HttpStatusCode.OK:
+                    if (response.Content == null)
+                    {
+                        HandleUnexpectedEmptyResponse(response);
+                    }
                     allSetsCached = response.Content;
                     break;
                 default:

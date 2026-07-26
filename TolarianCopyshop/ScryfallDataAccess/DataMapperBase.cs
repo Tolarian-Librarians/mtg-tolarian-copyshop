@@ -25,5 +25,10 @@ namespace Tolarian.Copyshop.ScryfallDataAccess
         {
             throw new WebException($"Unexpected Status Code of Http Request. Status {response.StatusCode}, Error: {response.Error}");
         }
+
+        protected static void HandleUnexpectedEmptyResponse<T>(ApiResponse<T> response)
+        {
+            throw new WebException($"Unexpected Empty Response. Status {response.StatusCode}, Error: {response.Error}");
+        }
     }
 }

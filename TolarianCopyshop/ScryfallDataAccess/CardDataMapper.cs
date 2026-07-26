@@ -31,6 +31,10 @@ namespace Tolarian.Copyshop.ScryfallDataAccess
             switch (response.StatusCode)
             {
                 case HttpStatusCode.OK:
+                    if (response.Content == null)
+                    {
+                        HandleUnexpectedEmptyResponse(response);
+                    }
                     return response.Content;
                 case HttpStatusCode.NotFound:
                     return SfCard.GetEmpty();
@@ -130,6 +134,10 @@ namespace Tolarian.Copyshop.ScryfallDataAccess
             switch (response.StatusCode)
             {
                 case HttpStatusCode.OK:
+                    if (response.Content == null)
+                    {
+                        HandleUnexpectedEmptyResponse(response);
+                    }
                     return response.Content;
                 case HttpStatusCode.NotFound:
                     return SfCardCollection.GetEmpty();
@@ -167,6 +175,10 @@ namespace Tolarian.Copyshop.ScryfallDataAccess
             switch (response.StatusCode)
             {
                 case HttpStatusCode.OK:
+                    if (response.Content == null)
+                    {
+                        HandleUnexpectedEmptyResponse(response);
+                    }
                     return response.Content;
                 case HttpStatusCode.NotFound:
                     return SfCatalog.GetEmpty();
@@ -185,6 +197,10 @@ namespace Tolarian.Copyshop.ScryfallDataAccess
             switch (response.StatusCode)
             {
                 case HttpStatusCode.OK:
+                    if (response.Content == null)
+                    {
+                        HandleUnexpectedEmptyResponse(response);
+                    }
                     return response.Content.Data.ToList();
                 case HttpStatusCode.NotFound:
                     return new List<SfCard>();
