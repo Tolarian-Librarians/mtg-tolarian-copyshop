@@ -40,7 +40,7 @@ namespace Tolarian.Copyshop.Controller.Mappers
                     SetCode = card.SetCode.ToUpper(),
                     SetName = TruncateSetname(card.SetName),
                     PrintId = card.PrintId,
-                    Image = card.IsTransformable ? card.CardFaces[0].ImageUris[CardImageTypes.Small] : card.ImageUris[CardImageTypes.Small],
+                    Image = card.IsTransformable ? card.CardFaces[0].ImageUris[CardImageTypes.Thumb] : card.ImageUris[CardImageTypes.Thumb],
                     ReleaseDate = card.ReleaseDate,
                 };
             }).ToList();
@@ -66,7 +66,7 @@ namespace Tolarian.Copyshop.Controller.Mappers
                 Name = source.Name,
                 PrimaryCardType = GetPrimaryCardType(GetBaseCardTypesFromTypeLine(source.TypeLine)),
                 PrintId = source.PrintId,
-                Image = source.IsTransformable ? source.CardFaces[0].ImageUris[CardImageTypes.Normal] : source.ImageUris[CardImageTypes.Normal],
+                Image = source.IsTransformable ? source.CardFaces[0].ImageUris[CardImageTypes.Grid] : source.ImageUris[CardImageTypes.Grid],
                 PowerToughness = string.IsNullOrWhiteSpace(source.Power) && string.IsNullOrWhiteSpace(source.Toughness) ? "" : $"{source.Power,-2}/{source.Toughness,2}",
             };
 
@@ -124,9 +124,9 @@ namespace Tolarian.Copyshop.Controller.Mappers
 
                     return new CardFace
                     {
-                        LargeImage = cf.ImageUris.ContainsKey(CardImageTypes.Large) ? cf.ImageUris[CardImageTypes.Large] : null,
-                        SmallImage = cf.ImageUris.ContainsKey(CardImageTypes.Small) ? cf.ImageUris[CardImageTypes.Small] : null,
-                        CroppedImage = cf.ImageUris.ContainsKey(CardImageTypes.Border_Crop) ? cf.ImageUris[CardImageTypes.Border_Crop] : null,
+                        LargeImage = cf.ImageUris.ContainsKey(CardImageTypes.Display) ? cf.ImageUris[CardImageTypes.Display] : null,
+                        SmallImage = cf.ImageUris.ContainsKey(CardImageTypes.Thumb) ? cf.ImageUris[CardImageTypes.Thumb] : null,
+                        CroppedImage = cf.ImageUris.ContainsKey(CardImageTypes.Crop) ? cf.ImageUris[CardImageTypes.Crop] : null,
                         Colors = cf.Colors?.Select(c => (ResponseObjects.Enums.MtgColor)((int)c)).ToList(),
                         Name = cf.Name,
                         Text = cf.Text,
@@ -141,9 +141,9 @@ namespace Tolarian.Copyshop.Controller.Mappers
                 List<ResponseObjects.Enums.CardType> typesOfCard = GetBaseCardTypesFromTypeLine(source.TypeLine);
                 result.Add(new CardFace
                 {
-                    LargeImage = source.ImageUris.ContainsKey(CardImageTypes.Large) ? source.ImageUris[CardImageTypes.Large] : null,
-                    SmallImage = source.ImageUris.ContainsKey(CardImageTypes.Small) ? source.ImageUris[CardImageTypes.Small] : null,
-                    CroppedImage = source.ImageUris.ContainsKey(CardImageTypes.Border_Crop) ? source.ImageUris[CardImageTypes.Border_Crop] : null,
+                    LargeImage = source.ImageUris.ContainsKey(CardImageTypes.Display) ? source.ImageUris[CardImageTypes.Display] : null,
+                    SmallImage = source.ImageUris.ContainsKey(CardImageTypes.Thumb) ? source.ImageUris[CardImageTypes.Thumb] : null,
+                    CroppedImage = source.ImageUris.ContainsKey(CardImageTypes.Crop) ? source.ImageUris[CardImageTypes.Crop] : null,
                     Colors = source.Colors?.Select(c => (ResponseObjects.Enums.MtgColor)((int)c)).ToList(),
                     Name = source.Name,
                     Text = GetTextOfCard(source),
