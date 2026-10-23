@@ -13,6 +13,11 @@
         Png,
 
         /// <summary>
+        /// A medium-sized full card image (488 × 680 JPG).
+        /// </summary>
+        Jpeg,
+
+        /// <summary>
         /// Small full card image (146×204 JPG).
         /// Designed for use as a thumbnail or list icon.
         /// </summary>
