@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Threading;
 
 using Refit;
@@ -20,6 +21,14 @@ namespace Tolarian.Copyshop.ScryfallDataAccess
         private readonly IScryfallApi _service;
 
         public CardDataMapper()
+        {
+            _service = RestService.For<IScryfallApi>(_httpClient, new RefitSettings() { ContentSerializer = new NewtonsoftJsonContentSerializer() });
+        }
+
+        /// <summary>
+        /// Allows tests to serve Scryfall responses without network access.
+        /// </summary>
+        internal CardDataMapper(HttpMessageHandler handler) : base(handler)
         {
             _service = RestService.For<IScryfallApi>(_httpClient, new RefitSettings() { ContentSerializer = new NewtonsoftJsonContentSerializer() });
         }

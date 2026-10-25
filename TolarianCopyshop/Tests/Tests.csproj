@@ -15,6 +15,9 @@
     <PackageReference Include="System.ComponentModel.Composition" Version="10.0.9" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="TestData\**\*.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\Business\Business.csproj" />
     <ProjectReference Include="..\Controller\Controller.csproj" />
     <ProjectReference Include="..\Frontend.WPF\Frontend.WPF.csproj" />

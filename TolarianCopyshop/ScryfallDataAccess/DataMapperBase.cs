@@ -10,9 +10,13 @@ namespace Tolarian.Copyshop.ScryfallDataAccess
     {
         protected HttpClient _httpClient;
 
-        protected DataMapperBase()
+        protected DataMapperBase() : this(new HttpClientHandler())
         {
-            _httpClient = new HttpClient
+        }
+
+        protected DataMapperBase(HttpMessageHandler handler)
+        {
+            _httpClient = new HttpClient(handler)
             {
                 BaseAddress = new Uri(Constants.SCRYFALL_BASE_URI)
             };

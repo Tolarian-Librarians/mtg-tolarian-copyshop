@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 
-using Tolarian.Copyshop.Business.Models.Enums;
 using Tolarian.Copyshop.Business.Models.SfCardInfo;
 
 namespace Tests
@@ -26,14 +25,14 @@ namespace Tests
                     Name = "Face 1",
                     Text = "Text 1",
                     TypeLine = "Artifact Creature - Dummy",
-                    ImageUris = new Dictionary<CardImageTypes, Uri>() ,
+                    ImageUris = new SfImageUris(),
                 },
                 new SfCardFace
                 {
                     Name = "Face 2",
                     Text = "Text 2",
                     TypeLine = "Artifact Creature - Dummy",
-                    ImageUris = new Dictionary<CardImageTypes, Uri>(),
+                    ImageUris = new SfImageUris(),
                 }
             };
 
@@ -47,10 +46,10 @@ namespace Tests
                 Name = "Dummy Mtg Card",
                 CardId = Guid.NewGuid(),
                 PrintId = Guid.NewGuid(),
-                ImageUris = new Dictionary<CardImageTypes, Uri> {
-                    { CardImageTypes.Grid, new Uri("https://img.scryfall.com/cards/png/front/e/6/e672d408-997c-4a19-810a-3da8411eecf2.png?1568004958") },
-                    { CardImageTypes.Thumb, new Uri("https://img.scryfall.com/cards/small/front/e/6/e672d408-997c-4a19-810a-3da8411eecf2.jpg?1568004958") },
-                    { CardImageTypes.Crop, new Uri("https://img.scryfall.com/cards/border_crop/front/0/e/0e0d989d-7186-40dc-bdfe-cfbb77656bc8.jpg?1559959218") } },
+                ImageUris = new SfImageUris {
+                    Grid = new Uri("https://img.scryfall.com/cards/png/front/e/6/e672d408-997c-4a19-810a-3da8411eecf2.png?1568004958"),
+                    Thumb = new Uri("https://img.scryfall.com/cards/small/front/e/6/e672d408-997c-4a19-810a-3da8411eecf2.jpg?1568004958"),
+                    Crop = new Uri("https://img.scryfall.com/cards/border_crop/front/0/e/0e0d989d-7186-40dc-bdfe-cfbb77656bc8.jpg?1559959218") },
                 Legalities = new Dictionary<string, string> {
                     { "commander", "legal" },
                     { "brawl", "legal" },
