@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 
-using Tolarian.Copyshop.Business.Models.Enums;
 using Tolarian.Copyshop.Business.Models.SfCardInfo;
 using Tolarian.Copyshop.Controller.Interfaces;
 using Tolarian.Copyshop.Controller.ResponseObjects;
@@ -40,7 +39,7 @@ namespace Tolarian.Copyshop.Controller.Mappers
                     SetCode = card.SetCode.ToUpper(),
                     SetName = TruncateSetname(card.SetName),
                     PrintId = card.PrintId,
-                    Image = card.IsTransformable ? card.CardFaces[0].ImageUris[CardImageTypes.Thumb] : card.ImageUris[CardImageTypes.Thumb],
+                    Image = card.IsTransformable ? card.CardFaces[0].ImageUris.Thumb : card.ImageUris.Thumb,
                     ReleaseDate = card.ReleaseDate,
                 };
             }).ToList();
@@ -66,7 +65,7 @@ namespace Tolarian.Copyshop.Controller.Mappers
                 Name = source.Name,
                 PrimaryCardType = GetPrimaryCardType(GetBaseCardTypesFromTypeLine(source.TypeLine)),
                 PrintId = source.PrintId,
-                Image = source.IsTransformable ? source.CardFaces[0].ImageUris[CardImageTypes.Grid] : source.ImageUris[CardImageTypes.Grid],
+                Image = source.IsTransformable ? source.CardFaces[0].ImageUris.Grid : source.ImageUris.Grid,
                 PowerToughness = string.IsNullOrWhiteSpace(source.Power) && string.IsNullOrWhiteSpace(source.Toughness) ? "" : $"{source.Power,-2}/{source.Toughness,2}",
             };
 
@@ -94,7 +93,7 @@ namespace Tolarian.Copyshop.Controller.Mappers
         {
             FullCard result = new()
             {
-                CardId = source.CardId,
+                CardId = GetOracleIdOf(source),
                 PrintId = source.PrintId,
                 FormattedCardName = GetFormattedNameOfCard(source),
                 Legalities = source.Legalities.ToDictionary(k => k.Key.ToString(), e => e.Value.Replace('_', ' ')),
@@ -103,10 +102,10 @@ namespace Tolarian.Copyshop.Controller.Mappers
                 RelatedCards = MapRelatedCardsOf(source),
                 IsTransformable = source.IsTransformable,
                 ConvertedManaCost = source.ConvertedManaCost,
-                ColorIdentity = source.ColorIdentity?.Select(c => (ResponseObjects.Enums.MtgColor)((int)c)).ToList(),
-                Colors = source.Colors?.Select(c => (ResponseObjects.Enums.MtgColor)((int)c)).ToList(),
+                ColorIdentity = MapColors(source.ColorIdentity),
+                Colors = MapColors(source.Colors),
                 ManaCostLine = source.ManaCostLine ?? source.CardFaces?.FirstOrDefault()?.ManaCostLine,
-                ProducedMana = source.ProducedMana?.Select(c => (ResponseObjects.Enums.MtgColor)((int)c)).ToList(),
+                ProducedMana = MapColors(source.ProducedMana),
                 SetCode = source.SetCode,
             };
 
@@ -124,10 +123,10 @@ namespace Tolarian.Copyshop.Controller.Mappers
 
                     return new CardFace
                     {
-                        LargeImage = cf.ImageUris.ContainsKey(CardImageTypes.Display) ? cf.ImageUris[CardImageTypes.Display] : null,
-                        SmallImage = cf.ImageUris.ContainsKey(CardImageTypes.Thumb) ? cf.ImageUris[CardImageTypes.Thumb] : null,
-                        CroppedImage = cf.ImageUris.ContainsKey(CardImageTypes.Crop) ? cf.ImageUris[CardImageTypes.Crop] : null,
-                        Colors = cf.Colors?.Select(c => (ResponseObjects.Enums.MtgColor)((int)c)).ToList(),
+                        LargeImage = cf.ImageUris.Display,
+                        SmallImage = cf.ImageUris.Thumb,
+                        CroppedImage = cf.ImageUris.Crop,
+                        Colors = MapColors(cf.Colors),
                         Name = cf.Name,
                         Text = cf.Text,
                         CardTypes = typesOfCard,
@@ -141,10 +140,10 @@ namespace Tolarian.Copyshop.Controller.Mappers
                 List<ResponseObjects.Enums.CardType> typesOfCard = GetBaseCardTypesFromTypeLine(source.TypeLine);
                 result.Add(new CardFace
                 {
-                    LargeImage = source.ImageUris.ContainsKey(CardImageTypes.Display) ? source.ImageUris[CardImageTypes.Display] : null,
-                    SmallImage = source.ImageUris.ContainsKey(CardImageTypes.Thumb) ? source.ImageUris[CardImageTypes.Thumb] : null,
-                    CroppedImage = source.ImageUris.ContainsKey(CardImageTypes.Crop) ? source.ImageUris[CardImageTypes.Crop] : null,
-                    Colors = source.Colors?.Select(c => (ResponseObjects.Enums.MtgColor)((int)c)).ToList(),
+                    LargeImage = source.ImageUris.Display,
+                    SmallImage = source.ImageUris.Thumb,
+                    CroppedImage = source.ImageUris.Crop,
+                    Colors = MapColors(source.Colors),
                     Name = source.Name,
                     Text = GetTextOfCard(source),
                     CardTypes = typesOfCard,
@@ -161,14 +160,57 @@ namespace Tolarian.Copyshop.Controller.Mappers
 
             if (source.RelatedCards != null)
             {
-                result = source.RelatedCards.Select(rc => new RelatedCard
+                foreach (SfRelatedCard relatedCard in source.RelatedCards)
                 {
-                    Id = rc.Id,
-                    Type = (RelatedCardType)(int)rc.Type
-                }).ToList();
+                    // Components Scryfall introduces after this was written are irrelevant for us, so they are skipped
+                    if (TryParseScryfallValue(relatedCard.Type, out RelatedCardType type))
+                    {
+                        result.Add(new RelatedCard { Id = relatedCard.Id, Type = type });
+                    }
+                }
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// Reversible cards have no oracle id themselves, only their faces have one.
+        /// </summary>
+        private static Guid GetOracleIdOf(SfCard source)
+            => source.CardId ?? source.CardFaces?.Select(cf => cf.CardId).FirstOrDefault(id => id.HasValue) ?? Guid.Empty;
+
+        /// <summary>
+        /// Maps Scryfall color symbols to <see cref="ResponseObjects.Enums.MtgColor"/>. Symbols unknown to the app are skipped.
+        /// Keeps null as null, because some statistics treat a missing color list differently from an empty one.
+        /// </summary>
+        private static List<ResponseObjects.Enums.MtgColor> MapColors(IEnumerable<string> scryfallColors)
+        {
+            if (scryfallColors is null)
+            {
+                return null;
+            }
+
+            List<ResponseObjects.Enums.MtgColor> result = new();
+            foreach (string scryfallColor in scryfallColors)
+            {
+                if (TryParseScryfallValue(scryfallColor, out ResponseObjects.Enums.MtgColor color))
+                {
+                    result.Add(color);
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Only accepts exact member names. <see cref="Enum.TryParse{TEnum}(string, out TEnum)"/> alone would also accept numbers and comma separated lists.
+        /// </summary>
+        private static bool TryParseScryfallValue<TEnum>(string value, out TEnum result) where TEnum : struct, Enum
+        {
+            result = default;
+            return value != null
+                && Enum.GetNames<TEnum>().Contains(value, StringComparer.OrdinalIgnoreCase)
+                && Enum.TryParse(value, true, out result);
         }
 
         private static string GetFormattedNameOfCard(SfCard source)

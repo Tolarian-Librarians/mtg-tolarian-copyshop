@@ -1,0 +1,152 @@
+{
+  "object": "card",
+  "id": "e349c204-3a93-4bf7-b79a-5f5f261ea2d3",
+  "oracle_id": "5fac139a-07d3-4e6c-98e3-d98b199f7a6f",
+  "multiverse_ids": [
+    370600
+  ],
+  "mtgo_id": 49413,
+  "mtgo_foil_id": 49414,
+  "tcgplayer_id": 69087,
+  "cardmarket_id": 262343,
+  "name": "Young Pyromancer",
+  "lang": "en",
+  "released_at": "2013-07-19",
+  "uri": "https://api.scryfall.com/cards/e349c204-3a93-4bf7-b79a-5f5f261ea2d3",
+  "scryfall_uri": "https://scryfall.com/card/m14/163/young-pyromancer?utm_source=api",
+  "layout": "normal",
+  "highres_image": true,
+  "image_status": "highres_scan",
+  "image_updated_at": "2026-07-13T10:51:48Z",
+  "image_uris": {
+    "small": "https://cards.scryfall.io/small/front/e/3/e349c204-3a93-4bf7-b79a-5f5f261ea2d3.jpg?1783939908",
+    "normal": "https://cards.scryfall.io/normal/front/e/3/e349c204-3a93-4bf7-b79a-5f5f261ea2d3.jpg?1783939908",
+    "large": "https://cards.scryfall.io/large/front/e/3/e349c204-3a93-4bf7-b79a-5f5f261ea2d3.jpg?1783939908",
+    "png": "https://cards.scryfall.io/png/front/e/3/e349c204-3a93-4bf7-b79a-5f5f261ea2d3.png?1783939908",
+    "art_crop": "https://cards.scryfall.io/art_crop/front/e/3/e349c204-3a93-4bf7-b79a-5f5f261ea2d3.jpg?1783939908",
+    "border_crop": "https://cards.scryfall.io/border_crop/front/e/3/e349c204-3a93-4bf7-b79a-5f5f261ea2d3.jpg?1783939908",
+    "thumb": "https://cards.scryfall.io/thumb/front/e/3/e349c204-3a93-4bf7-b79a-5f5f261ea2d3.webp?1783939908",
+    "grid": "https://cards.scryfall.io/grid/front/e/3/e349c204-3a93-4bf7-b79a-5f5f261ea2d3.webp?1783939908",
+    "display": "https://cards.scryfall.io/display/front/e/3/e349c204-3a93-4bf7-b79a-5f5f261ea2d3.webp?1783939908",
+    "art": "https://cards.scryfall.io/art/front/e/3/e349c204-3a93-4bf7-b79a-5f5f261ea2d3.webp?1783939908",
+    "crop": "https://cards.scryfall.io/crop/front/e/3/e349c204-3a93-4bf7-b79a-5f5f261ea2d3.webp?1783939908",
+    "jpeg": "https://cards.scryfall.io/normal/front/e/3/e349c204-3a93-4bf7-b79a-5f5f261ea2d3.jpg?1783939908"
+  },
+  "mana_cost": "{1}{R}",
+  "cmc": 2.0,
+  "type_line": "Creature — Human Shaman",
+  "oracle_text": "Whenever you cast an instant or sorcery spell, create a 1/1 red Elemental creature token.",
+  "power": "2",
+  "toughness": "1",
+  "colors": [
+    "R"
+  ],
+  "color_identity": [
+    "R"
+  ],
+  "keywords": [],
+  "all_parts": [
+    {
+      "object": "related_card",
+      "id": "fc7315d5-26d9-4ecc-bca2-b75c6fb12597",
+      "component": "token",
+      "name": "Elemental",
+      "type_line": "Token Creature — Elemental",
+      "uri": "https://api.scryfall.com/cards/fc7315d5-26d9-4ecc-bca2-b75c6fb12597"
+    },
+    {
+      "object": "related_card",
+      "id": "e349c204-3a93-4bf7-b79a-5f5f261ea2d3",
+      "component": "combo_piece",
+      "name": "Young Pyromancer",
+      "type_line": "Creature — Human Shaman",
+      "uri": "https://api.scryfall.com/cards/e349c204-3a93-4bf7-b79a-5f5f261ea2d3"
+    }
+  ],
+  "legalities": {
+    "standard": "not_legal",
+    "future": "not_legal",
+    "historic": "legal",
+    "timeless": "legal",
+    "gladiator": "legal",
+    "pioneer": "legal",
+    "modern": "legal",
+    "legacy": "legal",
+    "pauper": "not_legal",
+    "vintage": "legal",
+    "penny": "not_legal",
+    "commander": "legal",
+    "oathbreaker": "legal",
+    "standardbrawl": "not_legal",
+    "brawl": "legal",
+    "competitivebrawl": "legal",
+    "alchemy": "not_legal",
+    "paupercommander": "not_legal",
+    "duel": "legal",
+    "oldschool": "not_legal",
+    "premodern": "not_legal",
+    "predh": "not_legal",
+    "tlr": "legal"
+  },
+  "games": [
+    "paper",
+    "mtgo"
+  ],
+  "reserved": false,
+  "game_changer": false,
+  "foil": true,
+  "nonfoil": true,
+  "finishes": [
+    "nonfoil",
+    "foil"
+  ],
+  "oversized": false,
+  "promo": false,
+  "reprint": false,
+  "variation": false,
+  "set_id": "e03ee1c0-ecd2-4fcc-ac3c-e8fdb103a847",
+  "set": "m14",
+  "set_name": "Magic 2014",
+  "set_type": "core",
+  "set_uri": "https://api.scryfall.com/sets/e03ee1c0-ecd2-4fcc-ac3c-e8fdb103a847",
+  "set_search_uri": "https://api.scryfall.com/cards/search?order=set&q=e%3Am14&unique=prints",
+  "scryfall_set_uri": "https://scryfall.com/sets/m14?utm_source=api",
+  "rulings_uri": "https://api.scryfall.com/cards/e349c204-3a93-4bf7-b79a-5f5f261ea2d3/rulings",
+  "prints_search_uri": "https://api.scryfall.com/cards/search?order=released&q=oracleid%3A5fac139a-07d3-4e6c-98e3-d98b199f7a6f&unique=prints",
+  "collector_number": "163",
+  "digital": false,
+  "rarity": "uncommon",
+  "flavor_text": "Immolation is the sincerest form of flattery.",
+  "card_back_id": "0aeebaf5-8c7d-4636-9e82-8c27447861f7",
+  "artist": "Cynthia Sheppard",
+  "artist_ids": [
+    "9dfbdd58-65e6-40cf-951a-80e141061939"
+  ],
+  "illustration_id": "b0e1818e-dfc6-4d26-93ff-bbb4b0d711e6",
+  "border_color": "black",
+  "frame": "2003",
+  "full_art": false,
+  "textless": false,
+  "booster": true,
+  "story_spotlight": false,
+  "edhrec_rank": 852,
+  "prices": {
+    "usd": "0.34",
+    "usd_foil": "2.02",
+    "usd_etched": null,
+    "eur": "0.27",
+    "eur_foil": "1.44",
+    "tix": "0.03"
+  },
+  "related_uris": {
+    "gatherer": "https://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=370600&printed=false",
+    "tcgplayer_infinite_articles": "https://partner.tcgplayer.com/c/4931599/1830156/21018?subId1=api&trafcat=tcgplayer.com%2Fsearch%2Farticles&u=https%3A%2F%2Fwww.tcgplayer.com%2Fsearch%2Farticles%3FproductLineName%3Dmagic%26q%3DYoung%2BPyromancer",
+    "tcgplayer_infinite_decks": "https://partner.tcgplayer.com/c/4931599/1830156/21018?subId1=api&trafcat=tcgplayer.com%2Fsearch%2Fdecks&u=https%3A%2F%2Fwww.tcgplayer.com%2Fsearch%2Fdecks%3FproductLineName%3Dmagic%26q%3DYoung%2BPyromancer",
+    "edhrec": "https://edhrec.com/route/?cc=Young+Pyromancer"
+  },
+  "purchase_uris": {
+    "tcgplayer": "https://partner.tcgplayer.com/c/4931599/1830156/21018?subId1=api&u=https%3A%2F%2Fwww.tcgplayer.com%2Fproduct%2F69087%3Fpage%3D1",
+    "cardmarket": "https://www.cardmarket.com/en/Magic/Products?idProduct=262343&referrer=scryfall&utm_campaign=card_prices&utm_medium=text&utm_source=scryfall",
+    "cardhoarder": "https://www.cardhoarder.com/cards/49413?affiliate_id=scryfall&ref=card-profile&utm_campaign=affiliate&utm_medium=card&utm_source=scryfall"
+  }
+}

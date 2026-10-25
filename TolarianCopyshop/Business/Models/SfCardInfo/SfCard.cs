@@ -3,8 +3,6 @@ using System.Collections.Generic;
 
 using Newtonsoft.Json;
 
-using Tolarian.Copyshop.Business.Models.Enums;
-
 namespace Tolarian.Copyshop.Business.Models.SfCardInfo
 {
     public class SfCard
@@ -12,8 +10,11 @@ namespace Tolarian.Copyshop.Business.Models.SfCardInfo
         [JsonProperty(PropertyName = "Name")]
         public string Name { get; set; }
 
+        /// <summary>
+        /// Missing for reversible cards, their faces carry the oracle id instead.
+        /// </summary>
         [JsonProperty(PropertyName = "oracle_id")]
-        public Guid CardId { get; set; }
+        public Guid? CardId { get; set; }
 
         [JsonProperty(PropertyName = "id")]
         public Guid PrintId { get; set; }
@@ -22,7 +23,7 @@ namespace Tolarian.Copyshop.Business.Models.SfCardInfo
         public string Text { get; set; }
 
         [JsonProperty(PropertyName = "image_uris")]
-        public Dictionary<CardImageTypes, Uri> ImageUris { get; set; }
+        public SfImageUris ImageUris { get; set; }
 
         [JsonProperty(PropertyName = "legalities")]
         public Dictionary<string, string> Legalities { get; set; }
@@ -37,13 +38,13 @@ namespace Tolarian.Copyshop.Business.Models.SfCardInfo
         public float ConvertedManaCost { get; set; }
 
         [JsonProperty(PropertyName = "color_identity")]
-        public List<MtgColor> ColorIdentity { get; set; }
+        public List<string> ColorIdentity { get; set; }
 
         [JsonProperty(PropertyName = "colors")]
-        public List<MtgColor> Colors { get; set; }
+        public List<string> Colors { get; set; }
 
         [JsonProperty(PropertyName = "produced_mana")]
-        public List<MtgColor> ProducedMana { get; set; }
+        public List<string> ProducedMana { get; set; }
 
         [JsonProperty(PropertyName = "mana_cost")]
         public string ManaCostLine { get; set; }

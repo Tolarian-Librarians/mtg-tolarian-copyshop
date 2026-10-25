@@ -3,12 +3,16 @@ using System.Collections.Generic;
 
 using Newtonsoft.Json;
 
-using Tolarian.Copyshop.Business.Models.Enums;
-
 namespace Tolarian.Copyshop.Business.Models.SfCardInfo
 {
     public class SfCardFace
     {
+        /// <summary>
+        /// Only set for reversible cards, where the card itself has no oracle id.
+        /// </summary>
+        [JsonProperty(PropertyName = "oracle_id")]
+        public Guid? CardId { get; set; }
+
         [JsonProperty(PropertyName = "name")]
         public string Name { get; set; }
 
@@ -22,10 +26,10 @@ namespace Tolarian.Copyshop.Business.Models.SfCardInfo
         public string ManaCostLine { get; set; }
 
         [JsonProperty(PropertyName = "image_uris")]
-        public Dictionary<CardImageTypes, Uri> ImageUris { get; set; }
+        public SfImageUris ImageUris { get; set; }
 
         [JsonProperty(PropertyName = "colors")]
-        public List<MtgColor> Colors { get; set; }
+        public List<string> Colors { get; set; }
 
         public override string ToString()
         {
